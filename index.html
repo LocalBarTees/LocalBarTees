@@ -32,9 +32,9 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+            background: url('warehouse.jpg') center/cover no-repeat;
             overflow: hidden;
-            color: #333333;
+            color: #ffffff;
         }
 
         .hero::before {
@@ -44,8 +44,8 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(200,200,200,0.3)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>') repeat;
-            opacity: 0.8;
+            background: rgba(0,0,0,0.4);
+            z-index: 1;
         }
 
         .hero-content {
@@ -59,11 +59,13 @@
             font-size: 4rem;
             font-weight: bold;
             margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-            background: linear-gradient(45deg, #333333, #666666);
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
+            background: linear-gradient(45deg, #ffffff, #f0f0f0);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            z-index: 2;
+            position: relative;
         }
 
         .tagline {
@@ -287,68 +289,12 @@
         
         <div class="hero-content">
             <h1 class="logo">Local Bar Tees</h1>
-            <p class="tagline">Warehouse • The Lights Are On • Party's Over</p>
-            <p style="font-size: 1.2rem; margin-top: 2rem; opacity: 0.9;">You're probably looking for <a href="https://localbartees.com" style="color: white; text-decoration: underline;">https://localbartees.com</a></p>
-        </div>
-    </section>
-
-    <section id="about" class="about">
-        <div class="container">
-            <h2 class="section-title fade-in">Warehouse Operations</h2>
-            <div class="about-grid">
-                <div class="about-card fade-in">
-                    <div class="card-icon">📋</div>
-                    <h3 class="card-title">Inventory Management</h3>
-                    <p class="card-text">Where all the magic happens behind the scenes. Boxes, spreadsheets, and the occasional existential crisis about thread counts.</p>
-                </div>
-                <div class="about-card fade-in">
-                    <div class="card-icon">🚚</div>
-                    <h3 class="card-title">Fulfillment</h3>
-                    <p class="card-text">We pack, we ship, we try not to mix up orders. It's like Tetris but with t-shirts and significantly more bubble wrap.</p>
-                </div>
-                <div class="about-card fade-in">
-                    <div class="card-icon">💡</div>
-                    <h3 class="card-title">Bright Lights</h3>
-                    <p class="card-text">No dim bar lighting here. These fluorescent beauties illuminate every corner, every dust bunny, every moment of warehouse reality.</p>
-                </div>
+            <p class="tagline">Warehouse</p>
+            <p style="font-size: 1.2rem; margin-top: 2rem; opacity: 0.9; z-index: 2; position: relative;">You're probably looking for <a href="https://localbartees.com" style="color: #ffffff; text-decoration: underline; font-weight: bold; background: rgba(0,0,0,0.6); padding: 4px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.3);">https://localbartees.com</a></p>
+            <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.2); z-index: 2; position: relative;">
+                <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #ccc;">Employee Access:</p>
+                <a href="https://github.com/LocalBarTees" style="color: #ffffff; text-decoration: none; font-weight: bold; background: rgba(0,0,0,0.7); padding: 8px 16px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.4); font-family: monospace; font-size: 0.9rem;">WAREHOUSE LOGIN</a>
             </div>
-        </div>
-    </section>
-
-    <section class="services">
-        <div class="container">
-            <h2 class="section-title fade-in">What Happens Here</h2>
-            <div class="services-grid">
-                <div class="service-item fade-in">
-                    <h3>Quality Control</h3>
-                    <p>Someone has to check every shirt twice. That someone is probably drinking too much coffee.</p>
-                </div>
-                <div class="service-item fade-in">
-                    <h3>Storage Solutions</h3>
-                    <p>We've mastered the art of fitting 10 pounds of merchandise in a 5-pound box. Physics is more of a suggestion.</p>
-                </div>
-                <div class="service-item fade-in">
-                    <h3>Order Processing</h3>
-                    <p>The glamorous world of pick lists, packing slips, and trying to decipher handwriting from the front office.</p>
-                </div>
-                <div class="service-item fade-in">
-                    <h3>Reality Check</h3>
-                    <p>No mood lighting, no craft cocktails, just honest work under fluorescent lights. The party is definitely over.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="contact">
-        <div class="container">
-            <h2 class="section-title">Looking for the Fun Stuff?</h2>
-            <p style="font-size: 1.2rem; margin-bottom: 2rem;">The party moved to the main site. This is just where we keep the boxes and count inventory.</p>
-            <div style="font-size: 1.5rem; margin: 2rem 0;">
-                <a href="https://localbartees.com" style="color: white; text-decoration: underline; font-weight: bold;">→ Head to localbartees.com ←</a>
-            </div>
-            <p style="font-size: 0.9rem; opacity: 0.8; margin-top: 2rem;">
-                (Unless you're here for a job interview, in which case... welcome to the warehouse life!)
-            </p>
         </div>
     </section>
 
