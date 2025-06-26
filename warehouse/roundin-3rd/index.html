@@ -262,6 +262,14 @@
         <h2 style="text-align: center; margin-bottom: 2rem; color: #212529;">Navigate Your Warehouse</h2>
         
         <div class="warehouse-grid">
+            <!-- Quality Control - Brand Standards -->
+            <div class="warehouse-section working">
+                <span class="section-icon">✅</span>
+                <h3 class="section-title">Quality Control</h3>
+                <p class="section-description">Review design mockups, brand guidelines, approval workflow, and quality standards documentation.</p>
+                <a href="https://localbartees.github.io/LocalBarTees/warehouse/roundin-3rd/inventory/artwork-files/mockups/index.html" class="section-button">Review Mockups</a>
+            </div>
+
             <!-- Loading Dock - Dashboard -->
             <div class="warehouse-section disabled">
                 <span class="section-icon">🚪</span>
@@ -294,14 +302,6 @@
                 <a href="#" class="section-button">Check Shipping</a>
             </div>
 
-            <!-- Quality Control - Brand Standards -->
-            <div class="warehouse-section working">
-                <span class="section-icon">✅</span>
-                <h3 class="section-title">Quality Control</h3>
-                <p class="section-description">Review design mockups, brand guidelines, approval workflow, and quality standards documentation.</p>
-                <a href="https://localbartees.github.io/LocalBarTees/warehouse/roundin-3rd/inventory/artwork-files/mockups/index.html" class="section-button">Review Mockups</a>
-            </div>
-
             <!-- Office - Business Documents -->
             <div class="warehouse-section disabled">
                 <span class="section-icon">🏢</span>
@@ -322,7 +322,7 @@
         document.querySelectorAll('.disabled .section-button').forEach(button => {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
-                alert('This section is coming soon! Currently, only the Inventory mockups are available.');
+                alert('This section is coming soon! Currently, only Quality Control mockups are available.');
             });
         });
 
