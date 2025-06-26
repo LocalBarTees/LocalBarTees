@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JENN HOWARD | Official Merch</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #0a0a0a;
+            color: #000000;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+        }
+
+        .qr-container {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 48px;
+            text-align: center;
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06),
+                0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            max-width: 480px;
+            width: 100%;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .qr-container:hover {
+            box-shadow: 
+                0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 4px 6px -2px rgba(0, 0, 0, 0.05),
+                0 25px 50px -12px rgba(0, 0, 0, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .artist-header {
+            margin-bottom: 40px;
+        }
+
+        .artist-name {
+            font-size: 2.75rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 8px;
+            letter-spacing: -0.025em;
+            line-height: 1.1;
+        }
+
+        .artist-subtitle {
+            font-size: 1rem;
+            color: #6b7280;
+            font-weight: 400;
+            margin-bottom: 32px;
+            letter-spacing: 0.025em;
+        }
+
+        .brand-credit {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            font-weight: 400;
+        }
+
+        .qr-section {
+            margin: 40px 0;
+        }
+
+        .qr-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 32px;
+        }
+
+        .qr-image {
+            width: 280px;
+            height: 280px;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #ffffff;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .qr-image:hover {
+            transform: scale(1.02);
+            border-color: #d1d5db;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .scan-instruction {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 8px;
+            letter-spacing: -0.025em;
+        }
+
+        .scan-description {
+            color: #6b7280;
+            font-size: 0.95rem;
+            margin-bottom: 32px;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        .backup-section {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+
+        .backup-text {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 12px;
+            font-weight: 400;
+        }
+
+        .backup-url {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #000000;
+            background: #ffffff;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            display: inline-block;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+        }
+
+        .backup-url:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+            transform: translateY(-1px);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            border: 1px solid #e5e7eb;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            min-width: 120px;
+            justify-content: center;
+            font-family: inherit;
+        }
+
+        .btn-print {
+            background: #ffffff;
+            color: #374151;
+            border-color: #d1d5db;
+        }
+
+        .btn-print:hover {
+            background: #f9fafb;
+            border-color: #9ca3af;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .btn-share {
+            background: #000000;
+            color: #ffffff;
+            border-color: #000000;
+        }
+
+        .btn-share:hover {
+            background: #1f2937;
+            border-color: #1f2937;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer-message {
+            font-size: 0.875rem;
+            color: #6b7280;
+            line-height: 1.4;
+            font-weight: 400;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+            
+            .qr-container {
+                box-shadow: none;
+                border: 1px solid #000;
+                background: white;
+            }
+            
+            .action-buttons {
+                display: none;
+            }
+            
+            .qr-image {
+                width: 320px;
+                height: 320px;
+                border-color: #000;
+            }
+            
+            .backup-section {
+                border: 1px solid #000;
+                background: #f5f5f5;
+            }
+            
+            .backup-url {
+                background: white;
+                border-color: #000;
+                color: #000;
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .qr-container {
+                padding: 32px 24px;
+            }
+            
+            .artist-name {
+                font-size: 2.25rem;
+            }
+            
+            .qr-image {
+                width: 240px;
+                height: 240px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 280px;
+            }
+        }
+
+        /* Share modal styles */
+        .share-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .share-content {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .share-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 24px;
+            letter-spacing: -0.025em;
+        }
+
+        .share-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .share-option {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            border-radius: 12px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #000000;
+        }
+
+        .share-option:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+            transform: translateY(-1px);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+            padding: 4px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .close-modal:hover {
+            color: #000000;
+            background: #f3f4f6;
+        }
+
+        /* Subtle animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .qr-container {
+            animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body>
+    <div class="qr-container">
+        <div class="artist-header">
+            <h1 class="artist-name">JENN HOWARD</h1>
+            <p class="artist-subtitle">official merch</p>
+            <p class="brand-credit">localbartees.com</p>
+        </div>
+
+        <div class="qr-section">
+            <div class="qr-wrapper">
+                <img src="jh001.png" alt="scan for jenn howard official merchandise" class="qr-image">
+            </div>
+            <p class="scan-instruction">scan & shop</p>
+            <p class="scan-description">point your camera here to browse and buy official jenn howard merchandise</p>
+        </div>
+
+        <div class="backup-section">
+            <p class="backup-text">or visit:</p>
+            <div class="backup-url" onclick="window.open('https://localbartees.com/collections/band-jenn-howard', '_blank')">bit.ly/jenn-howard</div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-print" onclick="printQR()">
+                <span>🖨</span>
+                print
+            </button>
+            <button class="btn btn-share" onclick="shareQR()">
+                <span>📤</span>
+                share
+            </button>
+        </div>
+
+        <p class="footer-message">
+            support the music you love 🎵
+        </p>
+    </div>
+
+    <!-- Share Modal -->
+    <div class="share-modal" id="shareModal">
+        <div class="share-content">
+            <button class="close-modal" onclick="closeShareModal()">×</button>
+            <h3 class="share-title">share with fans</h3>
+            <div class="share-options">
+                <div class="share-option" onclick="shareVia('copy')">
+                    <span style="font-size: 1.2rem;">🔗</span>
+                    <div style="text-align: left;">
+                        <strong>copy link</strong>
+                        <div style="font-size: 0.8rem; color: #6b7280;">share it around</div>
+                    </div>
+                </div>
+                <div class="share-option" onclick="shareVia('text')">
+                    <span style="font-size: 1.2rem;">💬</span>
+                    <div style="text-align: left;">
+                        <strong>text message</strong>
+                        <div style="font-size: 0.8rem; color: #6b7280;">send to friends</div>
+                    </div>
+                </div>
+                <div class="share-option" onclick="shareVia('email')">
+                    <span style="font-size: 1.2rem;">📧</span>
+                    <div style="text-align: left;">
+                        <strong>email</strong>
+                        <div style="font-size: 0.8rem; color: #6b7280;">classic method</div>
+                    </div>
+                </div>
+                <div class="share-option" onclick="shareVia('social')">
+                    <span style="font-size: 1.2rem;">📱</span>
+                    <div style="text-align: left;">
+                        <strong>social media</strong>
+                        <div style="font-size: 0.8rem; color: #6b7280;">spread the word</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function printQR() {
+            window.print();
+        }
+
+        function shareQR() {
+            const shareModal = document.getElementById('shareModal');
+            shareModal.style.display = 'flex';
+        }
+
+        function closeShareModal() {
+            const shareModal = document.getElementById('shareModal');
+            shareModal.style.display = 'none';
+        }
+
+        function shareVia(method) {
+            const url = window.location.href;
+            const text = "check out jenn howard's official merchandise!";
+            
+            switch(method) {
+                case 'copy':
+                    navigator.clipboard.writeText(url).then(() => {
+                        alert('link copied! share it with fans 🎵');
+                        closeShareModal();
+                    }).catch(() => {
+                        alert('copy failed - here\'s the link: ' + url);
+                    });
+                    break;
+                    
+                case 'text':
+                    if (navigator.share) {
+                        navigator.share({
+                            title: 'jenn howard official merch',
+                            text: text,
+                            url: url
+                        });
+                    } else {
+                        window.location.href = `sms:?body=${encodeURIComponent(text + ' ' + url)}`;
+                    }
+                    closeShareModal();
+                    break;
+                    
+                case 'email':
+                    const subject = encodeURIComponent('jenn howard official merchandise');
+                    const body = encodeURIComponent(text + '\n\n' + url + '\n\nsupport great music ♪');
+                    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+                    closeShareModal();
+                    break;
+                    
+                case 'social':
+                    if (navigator.share) {
+                        navigator.share({
+                            title: 'jenn howard official merch',
+                            text: text,
+                            url: url
+                        });
+                    } else {
+                        const tweetText = encodeURIComponent(text + ' ' + url + ' #jennhoward #officialmerch');
+                        window.open(`https://twitter.com/intent/tweet?text=${tweetText}`, '_blank');
+                    }
+                    closeShareModal();
+                    break;
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('shareModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeShareModal();
+            }
+        });
+
+        // Add subtle animation to the QR code
+        document.querySelector('.qr-image').addEventListener('click', function() {
+            this.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+        });
+    </script>
+</body>
+</html>
