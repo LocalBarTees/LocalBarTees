@@ -1,17 +1,24 @@
 <?php
 /**
  * Simple Image Server - Debug Version
- * Put this file (image.php) in the same folder as your PNG file
+ * Put this file (image.php) in the same folder as your PNG files
  */
 
 // Enable error reporting for debugging
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Simple image mapping
+// Simple image mapping - add all your mockup images here
 $images = [
     'r3_logo' => 'R3 by LBT_sample.png',
-    'test' => 'test-image.png'  // Add a test image if needed
+    'blue_back' => 'blue_tshirt_back.png',
+    'purple_back' => 'purple_tshirt_back.png',
+    'red_womens_back' => 'red_womens_tshirt_back.png',
+    'red_mens_back' => 'red_mens_tshirt_back.png',
+    'black_front' => 'black_tshirt_front.png',
+    'black_womens_back' => 'black_womens_tshirt_back.png',
+    'black_mens_back' => 'black_mens_tshirt_back.png',
+    'test' => 'test-image.png'  // Keep test image if needed
 ];
 
 // Get the requested image ID
@@ -61,10 +68,13 @@ if (ob_get_level()) {
     ob_end_clean();
 }
 
-// Set headers
+// Set headers for better protection
 header('Content-Type: ' . $contentTypes[$extension]);
 header('Content-Length: ' . filesize($filepath));
 header('Cache-Control: private, max-age=3600');
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: DENY');
+header('Referrer-Policy: no-referrer');
 
 // Output the file
 readfile($filepath);
