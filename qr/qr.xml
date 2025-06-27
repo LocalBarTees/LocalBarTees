@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <qr id="jenn">
+        <name>Jenn Howard</name>
+        <url>jenn-howard</url>
+    </qr>
+    <qr id="nail">
+        <name>Another Artist</name>
+        <url>nail</url>
+    </qr>
+</root>

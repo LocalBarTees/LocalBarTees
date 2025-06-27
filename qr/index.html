@@ -15,8 +15,8 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: #0a0a0a;
-            color: #000000;
+            background: #000000;
+            color: #ffffff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -27,14 +27,15 @@
         }
 
         .qr-container {
-            background: #ffffff;
+            background: #000000;
+            border: 1px solid #333333;
             border-radius: 24px;
             padding: 48px;
             text-align: center;
             box-shadow: 
-                0 4px 6px -1px rgba(0, 0, 0, 0.1),
-                0 2px 4px -1px rgba(0, 0, 0, 0.06),
-                0 25px 50px -12px rgba(0, 0, 0, 0.25);
+                0 4px 6px -1px rgba(255, 255, 255, 0.1),
+                0 2px 4px -1px rgba(255, 255, 255, 0.06),
+                0 25px 50px -12px rgba(255, 255, 255, 0.25);
             max-width: 480px;
             width: 100%;
             position: relative;
@@ -43,10 +44,9 @@
 
         .qr-container:hover {
             box-shadow: 
-                0 10px 15px -3px rgba(0, 0, 0, 0.1),
-                0 4px 6px -2px rgba(0, 0, 0, 0.05),
-                0 25px 50px -12px rgba(0, 0, 0, 0.35);
-            transform: translateY(-2px);
+                0 10px 15px -3px rgba(255, 255, 255, 0.1),
+                0 4px 6px -2px rgba(255, 255, 255, 0.05),
+                0 25px 50px -12px rgba(255, 255, 255, 0.35);
         }
 
         .artist-header {
@@ -56,7 +56,7 @@
         .artist-name {
             font-size: 2.75rem;
             font-weight: 700;
-            color: #000000;
+            color: #ffffff;
             margin-bottom: 8px;
             letter-spacing: -0.025em;
             line-height: 1.1;
@@ -64,7 +64,7 @@
 
         .artist-subtitle {
             font-size: 1rem;
-            color: #6b7280;
+            color: #999999;
             font-weight: 400;
             margin-bottom: 32px;
             letter-spacing: 0.025em;
@@ -72,7 +72,7 @@
 
         .brand-credit {
             font-size: 0.75rem;
-            color: #9ca3af;
+            color: #666666;
             font-weight: 400;
         }
 
@@ -96,12 +96,6 @@
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
         }
 
-        .qr-image:hover {
-            transform: scale(1.02);
-            border-color: #d1d5db;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
         .scan-instruction {
             font-size: 1.25rem;
             font-weight: 600;
@@ -111,7 +105,7 @@
         }
 
         .scan-description {
-            color: #6b7280;
+            color: #cccccc;
             font-size: 0.95rem;
             margin-bottom: 32px;
             line-height: 1.5;
@@ -119,8 +113,8 @@
         }
 
         .backup-section {
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
+            background: #111111;
+            border: 1px solid #333333;
             border-radius: 16px;
             padding: 24px;
             margin-bottom: 40px;
@@ -128,7 +122,7 @@
 
         .backup-text {
             font-size: 0.875rem;
-            color: #6b7280;
+            color: #999999;
             margin-bottom: 12px;
             font-weight: 400;
         }
@@ -136,11 +130,11 @@
         .backup-url {
             font-size: 1rem;
             font-weight: 500;
-            color: #000000;
-            background: #ffffff;
+            color: #ffffff;
+            background: #222222;
             padding: 12px 20px;
             border-radius: 12px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid #333333;
             display: inline-block;
             cursor: pointer;
             text-decoration: none;
@@ -149,9 +143,8 @@
         }
 
         .backup-url:hover {
-            background: #f3f4f6;
-            border-color: #d1d5db;
-            transform: translateY(-1px);
+            background: #333333;
+            border-color: #555555;
         }
 
         .action-buttons {
@@ -167,7 +160,7 @@
             border-radius: 12px;
             font-weight: 500;
             font-size: 0.875rem;
-            border: 1px solid #e5e7eb;
+            border: 1px solid #333333;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -180,29 +173,27 @@
         }
 
         .btn-print {
-            background: #ffffff;
-            color: #374151;
-            border-color: #d1d5db;
+            background: #222222;
+            color: #ffffff;
+            border-color: #333333;
         }
 
         .btn-print:hover {
-            background: #f9fafb;
-            border-color: #9ca3af;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            background: #333333;
+            border-color: #555555;
+            box-shadow: 0 2px 4px -1px rgba(255, 255, 255, 0.06);
         }
 
         .btn-share {
-            background: #000000;
-            color: #ffffff;
-            border-color: #000000;
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
         }
 
         .btn-share:hover {
-            background: #1f2937;
-            border-color: #1f2937;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+            background: #e5e5e5;
+            border-color: #e5e5e5;
+            box-shadow: 0 2px 4px -1px rgba(255, 255, 255, 0.1);
         }
 
         .footer-message {
@@ -212,40 +203,182 @@
             font-weight: 400;
         }
 
-        /* Print styles */
+        /* Print styles - Letter size (8.5" x 11") optimization */
         @media print {
+            @page {
+                size: letter;
+                margin: 0.5in;
+            }
+            
             body {
                 background: white;
                 color: black;
+                font-size: 12pt;
+                line-height: 1.4;
+                padding: 0;
+                margin: 0;
+                min-height: auto;
+                display: block;
+                width: 100%;
             }
             
             .qr-container {
                 box-shadow: none;
-                border: 1px solid #000;
+                border: 2px solid #000;
                 background: white;
+                border-radius: 12px;
+                padding: 40px;
+                margin: 0 auto;
+                max-width: none;
+                width: 100%;
+                height: auto;
+                min-height: calc(11in - 1in); /* Letter height minus margins */
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                page-break-inside: avoid;
+            }
+            
+            .artist-header {
+                margin-bottom: 30px;
+                text-align: center;
+            }
+            
+            .artist-name {
+                font-size: 48pt;
+                font-weight: 700;
+                color: #000;
+                margin-bottom: 8px;
+                letter-spacing: -1px;
+            }
+            
+            .artist-subtitle {
+                font-size: 16pt;
+                color: #333;
+                font-weight: 400;
+                margin-bottom: 20px;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+            }
+            
+            .brand-credit {
+                font-size: 11pt;
+                color: #666;
+                font-weight: 400;
+            }
+            
+            .qr-section {
+                margin: 30px 0;
+                text-align: center;
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            
+            .qr-wrapper {
+                margin-bottom: 25px;
+                position: relative;
+            }
+            
+            .qr-image {
+                width: 4in;
+                height: 4in;
+                border: 3px solid #000;
+                border-radius: 8px;
+                background: white;
+                box-shadow: none;
+            }
+            
+            .scan-instruction {
+                font-size: 20pt;
+                font-weight: 600;
+                color: #000;
+                margin-bottom: 10px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            
+            .scan-description {
+                color: #333;
+                font-size: 14pt;
+                margin-bottom: 25px;
+                line-height: 1.4;
+                font-weight: 400;
+                max-width: 5in;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            .backup-section {
+                border: 2px solid #000;
+                background: #f8f8f8;
+                border-radius: 8px;
+                padding: 20px;
+                margin: 25px 0;
+                text-align: center;
+            }
+            
+            .backup-text {
+                font-size: 13pt;
+                color: #333;
+                margin-bottom: 10px;
+                font-weight: 500;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            
+            .backup-url {
+                background: white;
+                border: 2px solid #000;
+                color: #000;
+                font-size: 16pt;
+                font-weight: 600;
+                padding: 12px 20px;
+                border-radius: 6px;
+                display: inline-block;
+                font-family: 'Courier New', monospace;
+                letter-spacing: 0.5px;
             }
             
             .action-buttons {
                 display: none;
             }
             
-            .qr-image {
-                width: 320px;
-                height: 320px;
-                border-color: #000;
+            .footer-message {
+                font-size: 13pt;
+                color: #333;
+                text-align: center;
+                margin-top: 20px;
+                font-weight: 500;
+                text-transform: uppercase;
+                letter-spacing: 1px;
             }
             
-            .backup-section {
-                border: 1px solid #000;
-                background: #f5f5f5;
+            .share-modal {
+                display: none !important;
             }
             
-            .backup-url {
-                background: white;
-                border-color: #000;
-                color: #000;
-                font-size: 1.1rem;
+            /* Add print instructions */
+            .print-instructions {
+                display: block;
+                position: absolute;
+                bottom: 0.25in;
+                left: 0;
+                right: 0;
+                text-align: center;
+                font-size: 10pt;
+                color: #666;
+                border-top: 1px solid #ddd;
+                padding-top: 10px;
+                margin-top: 20px;
             }
+        }
+        
+        /* Hide print instructions on screen */
+        .print-instructions {
+            display: none;
         }
 
         /* Mobile optimizations */
@@ -338,7 +471,6 @@
         .share-option:hover {
             background: #f3f4f6;
             border-color: #d1d5db;
-            transform: translateY(-1px);
         }
 
         .close-modal {
@@ -387,9 +519,8 @@
 
         <div class="qr-section">
             <div class="qr-wrapper">
-                <img src="jh001.png" alt="scan for jenn howard official merchandise" class="qr-image">
+                <img src="qr.png" alt="scan for jenn howard official merchandise" class="qr-image">
             </div>
-            <p class="scan-instruction">scan & shop</p>
             <p class="scan-description">point your camera here to browse and buy official jenn howard merchandise</p>
         </div>
 
@@ -409,9 +540,9 @@
             </button>
         </div>
 
-        <p class="footer-message">
-            support the music you love 🎵
-        </p>
+        <div class="print-instructions">
+            Scan QR code with your phone's camera app • Generated: <span id="print-date"></span> • localbartees.com
+        </div>
     </div>
 
     <!-- Share Modal -->
@@ -454,6 +585,16 @@
 
     <script>
         function printQR() {
+            // Set the print date
+            const now = new Date();
+            const printDate = now.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+            document.getElementById('print-date').textContent = printDate;
+            
+            // Trigger print
             window.print();
         }
 
