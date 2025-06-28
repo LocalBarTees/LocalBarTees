@@ -293,6 +293,11 @@
                 margin: 0;
             }
 
+            .btn {
+                flex: 1;
+                max-width: none;
+            }
+
             .brand-credit {
                 text-align: center;
                 margin: 0;
@@ -458,6 +463,11 @@
             @page {
                 size: letter;
                 margin: 0.5in;
+            }
+            
+            @page :first {
+                margin-top: 0;
+                margin-bottom: 0;
             }
             
             * {
@@ -697,7 +707,13 @@
             try {
                 document.getElementById('artist-name').textContent = entityName.toUpperCase();
                 document.getElementById('backup-url').textContent = ('visit ' + urlLabel).toUpperCase();
-                document.title = entityName + ' Share';
+                document.title = entityName + ' - Official Merch';
+                
+                // Update apple-mobile-web-app-title for iOS home screen
+                let appTitleMeta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
+                if (appTitleMeta) {
+                    appTitleMeta.setAttribute('content', entityName);
+                }
                 
                 const qrImg = document.getElementById('qr-image');
                 qrImg.onload = showQRImage;
@@ -818,17 +834,19 @@
         function doShare() {
             try {
                 const shareUrl = backupUrl || 'https://localbartees.com';
+                const entityName = document.getElementById('artist-name').textContent;
                 if (navigator.share) {
                     navigator.share({
-                        title: 'Official Merchandise',
+                        title: entityName + ' - Official Merchandise',
+                        text: 'Check out official merchandise from ' + entityName,
                         url: shareUrl
                     });
                 } else if (navigator.clipboard) {
                     navigator.clipboard.writeText(shareUrl).then(() => {
-                        alert('Link copied!');
+                        alert('Shop link copied!');
                     });
                 } else {
-                    alert('Share: ' + shareUrl);
+                    alert('Share this shop: ' + shareUrl);
                 }
             } catch (e) {
                 console.log('Error sharing');
