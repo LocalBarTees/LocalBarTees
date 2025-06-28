@@ -16,4 +16,8 @@
         <name>Roundin' 3rd</name>
         <url>https://localbartees.com/roundin</url>
     </qr>
+        <qr id="sidecar">
+        <name>Sidecar Patio &amp; Oyster Bar</name>
+        <url>https://localbartees.com/sidecar</url>
+    </qr>
 </root>
