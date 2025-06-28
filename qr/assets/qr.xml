@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <qr id="jenn">
+        <name>Jenn Howard</name>
+        <url>https://localbartees.com/collections/jenn</url>
+    </qr>
+    <qr id="nail">
+        <name>The Rusty Nail</name>
+        <url>https://localbartees.com/collections/nail</url>
+    <qr id="lbt">
+        <name>Local Bar Tees</name>
+        <url>https://localbartees.com</url>
+    </qr>
+    <qr id="roundin">
+        <name>Roundin' 3rd</name>
+        <url>https://localbartees.com/collections/roundin</url>
+    </qr>
+</root>

@@ -6,7 +6,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="format-detection" content="telephone=no">
-    <title>QR Code | Official Merch</title>
+    <link rel="icon" href="assets/qr_favicon.ico" type="image/x-icon">
+    <title>Local Bar Tees Share</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
@@ -21,14 +22,10 @@
             background: #000000;
             color: #ffffff;
             min-height: 100vh;
-            min-height: -webkit-fill-available;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: env(safe-area-inset-top, 1rem) env(safe-area-inset-right, 1rem) env(safe-area-inset-bottom, 1rem) env(safe-area-inset-left, 1rem);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            -webkit-text-size-adjust: 100%;
+            padding: 1rem;
         }
 
         .qr-container {
@@ -39,7 +36,6 @@
             text-align: center;
             max-width: 480px;
             width: 100%;
-            position: relative;
         }
 
         .artist-header {
@@ -57,7 +53,6 @@
         .artist-subtitle {
             font-size: 1rem;
             color: #999999;
-            font-weight: 400;
             margin-bottom: 32px;
         }
 
@@ -90,7 +85,6 @@
             font-size: 2rem;
             font-weight: 600;
             color: #999999;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
         }
 
         .scan-description {
@@ -127,28 +121,10 @@
             text-decoration: none;
             font-family: monospace;
             min-height: 48px;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
         }
 
         .backup-url:hover {
             background: #333333;
-        }
-
-        .brand-credit {
-            font-size: 1.25rem;
-            color: #666666;
-            font-weight: 500;
-            text-decoration: none;
-            margin-top: 20px;
-            display: block;
-            padding: 8px;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-        }
-        
-        .brand-credit:hover {
-            color: #999999;
         }
 
         .action-buttons {
@@ -172,8 +148,6 @@
             min-height: 48px;
             justify-content: center;
             background: none;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
         }
 
         .btn-print {
@@ -192,6 +166,20 @@
 
         .btn-share:hover {
             background: #e5e5e5;
+        }
+
+        .brand-credit {
+            font-size: 1.25rem;
+            color: #666666;
+            font-weight: 500;
+            text-decoration: none;
+            margin-top: 20px;
+            display: block;
+            padding: 8px;
+        }
+        
+        .brand-credit:hover {
+            color: #999999;
         }
 
         /* Print styles */
@@ -227,11 +215,6 @@
                 color: #333;
             }
             
-            .brand-credit {
-                font-size: 11pt;
-                color: #666;
-            }
-            
             .qr-image, .qr-placeholder {
                 width: 4in;
                 height: 4in;
@@ -253,16 +236,16 @@
                 font-size: 13pt;
             }
             
-            .brand-credit {
-                font-size: 14pt;
-                color: #666;
-            }
-            
             .backup-url {
                 background: white;
                 border: 2px solid #000;
                 color: #000;
                 font-size: 16pt;
+            }
+            
+            .brand-credit {
+                font-size: 14pt;
+                color: #666;
             }
             
             .action-buttons {
@@ -284,105 +267,34 @@
             display: none;
         }
 
-        /* iPhone optimizations */
+        /* Mobile */
         @media (max-width: 640px) {
             body {
-                padding: max(env(safe-area-inset-top), 1rem) max(env(safe-area-inset-right), 1rem) max(env(safe-area-inset-bottom), 1rem) max(env(safe-area-inset-left), 1rem);
+                padding: 1rem;
             }
             
             .qr-container {
                 padding: 24px 20px;
-                margin: 0 auto;
-                width: calc(100vw - 2rem);
-                max-width: 400px;
             }
             
             .artist-name {
                 font-size: 2rem;
-                margin-bottom: 12px;
-            }
-            
-            .artist-subtitle {
-                font-size: 1rem;
-                margin-bottom: 24px;
             }
             
             .qr-image, .qr-placeholder {
-                width: min(280px, calc(100vw - 6rem));
-                height: min(280px, calc(100vw - 6rem));
-            }
-            
-            .scan-description {
-                font-size: 1rem;
-                line-height: 1.4;
-                margin-bottom: 24px;
-            }
-            
-            .backup-section {
-                padding: 20px;
-                margin-bottom: 24px;
-            }
-            
-            .backup-text {
-                font-size: 1rem;
-                margin-bottom: 16px;
-            }
-            
-            .backup-url {
-                font-size: 1.1rem;
-                padding: 18px 20px;
-                width: 100%;
-                text-align: center;
-                box-sizing: border-box;
+                width: 240px;
+                height: 240px;
             }
             
             .action-buttons {
                 flex-direction: column;
                 align-items: center;
                 gap: 12px;
-                margin-bottom: 24px;
             }
             
             .btn {
                 width: 100%;
                 max-width: 280px;
-                padding: 18px 24px;
-                font-size: 1.1rem;
-                min-height: 52px;
-            }
-            
-            .brand-credit {
-                font-size: 1.1rem;
-                padding: 12px;
-                margin-top: 16px;
-            }
-        }
-        
-        /* iPhone Pro Max and larger screens */
-        @media (max-width: 640px) and (min-height: 800px) {
-            .qr-container {
-                padding: 32px 24px;
-            }
-            
-            .qr-image, .qr-placeholder {
-                width: min(320px, calc(100vw - 6rem));
-                height: min(320px, calc(100vw - 6rem));
-            }
-        }
-        
-        /* iPhone SE and smaller screens */
-        @media (max-width: 480px) {
-            .artist-name {
-                font-size: 1.8rem;
-            }
-            
-            .qr-container {
-                padding: 20px 16px;
-            }
-            
-            .qr-image, .qr-placeholder {
-                width: min(240px, calc(100vw - 4rem));
-                height: min(240px, calc(100vw - 4rem));
             }
         }
     </style>
@@ -390,7 +302,7 @@
 <body>
     <div class="qr-container">
         <div class="artist-header">
-            <h1 class="artist-name" id="artist-name">ENTITY</h1>
+            <h1 class="artist-name" id="artist-name">LOCAL BAR TEES</h1>
             <p class="artist-subtitle">official merch</p>
         </div>
 
@@ -399,12 +311,12 @@
                 <img src="" alt="QR Code" class="qr-image" id="qr-image" style="display: none;">
                 <div class="qr-placeholder" id="qr-placeholder">QR</div>
             </div>
-            <p class="scan-description" id="scan-description">point your camera here to browse and buy official merchandise</p>
+            <p class="scan-description" id="scan-description">point your camera here to browse and buy official local bar tees merchandise</p>
         </div>
 
         <div class="backup-section">
             <p class="backup-text">or visit:</p>
-            <div class="backup-url" id="backup-url">loading...</div>
+            <div class="backup-url" id="backup-url">localbartees.com</div>
         </div>
 
         <div class="action-buttons">
@@ -426,39 +338,70 @@
     </div>
 
     <script>
-        let backupUrl = '';
+        let backupUrl = 'https://localbartees.com';
         
         function getQRParam() {
-            const params = new URLSearchParams(window.location.search);
-            return params.get('qr') || 'lbt';
+            try {
+                const params = new URLSearchParams(window.location.search);
+                return params.get('qr') || 'lbt';
+            } catch (e) {
+                return 'lbt';
+            }
         }
         
         function showQRImage() {
-            const img = document.getElementById('qr-image');
-            const placeholder = document.getElementById('qr-placeholder');
-            if (img && placeholder) {
-                img.style.display = 'block';
-                placeholder.style.display = 'none';
-                console.log('QR image loaded successfully');
+            try {
+                const img = document.getElementById('qr-image');
+                const placeholder = document.getElementById('qr-placeholder');
+                if (img && placeholder) {
+                    img.style.display = 'block';
+                    placeholder.style.display = 'none';
+                }
+            } catch (e) {
+                console.log('Error showing QR image');
             }
         }
         
         function showQRPlaceholder() {
-            console.log('QR image failed to load, showing placeholder');
-            const img = document.getElementById('qr-image');
-            const placeholder = document.getElementById('qr-placeholder');
-            if (img && placeholder) {
-                img.style.display = 'none';
-                placeholder.style.display = 'flex';
-                console.log('Placeholder should now be visible');
+            try {
+                const img = document.getElementById('qr-image');
+                const placeholder = document.getElementById('qr-placeholder');
+                if (img && placeholder) {
+                    img.style.display = 'none';
+                    placeholder.style.display = 'flex';
+                }
+            } catch (e) {
+                console.log('Error showing placeholder');
+            }
+        }
+        
+        function updateContent(entityName, urlLabel, qrId) {
+            try {
+                document.getElementById('artist-name').textContent = entityName.toUpperCase();
+                document.getElementById('backup-url').textContent = urlLabel;
+                document.getElementById('scan-description').textContent = 
+                    'point your camera here to browse and buy official ' + entityName.toLowerCase() + ' merchandise';
+                document.title = entityName + ' Share';
+                
+                const qrImg = document.getElementById('qr-image');
+                qrImg.onload = showQRImage;
+                qrImg.onerror = showQRPlaceholder;
+                qrImg.src = 'qr_codes/' + qrId + '.png';
+                
+                backupUrl = 'https://localbartees.github.io/LocalBarTees/warehouse/' + urlLabel + '/qr/index.html';
+            } catch (e) {
+                console.log('Error updating content');
             }
         }
         
         function loadData() {
             const qrParam = getQRParam().toLowerCase();
             
-            fetch('qr.xml')
-                .then(response => response.text())
+            fetch('assets/qr.xml')
+                .then(response => {
+                    if (!response.ok) throw new Error('XML not found');
+                    return response.text();
+                })
                 .then(xmlText => {
                     const parser = new DOMParser();
                     const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
@@ -466,6 +409,7 @@
                     const entries = xmlDoc.querySelectorAll('qr');
                     let found = null;
                     
+                    // Look for exact match
                     for (let i = 0; i < entries.length; i++) {
                         const entry = entries[i];
                         const id = entry.getAttribute('id');
@@ -475,11 +419,12 @@
                         }
                     }
                     
+                    // Use first entry if no match
                     if (!found && entries.length > 0) {
                         found = entries[0];
                     }
                     
-                    // If still no match, try to find 'lbt' entry
+                    // Try to find lbt specifically
                     if (!found) {
                         for (let i = 0; i < entries.length; i++) {
                             const entry = entries[i];
@@ -494,89 +439,82 @@
                     if (found) {
                         const entityEl = found.querySelector('entity');
                         const urlEl = found.querySelector('url');
-                        const entityName = entityEl ? entityEl.textContent : 'LOCAL BAR TEES';
+                        const entityName = entityEl ? entityEl.textContent : 'Local Bar Tees';
                         const urlLabel = urlEl ? urlEl.textContent : 'localbartees.com';
                         const qrId = found.getAttribute('id') || 'lbt';
                         
-                        document.getElementById('artist-name').textContent = entityName.toUpperCase();
-                        document.getElementById('backup-url').textContent = urlLabel;
-                        document.getElementById('scan-description').textContent = 
-                            'point your camera here to browse and buy official ' + entityName.toLowerCase() + ' merchandise';
-                        
-                        const qrImg = document.getElementById('qr-image');
-                        qrImg.onload = showQRImage;
-                        qrImg.onerror = showQRPlaceholder;
-                        qrImg.src = qrId + '.png';
-                        
-                        backupUrl = 'https://localbartees.github.io/LocalBarTees/warehouse/' + urlLabel + '/qr/index.html';
+                        updateContent(entityName, urlLabel, qrId);
                     } else {
-                        // Final fallback to lbt if no entries found at all
-                        document.getElementById('artist-name').textContent = 'LOCAL BAR TEES';
-                        document.getElementById('backup-url').textContent = 'localbartees.com';
-                        document.getElementById('scan-description').textContent = 'point your camera here to browse and buy official local bar tees merchandise';
-                        const qrImg = document.getElementById('qr-image');
-                        qrImg.onload = showQRImage;
-                        qrImg.onerror = showQRPlaceholder;
-                        qrImg.src = 'lbt.png';
-                        backupUrl = 'https://localbartees.com';
+                        // Use default lbt
+                        updateContent('Local Bar Tees', 'localbartees.com', 'lbt');
                     }
                 })
                 .catch(error => {
-                    console.log('XML load error, using default lbt:', error);
-                    // Default to lbt when XML fails
-                    document.getElementById('artist-name').textContent = 'LOCAL BAR TEES';
-                    document.getElementById('backup-url').textContent = 'localbartees.com';
-                    document.getElementById('scan-description').textContent = 'point your camera here to browse and buy official local bar tees merchandise';
-                    const qrImg = document.getElementById('qr-image');
-                    qrImg.onload = showQRImage;
-                    qrImg.onerror = showQRPlaceholder;
-                    qrImg.src = 'lbt.png';
-                    backupUrl = 'https://localbartees.com';
+                    console.log('Using default lbt content');
+                    updateContent('Local Bar Tees', 'localbartees.com', 'lbt');
                 });
         }
         
         function openBackupUrl() {
-            if (backupUrl) {
-                window.open(backupUrl, '_blank');
+            try {
+                if (backupUrl) {
+                    window.open(backupUrl, '_blank');
+                }
+            } catch (e) {
+                console.log('Error opening URL');
             }
         }
         
         function doPrint() {
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'short', 
-                day: 'numeric' 
-            });
-            const dateEl = document.getElementById('print-date');
-            if (dateEl) {
-                dateEl.textContent = dateStr;
+            try {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+                const dateEl = document.getElementById('print-date');
+                if (dateEl) {
+                    dateEl.textContent = dateStr;
+                }
+                window.print();
+            } catch (e) {
+                console.log('Error printing');
             }
-            window.print();
         }
         
         function doShare() {
-            const url = window.location.href;
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Official Merchandise',
-                    url: url
-                });
-            } else if (navigator.clipboard) {
-                navigator.clipboard.writeText(url).then(() => {
-                    alert('Link copied to clipboard!');
-                });
-            } else {
-                alert('Share this link: ' + url);
+            try {
+                const url = window.location.href;
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Official Merchandise',
+                        url: url
+                    });
+                } else if (navigator.clipboard) {
+                    navigator.clipboard.writeText(url).then(() => {
+                        alert('Link copied!');
+                    });
+                } else {
+                    alert('Share: ' + url);
+                }
+            } catch (e) {
+                console.log('Error sharing');
             }
         }
         
-        // Event listeners
-        document.addEventListener('DOMContentLoaded', loadData);
-        
-        document.getElementById('backup-url').addEventListener('click', openBackupUrl);
-        document.getElementById('print-btn').addEventListener('click', doPrint);
-        document.getElementById('share-btn').addEventListener('click', doShare);
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                loadData();
+                
+                document.getElementById('backup-url').addEventListener('click', openBackupUrl);
+                document.getElementById('print-btn').addEventListener('click', doPrint);
+                document.getElementById('share-btn').addEventListener('click', doShare);
+            } catch (e) {
+                console.log('Error initializing');
+            }
+        });
     </script>
 </body>
 </html>
