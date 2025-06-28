@@ -8,11 +8,8 @@
     <meta name="format-detection" content="telephone=no">
     <link rel="icon" href="assets/qr_favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="assets/apple-touch-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="assets/apple-touch-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="assets/apple-touch-icon-76x76.png">
-    <meta name="apple-mobile-web-app-title" content="Local Bar Tees QR Admin">
-    <title>Local Bar Tees Admin</title>
+    <meta name="apple-mobile-web-app-title" content="Local Bar Tees All Records">
+    <title>Local Bar Tees - All Records</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
@@ -44,21 +41,21 @@
             z-index: -1;
         }
 
-        .admin-container {
-            max-width: 600px;
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
             padding: 2rem 0;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1.5rem;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .title {
-            font-size: clamp(1.75rem, 6vw, 2.5rem);
+            font-size: clamp(2rem, 6vw, 3rem);
             font-weight: 800;
             color: #ffffff;
             margin-bottom: 0.5rem;
@@ -68,7 +65,7 @@
         }
 
         .subtitle {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: #999999;
             font-weight: 500;
             text-transform: uppercase;
@@ -93,62 +90,176 @@
             margin: 1rem 0;
         }
 
-        .buttons-grid {
-            display: flex;
-            flex-direction: column;
+        .records-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 2rem;
+            margin-bottom: 2rem;
         }
 
-        .entity-button {
+        .record-card {
             background: rgba(17, 17, 17, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 1.25rem 1.5rem;
-            margin-bottom: 1rem;
-            color: #ffffff;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            border-radius: 20px;
+            padding: 2rem;
             backdrop-filter: blur(20px);
-            transition: all 0.2s ease;
-            min-height: 70px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .entity-button:hover {
+        .record-card:hover {
             background: rgba(34, 34, 34, 0.9);
             border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
+            transform: translateY(-5px);
         }
 
-        .entity-button:active {
-            transform: translateY(0);
+        .record-card.featured {
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(34, 34, 34, 0.9);
+        }
+
+        .record-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        }
+
+        .qr-wrapper {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .qr-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            background: linear-gradient(45deg, #ffffff, #f0f0f0);
+            border-radius: 16px;
+            z-index: -1;
+        }
+
+        .qr-image, .qr-placeholder {
+            width: 200px;
+            height: 200px;
+            border-radius: 12px;
+            background: #ffffff;
+            border: 2px solid #ffffff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .qr-placeholder {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #999999;
         }
 
         .entity-name {
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-size: 1.5rem;
+            font-weight: 700;
             color: #ffffff;
-            line-height: 1.3;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
         }
 
         .entity-url {
-            font-size: 0.85rem;
-            color: #999999;
+            font-size: 1rem;
+            color: #cccccc;
             font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
-            margin-top: 0.25rem;
+            margin-bottom: 1rem;
+            word-break: break-all;
         }
 
-        .entity-info {
-            flex-grow: 1;
-            text-align: left;
-        }
-
-        .entity-arrow {
-            font-size: 1.2rem;
+        .entity-id {
+            font-size: 0.85rem;
             color: #666666;
-            margin-left: 1rem;
-            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
+            margin-bottom: 1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            width: 100%;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-align: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-view {
+            background: rgba(0, 120, 255, 0.2);
+            border-color: rgba(0, 120, 255, 0.4);
+        }
+
+        .btn-view:hover {
+            background: rgba(0, 120, 255, 0.3);
+            border-color: rgba(0, 120, 255, 0.6);
+        }
+
+        .btn-print {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: rgba(34, 197, 94, 0.4);
+        }
+
+        .btn-print:hover {
+            background: rgba(34, 197, 94, 0.3);
+            border-color: rgba(34, 197, 94, 0.6);
+        }
+
+        .btn-share-qr {
+            background: rgba(168, 85, 247, 0.2);
+            border-color: rgba(168, 85, 247, 0.4);
+        }
+
+        .btn-share-qr:hover {
+            background: rgba(168, 85, 247, 0.3);
+            border-color: rgba(168, 85, 247, 0.6);
+        }
+
+        .btn-share-site {
+            background: rgba(251, 146, 60, 0.2);
+            border-color: rgba(251, 146, 60, 0.4);
+        }
+
+        .btn-share-site:hover {
+            background: rgba(251, 146, 60, 0.3);
+            border-color: rgba(251, 146, 60, 0.6);
         }
 
         .brand-credit {
@@ -169,48 +280,69 @@
             color: rgba(255, 255, 255, 0.8);
         }
 
-        /* Desktop adjustments */
-        @media (min-width: 768px) {
-            .admin-container {
-                padding: 3rem 0;
+        .stats {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 0.25rem;
+        }
+
+        .stats-label {
+            font-size: 0.9rem;
+            color: #999999;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .records-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
 
-            .buttons-grid {
-                gap: 2rem;
+            .record-card {
+                padding: 1.5rem;
             }
 
-            .entity-button {
-                padding: 1.5rem 2rem;
-                min-height: 80px;
-            }
-
-            .entity-name {
-                font-size: 1.2rem;
-            }
-
-            .entity-url {
-                font-size: 0.9rem;
+            .qr-image, .qr-placeholder {
+                width: 160px;
+                height: 160px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="admin-container">
+    <div class="container">
         <div class="header">
             <h1 class="title">LOCAL BAR TEES</h1>
-            <p class="subtitle">qr code admin panel</p>
+            <p class="subtitle">all qr code records</p>
         </div>
 
         <div id="loading" class="loading">
-            Loading locations...
+            Loading all records...
         </div>
 
         <div id="error" class="error" style="display: none;">
             Error loading data. Please check that assets/qr.xml exists.
         </div>
 
-        <div id="buttons-container" class="buttons-grid" style="display: none;">
-            <!-- Buttons will be dynamically added here -->
+        <div id="stats" class="stats" style="display: none;">
+            <div class="stats-number" id="record-count">0</div>
+            <div class="stats-label">total records</div>
+        </div>
+
+        <div id="records-container" class="records-grid" style="display: none;">
+            <!-- Records will be dynamically added here -->
         </div>
 
         <div class="brand-credit">
@@ -219,7 +351,7 @@
     </div>
 
     <script>
-        function loadEntities() {
+        function loadAllRecords() {
             fetch('assets/qr.xml')
                 .then(response => {
                     if (!response.ok) throw new Error('XML not found');
@@ -268,6 +400,7 @@
                             entities.push({
                                 name: entityName,
                                 url: displayUrl,
+                                fullUrl: fullUrl,
                                 qrParam: qrParam
                             });
                         }
@@ -283,7 +416,7 @@
                         return a.name.localeCompare(b.name);
                     });
                     
-                    displayEntities(entities);
+                    displayAllRecords(entities);
                 })
                 .catch(error => {
                     console.error('Error loading XML:', error);
@@ -292,34 +425,50 @@
                 });
         }
         
-        function displayEntities(entities) {
-            const container = document.getElementById('buttons-container');
+        function displayAllRecords(entities) {
+            const container = document.getElementById('records-container');
             const loading = document.getElementById('loading');
+            const stats = document.getElementById('stats');
+            const recordCount = document.getElementById('record-count');
             
             if (entities.length === 0) {
-                loading.textContent = 'No locations found in XML file.';
+                loading.textContent = 'No records found in XML file.';
                 return;
             }
             
             // Hide loading and show container
             loading.style.display = 'none';
-            container.style.display = 'block';
+            container.style.display = 'grid';
+            stats.style.display = 'block';
+            recordCount.textContent = entities.length;
             
-            // Create buttons
-            entities.forEach(entity => {
-                const button = document.createElement('a');
-                button.className = 'entity-button';
-                button.href = `index.html?qr=${encodeURIComponent(entity.qrParam)}`;
+            // Create cards for each entity
+            entities.forEach((entity, index) => {
+                const card = document.createElement('div');
+                card.className = 'record-card' + (entity.qrParam === 'lbt' ? ' featured' : '');
                 
-                button.innerHTML = `
-                    <div class="entity-info">
-                        <div class="entity-name">${escapeHtml(entity.name)}</div>
-                        <div class="entity-url">${escapeHtml(entity.url)}</div>
+                card.innerHTML = `
+                    <div class="qr-wrapper">
+                        <img src="qr_codes/${escapeHtml(entity.qrParam)}.png" 
+                             alt="QR Code for ${escapeHtml(entity.name)}" 
+                             class="qr-image" 
+                             onload="this.style.display='block'; this.nextElementSibling.style.display='none';"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="qr-placeholder" style="display: none;">QR</div>
                     </div>
-                    <div class="entity-arrow">→</div>
+                    
+                    <div class="entity-name">${escapeHtml(entity.name)}</div>
+                    <div class="entity-url">${escapeHtml(entity.url)}</div>
+                    <div class="entity-id">ID: ${escapeHtml(entity.qrParam)}</div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-print" onclick="printQR('${escapeHtml(entity.qrParam)}', '${escapeHtml(entity.name)}')">print qr</button>
+                        <button class="btn btn-share-qr" onclick="shareQR('${escapeHtml(entity.qrParam)}', '${escapeHtml(entity.name)}')">share qr</button>
+                        <button class="btn btn-share-site" onclick="shareSite('${escapeHtml(entity.fullUrl)}', '${escapeHtml(entity.name)}')">share site</button>
+                    </div>
                 `;
                 
-                container.appendChild(button);
+                container.appendChild(card);
             });
         }
         
@@ -328,9 +477,67 @@
             div.textContent = text;
             return div.innerHTML;
         }
+
+        function printQR(qrId, entityName) {
+            try {
+                // Open the QR page in a new window and print it
+                const printWindow = window.open(`index.html?qr=${encodeURIComponent(qrId)}`, '_blank');
+                if (printWindow) {
+                    printWindow.addEventListener('load', function() {
+                        setTimeout(() => {
+                            printWindow.print();
+                        }, 500);
+                    });
+                }
+            } catch (e) {
+                console.log('Error printing QR');
+            }
+        }
+
+        function shareQR(qrId, entityName) {
+            try {
+                const qrUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname.replace(/\/[^\/]*$/, '')}/index.html?qr=${encodeURIComponent(qrId)}`;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: `${entityName} - QR Code`,
+                        text: `Check out the QR code for ${entityName}`,
+                        url: qrUrl
+                    });
+                } else if (navigator.clipboard) {
+                    navigator.clipboard.writeText(qrUrl).then(() => {
+                        alert('QR page link copied!');
+                    });
+                } else {
+                    alert(`QR page link: ${qrUrl}`);
+                }
+            } catch (e) {
+                console.log('Error sharing QR');
+            }
+        }
+
+        function shareSite(siteUrl, entityName) {
+            try {
+                if (navigator.share) {
+                    navigator.share({
+                        title: `${entityName} - Official Merchandise`,
+                        text: `Check out official merchandise from ${entityName}`,
+                        url: siteUrl
+                    });
+                } else if (navigator.clipboard) {
+                    navigator.clipboard.writeText(siteUrl).then(() => {
+                        alert('Site link copied!');
+                    });
+                } else {
+                    alert(`Site link: ${siteUrl}`);
+                }
+            } catch (e) {
+                console.log('Error sharing site');
+            }
+        }
         
         // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', loadEntities);
+        document.addEventListener('DOMContentLoaded', loadAllRecords);
     </script>
 </body>
 </html>
