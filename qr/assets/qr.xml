@@ -2,17 +2,18 @@
 <root>
     <qr id="jenn">
         <name>Jenn Howard</name>
-        <url>https://localbartees.com/collections/jenn</url>
+        <url>https://localbartees.com/jenn</url>
     </qr>
     <qr id="nail">
         <name>The Rusty Nail</name>
-        <url>https://localbartees.com/collections/nail</url>
+        <url>https://localbartees.com/nail</url>
+    </qr>
     <qr id="lbt">
         <name>Local Bar Tees</name>
         <url>https://localbartees.com</url>
     </qr>
     <qr id="roundin">
         <name>Roundin' 3rd</name>
-        <url>https://localbartees.com/collections/roundin</url>
+        <url>https://localbartees.com/roundin</url>
     </qr>
 </root>

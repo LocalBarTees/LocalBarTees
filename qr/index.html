@@ -375,7 +375,7 @@
             }
         }
         
-        function updateContent(entityName, urlLabel, qrId) {
+        function updateContent(entityName, urlLabel, actualUrl, qrId) {
             try {
                 document.getElementById('artist-name').textContent = entityName.toUpperCase();
                 document.getElementById('backup-url').textContent = urlLabel;
@@ -388,7 +388,8 @@
                 qrImg.onerror = showQRPlaceholder;
                 qrImg.src = 'qr_codes/' + qrId + '.png';
                 
-                backupUrl = 'https://localbartees.github.io/LocalBarTees/warehouse/' + urlLabel + '/qr/index.html';
+                // Use the actual URL for navigation
+                backupUrl = actualUrl;
             } catch (e) {
                 console.log('Error updating content');
             }
@@ -406,17 +407,23 @@
                     const parser = new DOMParser();
                     const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
                     
+                    // Look for qr elements with the matching attribute
                     const entries = xmlDoc.querySelectorAll('qr');
                     let found = null;
                     
-                    // Look for exact match
+                    // Look for exact match using the qr attribute
                     for (let i = 0; i < entries.length; i++) {
                         const entry = entries[i];
-                        const id = entry.getAttribute('id');
-                        if (id && id.toLowerCase() === qrParam) {
-                            found = entry;
-                            break;
+                        // Check all attributes to find the matching one
+                        const attributes = entry.attributes;
+                        for (let j = 0; j < attributes.length; j++) {
+                            const attr = attributes[j];
+                            if (attr.value.toLowerCase() === qrParam) {
+                                found = entry;
+                                break;
+                            }
                         }
+                        if (found) break;
                     }
                     
                     // Use first entry if no match
@@ -428,30 +435,60 @@
                     if (!found) {
                         for (let i = 0; i < entries.length; i++) {
                             const entry = entries[i];
-                            const id = entry.getAttribute('id');
-                            if (id && id.toLowerCase() === 'lbt') {
-                                found = entry;
-                                break;
+                            const attributes = entry.attributes;
+                            for (let j = 0; j < attributes.length; j++) {
+                                const attr = attributes[j];
+                                if (attr.value.toLowerCase() === 'lbt') {
+                                    found = entry;
+                                    break;
+                                }
                             }
+                            if (found) break;
                         }
                     }
                     
                     if (found) {
-                        const entityEl = found.querySelector('entity');
+                        const nameEl = found.querySelector('name');
                         const urlEl = found.querySelector('url');
-                        const entityName = entityEl ? entityEl.textContent : 'Local Bar Tees';
-                        const urlLabel = urlEl ? urlEl.textContent : 'localbartees.com';
-                        const qrId = found.getAttribute('id') || 'lbt';
+                        const entityName = nameEl ? nameEl.textContent : 'Local Bar Tees';
+                        const fullUrl = urlEl ? urlEl.textContent : 'https://localbartees.com';
                         
-                        updateContent(entityName, urlLabel, qrId);
+                        // Extract display label from URL (remove https:// and localbartees.com/ if present)
+                        let urlLabel = fullUrl;
+                        if (fullUrl.includes('localbartees.com')) {
+                            if (fullUrl === 'https://localbartees.com') {
+                                urlLabel = 'localbartees.com';
+                            } else {
+                                // Extract the path part for display
+                                const pathMatch = fullUrl.match(/localbartees\.com\/(.+)/);
+                                if (pathMatch) {
+                                    urlLabel = 'localbartees.com/' + pathMatch[1];
+                                } else {
+                                    urlLabel = 'localbartees.com';
+                                }
+                            }
+                        }
+                        
+                        // Get the qr ID from the attribute
+                        const attributes = found.attributes;
+                        let qrId = 'lbt';
+                        for (let j = 0; j < attributes.length; j++) {
+                            const attr = attributes[j];
+                            if (attr.value.toLowerCase() === qrParam) {
+                                qrId = attr.value;
+                                break;
+                            }
+                        }
+                        
+                        updateContent(entityName, urlLabel, fullUrl, qrId);
                     } else {
-                        // Use default lbt
-                        updateContent('Local Bar Tees', 'localbartees.com', 'lbt');
+                        // Use defaults
+                        updateContent('Local Bar Tees', 'localbartees.com', 'https://localbartees.com', 'lbt');
                     }
                 })
                 .catch(error => {
                     console.log('Using default lbt content');
-                    updateContent('Local Bar Tees', 'localbartees.com', 'lbt');
+                    updateContent('Local Bar Tees', 'localbartees.com', 'https://localbartees.com', 'lbt');
                 });
         }
         
