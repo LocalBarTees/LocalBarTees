@@ -1,20 +1,4 @@
-.qr-section {
-                margin: 0;
-            }
-
-            .qr-wrapper {
-                margin-bottom: 1rem;
-            }
-
-            .qr-image, .qr-placeholder {
-                width: 320px;
-                height: 320px;
-            }
-
-            .scan-description {
-                font-size: 1.1rem;
-                margin-bottom: 0;
-            }<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -79,7 +63,7 @@
             backdrop-filter: blur(20px);
             border: 1px solid var(--border-gray);
             border-radius: var(--radius-lg);
-            padding: 2rem;
+            padding: 1.5rem;
             text-align: center;
             max-width: 480px;
             width: 100%;
@@ -99,7 +83,7 @@
         }
 
         .artist-header {
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             position: relative;
         }
 
@@ -122,13 +106,13 @@
         }
 
         .qr-section {
-            margin: 2rem 0;
+            margin: 1.5rem 0;
             position: relative;
         }
 
         .qr-wrapper {
             display: inline-block;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             position: relative;
         }
 
@@ -142,17 +126,11 @@
         }
 
         .qr-image, .qr-placeholder {
-            width: 280px;
-            height: 280px;
+            width: 240px;
+            height: 240px;
             border-radius: var(--radius-md);
             background: var(--pure-white);
             box-shadow: var(--shadow);
-            transition: transform 0.2s ease;
-        }
-
-        .qr-wrapper:hover .qr-image,
-        .qr-wrapper:hover .qr-placeholder {
-            transform: translateY(-2px);
         }
         
         .qr-placeholder {
@@ -167,32 +145,24 @@
 
         .scan-description {
             color: var(--light-gray);
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
             font-weight: 400;
+            white-space: pre-line;
         }
 
         .backup-section {
             background: linear-gradient(135deg, var(--soft-black), rgba(17, 17, 17, 0.8));
             border: 1px solid var(--border-gray);
             border-radius: var(--radius-md);
-            padding: 1.5rem;
-            margin-bottom: 2rem;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
             position: relative;
             backdrop-filter: blur(10px);
             display: flex;
             flex-direction: column;
-            gap: 1rem;
-        }
-
-        .backup-text {
-            font-size: 0.875rem;
-            color: var(--text-gray);
-            margin-bottom: 0.75rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            gap: 0.75rem;
         }
 
         .backup-url {
@@ -203,26 +173,20 @@
             padding: 1rem 1.25rem;
             border-radius: var(--radius-sm);
             border: 1px solid var(--border-gray);
-            display: inline-block;
+            display: block;
             cursor: pointer;
             text-decoration: none;
             font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
             min-height: 48px;
-            transition: all 0.2s ease;
             backdrop-filter: blur(10px);
-        }
-
-        .backup-url:hover {
-            background: rgba(51, 51, 51, 0.9);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
         }
 
         .action-buttons {
             display: flex;
             gap: 1rem;
             justify-content: center;
-            margin-bottom: 1.5rem;
+            margin: 0;
         }
 
         .btn {
@@ -239,7 +203,6 @@
             min-height: 48px;
             justify-content: center;
             background: none;
-            transition: all 0.2s ease;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
@@ -250,38 +213,21 @@
             border-color: #444444;
         }
 
-        .btn-print:hover {
-            background: linear-gradient(135deg, #333333, #444444);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-
         .btn-share {
             background: linear-gradient(135deg, var(--pure-white), #f0f0f0);
             color: var(--primary-black);
             border-color: #e0e0e0;
         }
 
-        .btn-share:hover {
-            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
-        }
-
         .brand-credit {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #666666;
             font-weight: 500;
             text-decoration: none;
-            margin-top: 1rem;
+            margin-top: 0.75rem;
             display: block;
-            padding: 0.5rem;
-            transition: color 0.2s ease;
+            padding: 0.25rem;
             letter-spacing: 0.02em;
-        }
-        
-        .brand-credit:hover {
-            color: var(--text-gray);
         }
 
         .print-instructions {
@@ -298,26 +244,10 @@
             .qr-container {
                 max-width: 1200px;
                 width: 100%;
-                display: grid;
-                grid-template-columns: 1fr 400px;
-                gap: 3rem;
-                padding: 3rem;
-                text-align: left;
-                align-items: center;
-            }
-
-            .content-left {
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
-                gap: 2rem;
-            }
-
-            .content-right {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
+                gap: 1.5rem;
+                padding: 2.5rem;
                 text-align: center;
             }
 
@@ -334,36 +264,59 @@
                 font-size: 1.2rem;
             }
 
+            .main-content {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 2.5rem;
+                align-items: center;
+            }
+
+            .content-left {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+            }
+
+            .content-right {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+
             .qr-section {
                 margin: 0;
             }
 
             .qr-wrapper {
-                margin-bottom: 1rem;
+                margin-bottom: 0;
             }
 
             .qr-image, .qr-placeholder {
-                width: 320px;
-                height: 320px;
+                width: 280px;
+                height: 280px;
             }
 
             .scan-description {
-                font-size: 1.1rem;
-                margin-bottom: 0;
+                display: none !important;
             }
 
             .backup-section {
                 margin-bottom: 0;
+                width: 100%;
             }
 
             .action-buttons {
-                justify-content: flex-start;
-                margin-bottom: 0;
+                justify-content: center;
+                margin: 0;
             }
 
             .brand-credit {
-                margin-top: auto;
-                text-align: left;
+                text-align: center;
+                margin: 0;
             }
         }
 
@@ -448,12 +401,15 @@
                 text-align: center !important;
                 box-shadow: none !important;
                 backdrop-filter: none !important;
-                grid-template-columns: none !important;
                 gap: 0 !important;
             }
 
             .qr-container::before {
                 display: none;
+            }
+
+            .main-content {
+                display: block !important;
             }
 
             .content-left,
@@ -522,10 +478,6 @@
                 gap: 12px !important;
             }
             
-            .backup-text {
-                display: none !important;
-            }
-            
             .backup-url {
                 background: white !important;
                 border: 2px solid #000 !important;
@@ -547,57 +499,51 @@
             .action-buttons {
                 display: none !important;
             }
-            
-            .print-instructions {
-                display: block !important;
-                text-align: center !important;
-                font-size: 9pt !important;
-                color: #000 !important;
-                margin-top: 12px !important;
-                padding-top: 8px !important;
-                border-top: 1px solid #000 !important;
-            }
         }
     </style>
 </head>
 <body>
     <div class="qr-container">
-        <div class="content-left">
-            <div class="artist-header">
-                <h1 class="artist-name" id="artist-name">LOCAL BAR TEES</h1>
-                <p class="artist-subtitle">official merch</p>
-            </div>
-
-            <div class="qr-section">
-                <div class="qr-wrapper">
-                    <img src="" alt="QR Code" class="qr-image" id="qr-image" style="display: none;">
-                    <div class="qr-placeholder" id="qr-placeholder">QR</div>
-                </div>
-                <p class="scan-description" id="scan-description">point your camera here to browse and buy merchandise from local bar tees</p>
-            </div>
-
-            <a href="https://localbartees.com" target="_blank" class="brand-credit">localbartees.com</a>
+        <div class="artist-header">
+            <h1 class="artist-name" id="artist-name">LOCAL BAR TEES</h1>
+            <p class="artist-subtitle">official merch</p>
         </div>
 
-        <div class="content-right">
-            <div class="backup-section">
-                <div class="backup-url" id="backup-url">localbartees.com</div>
-                
-                <div class="action-buttons">
-                    <button class="btn btn-print" id="print-btn">
-                        <span>🖨</span>
-                        print
-                    </button>
-                    <button class="btn btn-share" id="share-btn">
-                        <span>📤</span>
-                        share
-                    </button>
+        <div class="main-content">
+            <div class="content-left">
+                <div class="qr-section">
+                    <div class="qr-wrapper">
+                        <img src="" alt="QR Code" class="qr-image" id="qr-image" style="display: none;">
+                        <div class="qr-placeholder" id="qr-placeholder">QR</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-right">
+                <div class="backup-section">
+                    <div class="backup-url" id="backup-url">visit localbartees.com</div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-print" id="print-btn">
+                            <span>🖨</span>
+                            print
+                        </button>
+                        <button class="btn btn-share" id="share-btn">
+                            <span>📤</span>
+                            share
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <p class="scan-description" id="scan-description" style="display: none;">point your camera here to browse and buy
+merchandise from local bar tees</p>
+
+        <a href="https://localbartees.com" target="_blank" class="brand-credit">localbartees.com</a>
 
         <div class="print-instructions">
-            Scan QR code with your phone's camera app • Generated: <span id="print-date"></span> • localbartees.com
+            Scan QR code with your phone's camera app • Generated: <span id="print-date"></span>
         </div>
     </div>
 
@@ -642,9 +588,9 @@
         function updateContent(entityName, urlLabel, actualUrl, qrId) {
             try {
                 document.getElementById('artist-name').textContent = entityName.toUpperCase();
-                document.getElementById('backup-url').textContent = urlLabel;
+                document.getElementById('backup-url').textContent = 'visit ' + urlLabel;
                 document.getElementById('scan-description').textContent = 
-                    'point your camera here to browse and buy merchandise from ' + entityName.toLowerCase();
+                    'point your camera here to browse and buy\nmerchandise from ' + entityName.toLowerCase();
                 document.title = entityName + ' Share';
                 
                 const qrImg = document.getElementById('qr-image');
