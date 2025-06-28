@@ -641,11 +641,11 @@
 
             <div class="content-right">
                 <div class="backup-section">
-                    <div class="backup-url" id="backup-url">visit localbartees.com</div>
+                    <div class="backup-url" id="backup-url">VISIT LOCALBARTEES.COM</div>
                     
                     <div class="action-buttons">
-                        <button class="btn btn-print" id="print-btn">print</button>
-                        <button class="btn btn-share" id="share-btn">share</button>
+                        <button class="btn btn-print" id="print-btn">print qr</button>
+                        <button class="btn btn-share" id="share-btn">share this shop</button>
                     </div>
                 </div>
             </div>
@@ -696,7 +696,7 @@
         function updateContent(entityName, urlLabel, actualUrl, qrId) {
             try {
                 document.getElementById('artist-name').textContent = entityName.toUpperCase();
-                document.getElementById('backup-url').textContent = 'visit ' + urlLabel;
+                document.getElementById('backup-url').textContent = ('visit ' + urlLabel).toUpperCase();
                 document.title = entityName + ' Share';
                 
                 const qrImg = document.getElementById('qr-image');
@@ -817,18 +817,18 @@
         
         function doShare() {
             try {
-                const url = window.location.href;
+                const shareUrl = backupUrl || 'https://localbartees.com';
                 if (navigator.share) {
                     navigator.share({
                         title: 'Official Merchandise',
-                        url: url
+                        url: shareUrl
                     });
                 } else if (navigator.clipboard) {
-                    navigator.clipboard.writeText(url).then(() => {
+                    navigator.clipboard.writeText(shareUrl).then(() => {
                         alert('Link copied!');
                     });
                 } else {
-                    alert('Share: ' + url);
+                    alert('Share: ' + shareUrl);
                 }
             } catch (e) {
                 console.log('Error sharing');
