@@ -7,6 +7,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="format-detection" content="telephone=no">
     <link rel="icon" href="assets/qr_favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="assets/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="assets/apple-touch-icon-76x76.png">
+    <meta name="apple-mobile-web-app-title" content="Local Bar Tees">
     <title>Local Bar Tees Share</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -484,7 +489,7 @@
         @media print {
             @page {
                 size: letter;
-                margin: 0.25in;
+                margin: 0.75in;
             }
             
             * {
@@ -498,9 +503,7 @@
                 color: black !important;
                 padding: 0;
                 margin: 0;
-                min-height: 100vh;
-                display: flex;
-                align-items: stretch;
+                font-family: 'Inter', Arial, sans-serif !important;
             }
 
             body::before {
@@ -510,11 +513,11 @@
             .qr-container {
                 border: 3px solid #000 !important;
                 background: white !important;
-                border-radius: 0 !important;
+                border-radius: 12px !important;
                 padding: 30px !important;
                 max-width: none !important;
                 width: 100% !important;
-                height: 100vh !important;
+                height: 9in !important;
                 display: flex !important;
                 flex-direction: column !important;
                 justify-content: space-between !important;
@@ -522,6 +525,7 @@
                 box-shadow: none !important;
                 backdrop-filter: none !important;
                 gap: 0 !important;
+                box-sizing: border-box !important;
             }
 
             .qr-container::before {
@@ -539,21 +543,29 @@
             }
             
             .artist-header {
-                margin-bottom: 16px !important;
+                margin-bottom: 25px !important;
+                border-bottom: 2px solid #000 !important;
+                padding-bottom: 15px !important;
+                flex-shrink: 0 !important;
             }
             
             .artist-name {
-                font-size: 36pt !important;
+                font-size: 42pt !important;
                 color: #000 !important;
-                margin-bottom: 6px !important;
+                margin-bottom: 8px !important;
                 text-shadow: none !important;
                 font-weight: 800 !important;
+                line-height: 1.1 !important;
+                letter-spacing: -1px !important;
             }
             
             .artist-subtitle {
                 font-size: 14pt !important;
                 color: #000 !important;
                 margin-bottom: 0 !important;
+                text-transform: uppercase !important;
+                letter-spacing: 2px !important;
+                font-weight: 600 !important;
             }
             
             .qr-section {
@@ -561,12 +573,18 @@
                 display: flex !important;
                 flex-direction: column !important;
                 justify-content: center !important;
-                margin: 16px 0 !important;
+                align-items: center !important;
+                margin: 0 !important;
                 text-align: center !important;
             }
 
             .qr-wrapper {
-                margin: 0 auto 16px auto !important;
+                margin: 0 auto 20px auto !important;
+                padding: 12px !important;
+                border: 3px solid #000 !important;
+                border-radius: 12px !important;
+                background: white !important;
+                display: inline-block !important;
             }
 
             .qr-wrapper::before {
@@ -580,43 +598,79 @@
                 margin: 0 auto !important;
                 box-shadow: none !important;
                 background: white !important;
+                border-radius: 8px !important;
             }
-            
-            .scan-description {
+
+            .scan-instruction {
+                display: block !important;
                 color: #000 !important;
-                font-size: 12pt !important;
-                margin-bottom: 16px !important;
-                font-weight: 400 !important;
+                font-size: 13pt !important;
+                margin: 0 0 20px 0 !important;
+                font-weight: 500 !important;
+                line-height: 1.3 !important;
             }
             
             .backup-section {
                 border: 2px solid #000 !important;
-                background: #f8f8f8 !important;
-                margin-bottom: 16px !important;
-                padding: 16px !important;
+                background: #f9f9f9 !important;
+                margin: 0 !important;
+                padding: 18px !important;
                 backdrop-filter: none !important;
-                gap: 12px !important;
+                gap: 0 !important;
+                border-radius: 8px !important;
+                display: block !important;
+                flex-shrink: 0 !important;
+            }
+
+            .backup-section::before {
+                display: none !important;
             }
             
             .backup-url {
                 background: white !important;
                 border: 2px solid #000 !important;
                 color: #000 !important;
-                font-size: 14pt !important;
-                padding: 12px 16px !important;
+                font-size: 16pt !important;
+                padding: 12px 20px !important;
                 backdrop-filter: none !important;
                 box-shadow: none !important;
+                border-radius: 6px !important;
+                font-family: 'Inter', Arial, sans-serif !important;
+                font-weight: 700 !important;
+                text-transform: uppercase !important;
+                letter-spacing: 1px !important;
+                margin: 0 !important;
             }
             
             .brand-credit {
-                font-size: 12pt !important;
-                color: #000 !important;
+                font-size: 10pt !important;
+                color: #666 !important;
                 text-align: center !important;
-                margin-top: 8px !important;
+                margin: 15px 0 0 0 !important;
                 text-decoration: none !important;
+                font-weight: 500 !important;
+                border-top: 1px solid #ccc !important;
+                padding-top: 10px !important;
+                flex-shrink: 0 !important;
+            }
+
+            .brand-credit::before {
+                content: "powered by " !important;
+                font-size: 8pt !important;
+                color: #999 !important;
+                display: block !important;
+                margin-bottom: 3px !important;
             }
             
             .action-buttons {
+                display: none !important;
+            }
+
+            .scan-description {
+                display: none !important;
+            }
+
+            .print-instructions {
                 display: none !important;
             }
         }
@@ -655,8 +709,7 @@
             </div>
         </div>
 
-        <p class="scan-description" id="scan-description" style="display: none;">point your camera here to browse and buy
-merchandise from local bar tees</p>
+        <p class="scan-instruction" style="display: none;">Scan with your phone's camera to browse and buy merchandise</p>
 
         <a href="https://localbartees.com" target="_blank" class="brand-credit">localbartees.com</a>
 
