@@ -146,7 +146,6 @@
             font-size: 2rem;
             font-weight: 600;
             color: var(--text-gray);
-            border: 2px dashed #ddd;
         }
 
         .scan-description {
@@ -237,6 +236,10 @@
         }
 
         .print-instructions {
+            display: none;
+        }
+
+        .scan-instruction {
             display: none;
         }
 
@@ -489,7 +492,7 @@
         @media print {
             @page {
                 size: letter;
-                margin: 0.75in;
+                margin: 0.5in;
             }
             
             * {
@@ -511,20 +514,17 @@
             }
             
             .qr-container {
-                border: 3px solid #000 !important;
+                border: none !important;
                 background: white !important;
-                border-radius: 12px !important;
-                padding: 30px !important;
+                border-radius: 0 !important;
+                padding: 0 !important;
                 max-width: none !important;
                 width: 100% !important;
-                height: 9in !important;
-                display: flex !important;
-                flex-direction: column !important;
-                justify-content: space-between !important;
+                height: 100% !important;
+                display: block !important;
                 text-align: center !important;
                 box-shadow: none !important;
                 backdrop-filter: none !important;
-                gap: 0 !important;
                 box-sizing: border-box !important;
             }
 
@@ -543,47 +543,42 @@
             }
             
             .artist-header {
-                margin-bottom: 25px !important;
-                border-bottom: 2px solid #000 !important;
-                padding-bottom: 15px !important;
-                flex-shrink: 0 !important;
+                margin: 60px 0 80px 0 !important;
+                border-bottom: none !important;
+                padding-bottom: 0 !important;
             }
             
             .artist-name {
-                font-size: 42pt !important;
+                font-size: 54pt !important;
                 color: #000 !important;
-                margin-bottom: 8px !important;
+                margin-bottom: 20px !important;
                 text-shadow: none !important;
-                font-weight: 800 !important;
-                line-height: 1.1 !important;
-                letter-spacing: -1px !important;
+                font-weight: 900 !important;
+                line-height: 0.9 !important;
+                letter-spacing: -3px !important;
             }
             
             .artist-subtitle {
-                font-size: 14pt !important;
+                font-size: 20pt !important;
                 color: #000 !important;
                 margin-bottom: 0 !important;
                 text-transform: uppercase !important;
-                letter-spacing: 2px !important;
-                font-weight: 600 !important;
+                letter-spacing: 8px !important;
+                font-weight: 400 !important;
             }
             
             .qr-section {
-                flex-grow: 1 !important;
-                display: flex !important;
-                flex-direction: column !important;
-                justify-content: center !important;
-                align-items: center !important;
-                margin: 0 !important;
+                display: block !important;
+                margin: 0 0 60px 0 !important;
                 text-align: center !important;
             }
 
             .qr-wrapper {
-                margin: 0 auto 20px auto !important;
-                padding: 12px !important;
-                border: 3px solid #000 !important;
-                border-radius: 12px !important;
-                background: white !important;
+                margin: 0 auto !important;
+                padding: 0 !important;
+                border: none !important;
+                border-radius: 0 !important;
+                background: transparent !important;
                 display: inline-block !important;
             }
 
@@ -592,34 +587,29 @@
             }
             
             .qr-image, .qr-placeholder {
-                width: 3.5in !important;
-                height: 3.5in !important;
+                width: 5in !important;
+                height: 5in !important;
                 border: none !important;
                 margin: 0 auto !important;
                 box-shadow: none !important;
                 background: white !important;
-                border-radius: 8px !important;
+                border-radius: 0 !important;
             }
 
             .scan-instruction {
-                display: block !important;
-                color: #000 !important;
-                font-size: 13pt !important;
-                margin: 0 0 20px 0 !important;
-                font-weight: 500 !important;
-                line-height: 1.3 !important;
+                display: none !important;
             }
             
             .backup-section {
-                border: 2px solid #000 !important;
-                background: #f9f9f9 !important;
+                border: none !important;
+                background: transparent !important;
                 margin: 0 !important;
-                padding: 18px !important;
+                padding: 0 !important;
                 backdrop-filter: none !important;
                 gap: 0 !important;
-                border-radius: 8px !important;
+                border-radius: 0 !important;
                 display: block !important;
-                flex-shrink: 0 !important;
+                text-align: center !important;
             }
 
             .backup-section::before {
@@ -627,39 +617,40 @@
             }
             
             .backup-url {
-                background: white !important;
-                border: 2px solid #000 !important;
+                background: transparent !important;
+                border: none !important;
                 color: #000 !important;
-                font-size: 16pt !important;
-                padding: 12px 20px !important;
+                font-size: 28pt !important;
+                padding: 0 !important;
                 backdrop-filter: none !important;
                 box-shadow: none !important;
-                border-radius: 6px !important;
+                border-radius: 0 !important;
                 font-family: 'Inter', Arial, sans-serif !important;
                 font-weight: 700 !important;
                 text-transform: uppercase !important;
-                letter-spacing: 1px !important;
-                margin: 0 !important;
+                letter-spacing: 2px !important;
+                margin: 0 0 60px 0 !important;
+                display: block !important;
+                text-align: center !important;
             }
             
             .brand-credit {
-                font-size: 10pt !important;
-                color: #666 !important;
+                position: fixed !important;
+                bottom: 0.5in !important;
+                left: 0 !important;
+                right: 0 !important;
+                font-size: 12pt !important;
+                color: #888 !important;
                 text-align: center !important;
-                margin: 15px 0 0 0 !important;
+                margin: 0 !important;
                 text-decoration: none !important;
-                font-weight: 500 !important;
-                border-top: 1px solid #ccc !important;
-                padding-top: 10px !important;
-                flex-shrink: 0 !important;
+                font-weight: 400 !important;
+                border-top: none !important;
+                padding: 0 !important;
             }
 
             .brand-credit::before {
-                content: "powered by " !important;
-                font-size: 8pt !important;
-                color: #999 !important;
-                display: block !important;
-                margin-bottom: 3px !important;
+                display: none !important;
             }
             
             .action-buttons {
@@ -687,8 +678,8 @@
             <div class="content-left">
                 <div class="qr-section">
                     <div class="qr-wrapper">
-                        <img src="" alt="QR Code" class="qr-image" id="qr-image" style="display: none;">
-                        <div class="qr-placeholder" id="qr-placeholder">QR</div>
+                        <img src="qr_codes/lbt.png?v=1" alt="QR Code" class="qr-image" id="qr-image">
+                        <div class="qr-placeholder" id="qr-placeholder" style="display: none;">QR</div>
                     </div>
                 </div>
             </div>
@@ -760,8 +751,6 @@
             try {
                 document.getElementById('artist-name').textContent = entityName.toUpperCase();
                 document.getElementById('backup-url').textContent = 'visit ' + urlLabel;
-                document.getElementById('scan-description').textContent = 
-                    'point your camera here to browse and buy\nmerchandise from ' + entityName.toLowerCase();
                 document.title = entityName + ' Share';
                 
                 const qrImg = document.getElementById('qr-image');
