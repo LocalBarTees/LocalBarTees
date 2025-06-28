@@ -1,4 +1,20 @@
-<!DOCTYPE html>
+.qr-section {
+                margin: 0;
+            }
+
+            .qr-wrapper {
+                margin-bottom: 1rem;
+            }
+
+            .qr-image, .qr-placeholder {
+                width: 320px;
+                height: 320px;
+            }
+
+            .scan-description {
+                font-size: 1.1rem;
+                margin-bottom: 0;
+            }<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,7 +25,7 @@
     <link rel="icon" href="assets/qr_favicon.ico" type="image/x-icon">
     <title>Local Bar Tees Share</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
         * {
             margin: 0;
@@ -17,310 +33,372 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary-black: #000000;
+            --soft-black: #111111;
+            --border-gray: #333333;
+            --text-gray: #999999;
+            --light-gray: #cccccc;
+            --pure-white: #ffffff;
+            --accent-gray: #f8f8f8;
+            --radius-sm: 12px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.15);
+        }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #000000;
-            color: #ffffff;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            color: var(--pure-white);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 1rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
         }
 
         .qr-container {
-            background: #000000;
-            border: 1px solid #333333;
-            border-radius: 24px;
-            padding: 48px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-gray);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
             text-align: center;
             max-width: 480px;
             width: 100%;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qr-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
         }
 
         .artist-header {
-            margin-bottom: 32px;
+            margin-bottom: 2rem;
+            position: relative;
         }
 
         .artist-name {
-            font-size: 2.75rem;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 6px;
+            font-size: clamp(2rem, 5vw, 2.75rem);
+            font-weight: 800;
+            color: var(--pure-white);
+            margin-bottom: 0.5rem;
             line-height: 1.1;
+            letter-spacing: -0.02em;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .artist-subtitle {
             font-size: 1rem;
-            color: #999999;
-            margin-bottom: 0;
+            color: var(--text-gray);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
 
         .qr-section {
-            margin: 32px 0;
+            margin: 2rem 0;
+            position: relative;
         }
 
         .qr-wrapper {
             display: inline-block;
-            margin-bottom: 24px;
+            margin-bottom: 1.5rem;
+            position: relative;
         }
 
-        .qr-image {
+        .qr-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            background: linear-gradient(45deg, var(--pure-white), #f0f0f0);
+            border-radius: calc(var(--radius-md) + 4px);
+            z-index: -1;
+        }
+
+        .qr-image, .qr-placeholder {
             width: 280px;
             height: 280px;
-            border-radius: 16px;
-            border: 1px solid #e5e7eb;
-            background: #ffffff;
+            border-radius: var(--radius-md);
+            background: var(--pure-white);
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease;
+        }
+
+        .qr-wrapper:hover .qr-image,
+        .qr-wrapper:hover .qr-placeholder {
+            transform: translateY(-2px);
         }
         
         .qr-placeholder {
-            width: 280px;
-            height: 280px;
-            border-radius: 16px;
-            border: 1px solid #e5e7eb;
-            background: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 2rem;
             font-weight: 600;
-            color: #999999;
+            color: var(--text-gray);
+            border: 2px dashed #ddd;
         }
 
         .scan-description {
-            color: #cccccc;
-            font-size: 0.95rem;
-            margin-bottom: 24px;
-            line-height: 1.5;
+            color: var(--light-gray);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            font-weight: 400;
         }
 
         .backup-section {
-            background: #111111;
-            border: 1px solid #333333;
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 32px;
+            background: linear-gradient(135deg, var(--soft-black), rgba(17, 17, 17, 0.8));
+            border: 1px solid var(--border-gray);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
         .backup-text {
             font-size: 0.875rem;
-            color: #999999;
-            margin-bottom: 12px;
+            color: var(--text-gray);
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .backup-url {
-            font-size: 1rem;
-            font-weight: 500;
-            color: #ffffff;
-            background: #222222;
-            padding: 16px 20px;
-            border-radius: 12px;
-            border: 1px solid #333333;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--pure-white);
+            background: rgba(34, 34, 34, 0.8);
+            padding: 1rem 1.25rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-gray);
             display: inline-block;
             cursor: pointer;
             text-decoration: none;
-            font-family: monospace;
+            font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
             min-height: 48px;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
         }
 
         .backup-url:hover {
-            background: #333333;
+            background: rgba(51, 51, 51, 0.9);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .action-buttons {
             display: flex;
-            gap: 16px;
+            gap: 1rem;
             justify-content: center;
-            margin-bottom: 24px;
+            margin-bottom: 1.5rem;
         }
 
         .btn {
-            padding: 16px 24px;
-            border-radius: 12px;
-            font-weight: 500;
-            font-size: 1rem;
-            border: 1px solid #333333;
+            padding: 0.875rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 1px solid var(--border-gray);
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
-            min-width: 140px;
+            gap: 0.5rem;
+            min-width: 130px;
             min-height: 48px;
             justify-content: center;
             background: none;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .btn-print {
-            background: #222222;
-            color: #ffffff;
+            background: linear-gradient(135deg, #222222, #333333);
+            color: var(--pure-white);
+            border-color: #444444;
         }
 
         .btn-print:hover {
-            background: #333333;
+            background: linear-gradient(135deg, #333333, #444444);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
         .btn-share {
-            background: #ffffff;
-            color: #000000;
+            background: linear-gradient(135deg, var(--pure-white), #f0f0f0);
+            color: var(--primary-black);
+            border-color: #e0e0e0;
         }
 
         .btn-share:hover {
-            background: #e5e5e5;
+            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
         }
 
         .brand-credit {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             color: #666666;
             font-weight: 500;
             text-decoration: none;
-            margin-top: 16px;
+            margin-top: 1rem;
             display: block;
-            padding: 8px;
+            padding: 0.5rem;
+            transition: color 0.2s ease;
+            letter-spacing: 0.02em;
         }
         
         .brand-credit:hover {
-            color: #999999;
+            color: var(--text-gray);
         }
 
-        /* Print styles */
-        @media print {
-            @page {
-                size: letter;
-                margin: 0.25in;
-            }
-            
-            body {
-                background: white;
-                color: black;
-                padding: 0;
-                margin: 0;
-                min-height: 100vh;
-                display: flex;
-                align-items: stretch;
-            }
-            
-            .qr-container {
-                border: 3px solid #000;
-                background: white;
-                border-radius: 0;
-                padding: 30px;
-                max-width: none;
-                width: 100%;
-                height: 100vh;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-            }
-            
-            .artist-header {
-                text-align: center;
-                margin-bottom: 16px;
-            }
-            
-            .artist-name {
-                font-size: 36pt;
-                color: #000;
-                margin-bottom: 6px;
-            }
-            
-            .artist-subtitle {
-                font-size: 14pt;
-                color: #000;
-                margin-bottom: 0;
-            }
-            
-            .qr-section {
-                text-align: center;
-                flex-grow: 1;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                margin: 16px 0;
-            }
-            
-            .qr-image, .qr-placeholder {
-                width: 3.5in;
-                height: 3.5in;
-                border: none;
-                margin: 0 auto 16px auto;
-            }
-            
-            .scan-description {
-                color: #000;
-                font-size: 12pt;
-                margin-bottom: 16px;
-            }
-            
-            .backup-section {
-                border: 2px solid #000;
-                background: #f8f8f8;
-                margin-bottom: 16px;
-                padding: 16px;
-            }
-            
-            .backup-text {
-                color: #000;
-                font-size: 11pt;
-                margin-bottom: 8px;
-            }
-            
-            .backup-url {
-                background: white;
-                border: 2px solid #000;
-                color: #000;
-                font-size: 14pt;
-                padding: 12px 16px;
-            }
-            
-            .brand-credit {
-                font-size: 12pt;
-                color: #000;
-                text-align: center;
-                margin-top: 8px;
-            }
-            
-            .action-buttons {
-                display: none;
-            }
-            
-            .print-instructions {
-                display: block;
-                text-align: center;
-                font-size: 9pt;
-                color: #000;
-                margin-top: 12px;
-                padding-top: 8px;
-                border-top: 1px solid #000;
-            }
-        }
-        
         .print-instructions {
             display: none;
         }
 
-        /* Mobile */
+        /* Desktop/Web Layout - Side by Side */
+        @media (min-width: 1024px) {
+            body {
+                padding: 2rem;
+                align-items: stretch;
+            }
+
+            .qr-container {
+                max-width: 1200px;
+                width: 100%;
+                display: grid;
+                grid-template-columns: 1fr 400px;
+                gap: 3rem;
+                padding: 3rem;
+                text-align: left;
+                align-items: center;
+            }
+
+            .content-left {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                gap: 2rem;
+            }
+
+            .content-right {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+
+            .artist-header {
+                margin-bottom: 0;
+            }
+
+            .artist-name {
+                font-size: clamp(3rem, 6vw, 4rem);
+                margin-bottom: 1rem;
+            }
+
+            .artist-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .qr-section {
+                margin: 0;
+            }
+
+            .qr-wrapper {
+                margin-bottom: 1rem;
+            }
+
+            .qr-image, .qr-placeholder {
+                width: 320px;
+                height: 320px;
+            }
+
+            .scan-description {
+                font-size: 1.1rem;
+                margin-bottom: 0;
+            }
+
+            .backup-section {
+                margin-bottom: 0;
+            }
+
+            .action-buttons {
+                justify-content: flex-start;
+                margin-bottom: 0;
+            }
+
+            .brand-credit {
+                margin-top: auto;
+                text-align: left;
+            }
+        }
+
+        /* Mobile Optimizations */
         @media (max-width: 640px) {
             body {
                 padding: 1rem;
             }
             
             .qr-container {
-                padding: 24px 20px;
+                padding: 1.5rem;
+                border-radius: var(--radius-md);
             }
             
             .artist-name {
                 font-size: 2rem;
+            }
+
+            .artist-subtitle {
+                font-size: 0.9rem;
             }
             
             .qr-image, .qr-placeholder {
                 width: 240px;
                 height: 240px;
             }
+
+            .scan-description {
+                font-size: 0.95rem;
+            }
             
             .action-buttons {
                 flex-direction: column;
                 align-items: center;
-                gap: 12px;
+                gap: 0.75rem;
             }
             
             .btn {
@@ -328,44 +406,199 @@
                 max-width: 280px;
             }
         }
+
+        /* Print Styles */
+        @media print {
+            @page {
+                size: letter;
+                margin: 0.25in;
+            }
+            
+            * {
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            body {
+                background: white !important;
+                color: black !important;
+                padding: 0;
+                margin: 0;
+                min-height: 100vh;
+                display: flex;
+                align-items: stretch;
+            }
+
+            body::before {
+                display: none;
+            }
+            
+            .qr-container {
+                border: 3px solid #000 !important;
+                background: white !important;
+                border-radius: 0 !important;
+                padding: 30px !important;
+                max-width: none !important;
+                width: 100% !important;
+                height: 100vh !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
+                text-align: center !important;
+                box-shadow: none !important;
+                backdrop-filter: none !important;
+                grid-template-columns: none !important;
+                gap: 0 !important;
+            }
+
+            .qr-container::before {
+                display: none;
+            }
+
+            .content-left,
+            .content-right {
+                display: block !important;
+                text-align: center !important;
+            }
+            
+            .artist-header {
+                margin-bottom: 16px !important;
+            }
+            
+            .artist-name {
+                font-size: 36pt !important;
+                color: #000 !important;
+                margin-bottom: 6px !important;
+                text-shadow: none !important;
+                font-weight: 800 !important;
+            }
+            
+            .artist-subtitle {
+                font-size: 14pt !important;
+                color: #000 !important;
+                margin-bottom: 0 !important;
+            }
+            
+            .qr-section {
+                flex-grow: 1 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: center !important;
+                margin: 16px 0 !important;
+                text-align: center !important;
+            }
+
+            .qr-wrapper {
+                margin: 0 auto 16px auto !important;
+            }
+
+            .qr-wrapper::before {
+                display: none;
+            }
+            
+            .qr-image, .qr-placeholder {
+                width: 3.5in !important;
+                height: 3.5in !important;
+                border: none !important;
+                margin: 0 auto !important;
+                box-shadow: none !important;
+                background: white !important;
+            }
+            
+            .scan-description {
+                color: #000 !important;
+                font-size: 12pt !important;
+                margin-bottom: 16px !important;
+                font-weight: 400 !important;
+            }
+            
+            .backup-section {
+                border: 2px solid #000 !important;
+                background: #f8f8f8 !important;
+                margin-bottom: 16px !important;
+                padding: 16px !important;
+                backdrop-filter: none !important;
+                gap: 12px !important;
+            }
+            
+            .backup-text {
+                display: none !important;
+            }
+            
+            .backup-url {
+                background: white !important;
+                border: 2px solid #000 !important;
+                color: #000 !important;
+                font-size: 14pt !important;
+                padding: 12px 16px !important;
+                backdrop-filter: none !important;
+                box-shadow: none !important;
+            }
+            
+            .brand-credit {
+                font-size: 12pt !important;
+                color: #000 !important;
+                text-align: center !important;
+                margin-top: 8px !important;
+                text-decoration: none !important;
+            }
+            
+            .action-buttons {
+                display: none !important;
+            }
+            
+            .print-instructions {
+                display: block !important;
+                text-align: center !important;
+                font-size: 9pt !important;
+                color: #000 !important;
+                margin-top: 12px !important;
+                padding-top: 8px !important;
+                border-top: 1px solid #000 !important;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="qr-container">
-        <div class="artist-header">
-            <h1 class="artist-name" id="artist-name">LOCAL BAR TEES</h1>
-            <p class="artist-subtitle">official merch</p>
-        </div>
-
-        <div class="qr-section">
-            <div class="qr-wrapper">
-                <img src="" alt="QR Code" class="qr-image" id="qr-image" style="display: none;">
-                <div class="qr-placeholder" id="qr-placeholder">QR</div>
+        <div class="content-left">
+            <div class="artist-header">
+                <h1 class="artist-name" id="artist-name">LOCAL BAR TEES</h1>
+                <p class="artist-subtitle">official merch</p>
             </div>
-            <p class="scan-description" id="scan-description">point your camera here to browse and buy official local bar tees merchandise</p>
+
+            <div class="qr-section">
+                <div class="qr-wrapper">
+                    <img src="" alt="QR Code" class="qr-image" id="qr-image" style="display: none;">
+                    <div class="qr-placeholder" id="qr-placeholder">QR</div>
+                </div>
+                <p class="scan-description" id="scan-description">point your camera here to browse and buy merchandise from local bar tees</p>
+            </div>
+
+            <a href="https://localbartees.com" target="_blank" class="brand-credit">localbartees.com</a>
         </div>
 
-        <div class="backup-section">
-            <p class="backup-text">or visit:</p>
-            <div class="backup-url" id="backup-url">localbartees.com</div>
-        </div>
-
-        <div class="action-buttons">
-            <button class="btn btn-print" id="print-btn">
-                <span>🖨</span>
-                print
-            </button>
-            <button class="btn btn-share" id="share-btn">
-                <span>📤</span>
-                share
-            </button>
+        <div class="content-right">
+            <div class="backup-section">
+                <div class="backup-url" id="backup-url">localbartees.com</div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-print" id="print-btn">
+                        <span>🖨</span>
+                        print
+                    </button>
+                    <button class="btn btn-share" id="share-btn">
+                        <span>📤</span>
+                        share
+                    </button>
+                </div>
+            </div>
         </div>
 
         <div class="print-instructions">
             Scan QR code with your phone's camera app • Generated: <span id="print-date"></span> • localbartees.com
         </div>
-        
-        <a href="https://localbartees.com" target="_blank" class="brand-credit">localbartees.com</a>
     </div>
 
     <script>
