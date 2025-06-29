@@ -303,6 +303,170 @@
             letter-spacing: 0.1em;
         }
 
+        /* Print styles */
+        @media print {
+            @page {
+                size: letter;
+                margin: 0.5in;
+            }
+            
+            @page :first {
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+            
+            * {
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            body {
+                background: white !important;
+                color: black !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                font-family: 'Inter', Arial, sans-serif !important;
+                width: 100% !important;
+                height: 100vh !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: center !important;
+                align-items: center !important;
+            }
+
+            body::before {
+                display: none;
+            }
+            
+            .container {
+                border: none !important;
+                background: white !important;
+                border-radius: 0 !important;
+                padding: 0 !important;
+                max-width: none !important;
+                width: 100% !important;
+                height: auto !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                text-align: center !important;
+                box-shadow: none !important;
+                backdrop-filter: none !important;
+                gap: 40px !important;
+            }
+
+            .container::before {
+                display: none;
+            }
+
+            /* Hide everything by default */
+            .header, .stats, .records-grid, .brand-credit, .loading, .error {
+                display: none !important;
+            }
+            
+            /* Show only the print content */
+            .container::after {
+                content: '';
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 100% !important;
+                height: 100% !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                background: white !important;
+                z-index: 9999 !important;
+            }
+        }
+        
+        /* Print content that gets inserted dynamically */
+        .print-content {
+            display: none;
+        }
+        
+        @media print {
+            .print-content {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                text-align: center !important;
+                width: 100% !important;
+                height: 100vh !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                background: white !important;
+                z-index: 10000 !important;
+                gap: 40px !important;
+            }
+            
+            .print-artist-name {
+                font-size: 36pt !important;
+                color: #000 !important;
+                margin-bottom: 8px !important;
+                text-shadow: none !important;
+                font-weight: 800 !important;
+                line-height: 1 !important;
+                letter-spacing: -2px !important;
+                text-transform: uppercase !important;
+            }
+            
+            .print-artist-subtitle {
+                font-size: 14pt !important;
+                color: #000 !important;
+                margin-bottom: 0 !important;
+                text-transform: uppercase !important;
+                letter-spacing: 4px !important;
+                font-weight: 500 !important;
+            }
+            
+            .print-qr-image {
+                width: 3.5in !important;
+                height: 3.5in !important;
+                border: none !important;
+                margin: 0 auto !important;
+                box-shadow: none !important;
+                background: white !important;
+                border-radius: 0 !important;
+            }
+            
+            .print-url {
+                background: transparent !important;
+                border: none !important;
+                color: #000 !important;
+                font-size: 22pt !important;
+                padding: 0 !important;
+                font-family: 'Inter', Arial, sans-serif !important;
+                font-weight: 700 !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0 !important;
+                margin: 0 !important;
+                display: block !important;
+                text-align: center !important;
+                width: 100% !important;
+                white-space: nowrap !important;
+                overflow: visible !important;
+                word-break: keep-all !important;
+                line-height: 1 !important;
+            }
+            
+            .print-credit {
+                font-size: 10pt !important;
+                color: #666 !important;
+                text-align: center !important;
+                margin: 0 !important;
+                text-decoration: none !important;
+                font-weight: 400 !important;
+                border-top: none !important;
+                padding: 0 !important;
+            }
+        }
+
         /* Mobile adjustments */
         @media (max-width: 768px) {
             .records-grid {
@@ -350,6 +514,15 @@
         </div>
     </div>
 
+    <!-- Hidden print content -->
+    <div class="print-content" id="print-content">
+        <div class="print-artist-name" id="print-artist-name"></div>
+        <div class="print-artist-subtitle">official merch</div>
+        <img class="print-qr-image" id="print-qr-image" alt="QR Code">
+        <div class="print-url" id="print-url"></div>
+        <div class="print-credit">localbartees.com</div>
+    </div>
+
     <script>
         function loadAllRecords() {
             fetch('assets/qr.xml')
@@ -375,12 +548,8 @@
                             const entityName = nameEl.textContent.trim();
                             const fullUrl = urlEl.textContent.trim();
                             
-                            // Get the qr parameter from the first attribute
-                            const attributes = entry.attributes;
-                            let qrParam = 'lbt'; // default
-                            if (attributes.length > 0) {
-                                qrParam = attributes[0].value;
-                            }
+                            // Get the qr parameter from the id attribute
+                            let qrParam = entry.getAttribute('id') || 'lbt';
                             
                             // Extract display URL
                             let displayUrl = fullUrl;
@@ -462,11 +631,28 @@
                     <div class="entity-id">ID: ${escapeHtml(entity.qrParam)}</div>
                     
                     <div class="action-buttons">
-                        <button class="btn btn-print" onclick="printQR('${escapeHtml(entity.qrParam)}', '${escapeHtml(entity.name)}')">print qr</button>
-                        <button class="btn btn-share-qr" onclick="shareQR('${escapeHtml(entity.qrParam)}', '${escapeHtml(entity.name)}')">share qr</button>
-                        <button class="btn btn-share-site" onclick="shareSite('${escapeHtml(entity.fullUrl)}', '${escapeHtml(entity.name)}')">share site</button>
+                        <button class="btn btn-print" data-qr-id="${escapeHtml(entity.qrParam)}" data-name="${escapeHtml(entity.name)}" data-url="${escapeHtml(entity.url)}">print qr</button>
+                        <button class="btn btn-share-qr" data-qr-id="${escapeHtml(entity.qrParam)}" data-name="${escapeHtml(entity.name)}">share qr</button>
+                        <button class="btn btn-share-site" data-full-url="${escapeHtml(entity.fullUrl)}" data-name="${escapeHtml(entity.name)}">share site</button>
                     </div>
                 `;
+                
+                // Add event listeners
+                const printBtn = card.querySelector('.btn-print');
+                const shareQrBtn = card.querySelector('.btn-share-qr');
+                const shareSiteBtn = card.querySelector('.btn-share-site');
+                
+                printBtn.addEventListener('click', () => {
+                    printQR(entity.qrParam, entity.name, entity.url);
+                });
+                
+                shareQrBtn.addEventListener('click', () => {
+                    shareQR(entity.qrParam, entity.name);
+                });
+                
+                shareSiteBtn.addEventListener('click', () => {
+                    shareSite(entity.fullUrl, entity.name);
+                });
                 
                 container.appendChild(card);
             });
@@ -478,19 +664,20 @@
             return div.innerHTML;
         }
 
-        function printQR(qrId, entityName) {
+        function escapeForJs(text) {
+            return text.replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\\/g, '\\\\');
+        }
+
+        function printQR(qrId, entityName, entityUrl) {
             try {
-                // Open the QR page in a new window and print it
-                const printWindow = window.open(`index.html?qr=${encodeURIComponent(qrId)}`, '_blank');
-                if (printWindow) {
-                    printWindow.addEventListener('load', function() {
-                        setTimeout(() => {
-                            printWindow.print();
-                        }, 500);
-                    });
-                }
+                // Update the hidden print content
+                document.getElementById('print-artist-name').textContent = entityName.toUpperCase();
+                document.getElementById('print-qr-image').src = `qr_codes/${qrId}.png`;
+                document.getElementById('print-url').textContent = `VISIT ${entityUrl.toUpperCase()}`;
+                
+                window.print();
             } catch (e) {
-                console.log('Error printing QR');
+                console.log('Error printing QR:', e);
             }
         }
 
