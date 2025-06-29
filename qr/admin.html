@@ -500,7 +500,7 @@
     </div>
 
     <!-- Hidden print content -->
-    <div class="print-content" id="print-content">
+    <div class="print-content" id="print-content" style="display: none;">
         <div class="print-artist-name" id="print-artist-name"></div>
         <div class="print-artist-subtitle">official merch</div>
         <img class="print-qr-image" id="print-qr-image" alt="QR Code">
@@ -647,10 +647,6 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
-        }
-
-        function escapeForJs(text) {
-            return text.replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\\/g, '\\\\');
         }
 
         function printQR(qrId, entityName, entityUrl) {
