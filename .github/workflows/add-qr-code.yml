@@ -10,10 +10,6 @@ on:
         description: 'QR Code ID (web shop stem)'
         required: true
         type: string
-      website_url:
-        description: 'Website URL'
-        required: true
-        type: string
 
 jobs:
   add-qr-code:
@@ -22,33 +18,44 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
-      - name: Validate inputs
+      - name: Show current XML
         run: |
-          echo "Adding QR code for: ${{ github.event.inputs.bar_name }}"
-          echo "QR ID: ${{ github.event.inputs.qr_id }}"
-          echo "URL: ${{ github.event.inputs.website_url }}"
+          echo "Current XML file:"
+          cat assets/qr.xml
           
       - name: Add new QR entry to XML
         run: |
-          # Create the new QR entry
           BAR_NAME="${{ github.event.inputs.bar_name }}"
           QR_ID="${{ github.event.inputs.qr_id }}"
-          WEBSITE_URL="${{ github.event.inputs.website_url }}"
+          WEBSITE_URL="https://localbartees.com/${QR_ID}"
           
-          NEW_ENTRY="  <qr ${QR_ID}=\"${QR_ID}\">"$'\n'"    <name>${BAR_NAME}</name>"$'\n'"    <url>${WEBSITE_URL}</url>"$'\n'"  </qr>"
+          echo "Adding QR code:"
+          echo "  Bar/Band: ${BAR_NAME}"
+          echo "  QR ID: ${QR_ID}"
+          echo "  URL: ${WEBSITE_URL}"
           
-          # Insert before the closing </root> tag
-          sed -i "/<\/root>/i\\${NEW_ENTRY}" assets/qr.xml
+          # Create the new entry in a temporary file
+          cat > new_entry.xml << EOF
+  <qr ${QR_ID}="${QR_ID}">
+    <name>${BAR_NAME}</name>
+    <url>${WEBSITE_URL}</url>
+  </qr>
+EOF
           
-      - name: Validate XML
-        run: |
-          # Check if XML is valid (requires xmllint)
-          if command -v xmllint >/dev/null 2>&1; then
-            xmllint --noout assets/qr.xml
-            echo "XML validation passed"
-          else
-            echo "xmllint not available, skipping validation"
-          fi
+          # Remove the last line (</root>) from the original file
+          head -n -1 assets/qr.xml > temp.xml
+          
+          # Add our new entry
+          cat new_entry.xml >> temp.xml
+          
+          # Add the closing </root> tag back
+          echo "</root>" >> temp.xml
+          
+          # Replace the original file
+          mv temp.xml assets/qr.xml
+          
+          # Clean up
+          rm new_entry.xml
           
       - name: Show updated XML
         run: |
