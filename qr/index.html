@@ -510,7 +510,7 @@
 
     <script>
         function loadAllRecords() {
-            fetch('assets/qr.xml')
+            fetch('qr.xml')
                 .then(response => {
                     if (!response.ok) throw new Error('XML not found');
                     return response.text();
@@ -519,8 +519,8 @@
                     const parser = new DOMParser();
                     const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
                     
-                    // Get all qr elements
-                    const entries = xmlDoc.querySelectorAll('qr');
+                    // Get all code elements
+                    const entries = xmlDoc.querySelectorAll('code');
                     const entities = [];
                     
                     // Process each entry
@@ -528,21 +528,25 @@
                         const entry = entries[i];
                         const nameEl = entry.querySelector('name');
                         const urlEl = entry.querySelector('url');
+                        const filenameEl = entry.querySelector('filename');
                         
                         if (nameEl && urlEl) {
                             const entityName = nameEl.textContent.trim();
                             const fullUrl = urlEl.textContent.trim();
                             
-                            // Get the qr parameter from the id attribute
-                            let qrParam = entry.getAttribute('id') || 'lbt';
+                            // Get the uniqueId from the uniqueId attribute
+                            let qrParam = entry.getAttribute('uniqueId') || 'test';
                             
-                            // Extract display URL
-                            let displayUrl = fullUrl;
-                            if (fullUrl.includes('localbartees.com')) {
-                                if (fullUrl === 'https://localbartees.com') {
+                            // Get filename if available, otherwise construct it
+                            let filename = filenameEl ? filenameEl.textContent.trim() : `qr_${qrParam}.png`;
+                            
+                            // Extract display URL (remove ?qr parameter for display)
+                            let displayUrl = fullUrl.replace('?qr', '');
+                            if (displayUrl.includes('localbartees.com')) {
+                                if (displayUrl === 'https://localbartees.com') {
                                     displayUrl = 'localbartees.com';
                                 } else {
-                                    const pathMatch = fullUrl.match(/localbartees\.com\/(.+)/);
+                                    const pathMatch = displayUrl.match(/localbartees\.com\/(.+)/);
                                     if (pathMatch) {
                                         displayUrl = 'localbartees.com/' + pathMatch[1];
                                     } else {
@@ -555,20 +559,14 @@
                                 name: entityName,
                                 url: displayUrl,
                                 fullUrl: fullUrl,
-                                qrParam: qrParam
+                                qrParam: qrParam,
+                                filename: filename
                             });
                         }
                     }
                     
-                    // Custom sort: "lbt" first, then alphabetical by name
-                    entities.sort((a, b) => {
-                        // If one is "lbt" and the other isn't, "lbt" comes first
-                        if (a.qrParam === 'lbt' && b.qrParam !== 'lbt') return -1;
-                        if (b.qrParam === 'lbt' && a.qrParam !== 'lbt') return 1;
-                        
-                        // Otherwise sort alphabetically by name
-                        return a.name.localeCompare(b.name);
-                    });
+                    // Sort alphabetically by name
+                    entities.sort((a, b) => a.name.localeCompare(b.name));
                     
                     displayAllRecords(entities);
                 })
@@ -603,7 +601,7 @@
                 
                 card.innerHTML = `
                     <div class="qr-wrapper">
-                        <img src="qr_codes/${escapeHtml(entity.qrParam)}.png" 
+                        <img src="qr_codes/${escapeHtml(entity.filename)}" 
                              alt="QR Code for ${escapeHtml(entity.name)}" 
                              class="qr-image" 
                              onload="this.style.display='block'; this.nextElementSibling.style.display='none';"
@@ -616,7 +614,7 @@
                     <div class="entity-id">ID: ${escapeHtml(entity.qrParam)}</div>
                     
                     <div class="action-buttons">
-                        <button class="btn btn-print" data-qr-id="${escapeHtml(entity.qrParam)}" data-name="${escapeHtml(entity.name)}" data-url="${escapeHtml(entity.url)}">print qr</button>
+                        <button class="btn btn-print" data-qr-id="${escapeHtml(entity.qrParam)}" data-name="${escapeHtml(entity.name)}" data-url="${escapeHtml(entity.url)}" data-filename="${escapeHtml(entity.filename)}">print qr</button>
                         <button class="btn btn-share-qr" data-qr-id="${escapeHtml(entity.qrParam)}" data-name="${escapeHtml(entity.name)}">share qr</button>
                         <button class="btn btn-share-site" data-full-url="${escapeHtml(entity.fullUrl)}" data-name="${escapeHtml(entity.name)}">share site</button>
                     </div>
@@ -628,7 +626,7 @@
                 const shareSiteBtn = card.querySelector('.btn-share-site');
                 
                 printBtn.addEventListener('click', () => {
-                    printQR(entity.qrParam, entity.name, entity.url);
+                    printQR(entity.filename, entity.name, entity.url);
                 });
                 
                 shareQrBtn.addEventListener('click', () => {
@@ -649,11 +647,11 @@
             return div.innerHTML;
         }
 
-        function printQR(qrId, entityName, entityUrl) {
+        function printQR(filename, entityName, entityUrl) {
             try {
                 // Update the hidden print content
                 document.getElementById('print-artist-name').textContent = entityName.toUpperCase();
-                document.getElementById('print-qr-image').src = `qr_codes/${qrId}.png`;
+                document.getElementById('print-qr-image').src = `qr_codes/${filename}`;
                 document.getElementById('print-url').textContent = `VISIT ${entityUrl.toUpperCase()}`;
                 
                 window.print();
