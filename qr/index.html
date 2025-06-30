@@ -11,8 +11,8 @@
     <link rel="apple-touch-icon" sizes="152x152" href="assets/apple-touch-icon-152x152.png">
     <link rel="apple-touch-icon" sizes="120x120" href="assets/apple-touch-icon-120x120.png">
     <link rel="apple-touch-icon" sizes="76x76" href="assets/apple-touch-icon-76x76.png">
-    <meta name="apple-mobile-web-app-title" content="Local Bar Tees">
-    <title>Local Bar Tees Share</title>
+    <meta name="apple-mobile-web-app-title" content="QR Codes for Local Bar Tees">
+    <title>QR Codes for Local Bar Tees</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
@@ -505,16 +505,16 @@
 <body>
     <div class="qr-container">
         <div class="artist-header">
-            <h1 class="artist-name" id="artist-name">LOCAL BAR TEES</h1>
+            <h1 class="artist-name" id="artist-name"></h1>
             <p class="artist-subtitle">official merch</p>
         </div>
 
         <div class="qr-section">
             <div class="qr-wrapper">
-                <img src="qr_codes/lbt.png" alt="QR Code" class="qr-image" id="qr-image">
-                <div class="qr-placeholder" id="qr-placeholder" style="display: none;">QR</div>
+                <img src="" alt="QR Code" class="qr-image" id="qr-image" style="display: none;">
+                <div class="qr-placeholder" id="qr-placeholder">QR</div>
             </div>
-            <div class="qr-url" id="qr-url">LOCALBARTEES.COM</div>
+            <div class="qr-url" id="qr-url"></div>
         </div>
 
         <div class="action-buttons">
@@ -522,7 +522,7 @@
             <button class="btn btn-share" id="share-btn">share this shop</button>
         </div>
 
-        <a href="https://localbartees.com" target="_blank" class="brand-credit">localbartees.com</a>
+        <a href="" target="_blank" class="brand-credit" id="brand-credit"></a>
     </div>
 
     <script>
@@ -568,18 +568,23 @@
             try {
                 document.getElementById('artist-name').textContent = entityName.toUpperCase();
                 document.getElementById('qr-url').textContent = urlLabel.toUpperCase();
-                document.title = entityName + ' - Official Merch';
+                document.title = 'QR Codes for ' + entityName;
                 
                 // Update apple-mobile-web-app-title for iOS home screen
                 let appTitleMeta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
                 if (appTitleMeta) {
-                    appTitleMeta.setAttribute('content', entityName);
+                    appTitleMeta.setAttribute('content', 'QR Codes for ' + entityName);
                 }
                 
                 const qrImg = document.getElementById('qr-image');
                 qrImg.onload = showQRImage;
                 qrImg.onerror = showQRPlaceholder;
                 qrImg.src = 'qr_codes/' + qrId + '.png';
+                
+                // Update brand credit link
+                const brandCredit = document.getElementById('brand-credit');
+                brandCredit.href = actualUrl;
+                brandCredit.textContent = urlLabel.toLowerCase();
                 
                 backupUrl = actualUrl;
             } catch (e) {
@@ -589,9 +594,9 @@
         
         function displayAllRecords(entries) {
             try {
-                document.getElementById('artist-name').textContent = 'ALL QR CODES';
+                document.getElementById('artist-name').textContent = 'QR CODES FOR LOCAL BAR TEES';
                 document.getElementById('qr-url').textContent = 'SELECT AN OPTION BELOW';
-                document.title = 'All QR Codes - Local Bar Tees';
+                document.title = 'QR Codes for Local Bar Tees';
                 
                 // Hide the QR image section
                 const qrSection = document.querySelector('.qr-section');
@@ -689,8 +694,8 @@
                     if (found) {
                         const nameEl = found.querySelector('name');
                         const urlEl = found.querySelector('url');
-                        const entityName = nameEl ? nameEl.textContent : 'Local Bar Tees';
-                        const fullUrl = urlEl ? urlEl.textContent : 'https://localbartees.com';
+                        const entityName = nameEl ? nameEl.textContent : 'Unknown';
+                        const fullUrl = urlEl ? urlEl.textContent : '#';
                         
                         let urlLabel = fullUrl;
                         if (fullUrl.includes('localbartees.com')) {
@@ -715,12 +720,18 @@
                         
                         updateContent(entityName, urlLabel, fullUrl, qrId);
                     } else {
-                        updateContent('Local Bar Tees', 'localbartees.com', 'https://localbartees.com', 'lbt');
+                        // Show error message if no data found
+                        document.getElementById('artist-name').textContent = 'NO DATA FOUND';
+                        document.getElementById('qr-url').textContent = 'CHECK XML FILE';
+                        document.title = 'QR Codes - No Data';
                     }
                 })
                 .catch(error => {
-                    console.log('Using default lbt content');
-                    updateContent('Local Bar Tees', 'localbartees.com', 'https://localbartees.com', 'lbt');
+                    console.log('Error loading XML file');
+                    // Show error message if XML fails to load
+                    document.getElementById('artist-name').textContent = 'ERROR LOADING';
+                    document.getElementById('qr-url').textContent = 'XML FILE NOT FOUND';
+                    document.title = 'QR Codes - Error';
                 });
         }
         
@@ -748,7 +759,7 @@
                 const entityName = document.getElementById('artist-name').textContent;
                 if (navigator.share) {
                     navigator.share({
-                        title: entityName + ' - Official Merchandise',
+                        title: 'QR Codes for ' + entityName,
                         text: 'Check out official merchandise from ' + entityName,
                         url: shareUrl
                     });
