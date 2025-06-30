@@ -1,27 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<root>
-    <qr id="jenn">
-        <name>Jenn Howard</name>
-        <url>https://localbartees.com/jenn</url>
-    </qr>
-    <qr id="nail">
-        <name>The Rusty Nail</name>
-        <url>https://localbartees.com/nail</url>
-    </qr>
-    <qr id="lbt">
-        <name>Local Bar Tees</name>
-        <url>https://localbartees.com</url>
-    </qr>
-    <qr id="roundin">
-        <name>Roundin' 3rd</name>
-        <url>https://localbartees.com/roundin</url>
-    </qr>
-        <qr id="sidecar">
-        <name>Sidecar Patio &amp; Oyster Bar</name>
-        <url>https://localbartees.com/sidecar</url>
-    </qr>
-        <qr id="mayfair">
-        <name>Mayfair Lounge</name>
-        <url>https://localbartees.com/mayfair</url>
-    </qr>
-</root>
+<qrCodes version="1.0" generator="Local Bar Tees QR Generator" batchName="qr-batch" generated="2025-06-30T06:01:07.165Z" count="1">
+  <codes>
+    <code uniqueId="Kolb's Restaurant">
+      <url>https://locabartees.com/Kolb's Restaurant?qr</url>
+      <filename>locabartees-qr-Kolb-s-Restaurant.png</filename>
+      <size>300x300</size>
+      <errorCorrection>M</errorCorrection>
+      <generated>2025-06-30T06:01:07.165Z</generated>
+    </code>
+  </codes>
+</qrCodes>
