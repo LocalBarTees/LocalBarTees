@@ -20,4 +20,8 @@
         <name>Sidecar Patio &amp; Oyster Bar</name>
         <url>https://localbartees.com/sidecar</url>
     </qr>
+        <qr id="mayfair">
+        <name>Mayfair Lounge</name>
+        <url>https://localbartees.com/mayfair</url>
+    </qr>
 </root>
