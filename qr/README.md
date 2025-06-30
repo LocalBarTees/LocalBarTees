@@ -1,12 +1,12 @@
 # Local Bar Tees QR Codes
 
-Generated: 2025-06-30T06:30:26.037Z
+Generated: 2025-06-30T06:35:56.096Z
 Total QR Codes: 1
 
 ## Files Generated
 
 ### PNG Files
-- juans.png → https://localbartees.com/juans?qr
+- traceys.png → https://localbartees.com/traceys?qr
 
 ### XML Data
 - qr.xml (contains all QR codes metadata)
