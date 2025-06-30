@@ -6,15 +6,28 @@ const { Builder } = require('xml2js');
 
 async function generateQRCodes() {
   // Get input from environment variables or command line args
-  const uniqueIdsInput = process.env.UNIQUE_IDS || process.argv[2] || 'featured-products,contact,about';
-  const batchName = process.env.BATCH_NAME || process.argv[3] || 'qr-batch';
+  const uniqueIdsInput = process.env.UNIQUE_IDS || process.argv[2] || 'featuredproducts,contact,about';
+  const namesInput = process.env.NAMES || process.argv[3] || 'Featured Products,Contact Page,About Us';
   
   const uniqueIds = uniqueIdsInput.split(',').map(id => id.trim());
+  const names = namesInput.split(',').map(name => name.trim());
   const timestamp = new Date().toISOString();
   
+  // Validate unique IDs
+  for (const uniqueId of uniqueIds) {
+    if (!/^[a-zA-Z0-9]+$/.test(uniqueId)) {
+      throw new Error(`Invalid unique ID: "${uniqueId}". Only letters and numbers allowed, no spaces or special characters.`);
+    }
+  }
+  
+  // Validate that we have the same number of IDs and names
+  if (uniqueIds.length !== names.length) {
+    throw new Error(`Mismatch: ${uniqueIds.length} unique IDs but ${names.length} names. Please provide the same number of IDs and names.`);
+  }
+  
   console.log(`🚀 Starting QR code generation for Local Bar Tees`);
-  console.log(`📦 Batch: ${batchName}`);
   console.log(`🔢 IDs: ${uniqueIds.join(', ')}`);
+  console.log(`📝 Names: ${names.join(', ')}`);
   
   // Create output directory (write directly to qr folder)
   const outputDir = `qr`;
@@ -23,14 +36,16 @@ async function generateQRCodes() {
   
   const qrData = [];
   
-  for (const uniqueId of uniqueIds) {
+  for (let i = 0; i < uniqueIds.length; i++) {
+    const uniqueId = uniqueIds[i];
+    const name = names[i];
+    
     try {
       // Construct URL with ?qr parameter
-      const cleanId = uniqueId.replace(/^\/+/, '');
-      const fullUrl = `https://locabartees.com/${cleanId}?qr`;
+      const fullUrl = `https://localbartees.com/${uniqueId}?qr`;
       
       // Generate QR code PNG directly in qr directory
-      const filename = `locabartees-qr-${cleanId.replace(/[^a-zA-Z0-9-]/g, '-')}.png`;
+      const filename = `${uniqueId}.png`;
       const pngPath = path.join(outputDir, filename);
       
       await QRCode.toFile(pngPath, fullUrl, {
@@ -46,7 +61,8 @@ async function generateQRCodes() {
       
       // Collect data for XML
       const qrInfo = {
-        uniqueId: cleanId,
+        uniqueId: uniqueId,
+        name: name,
         url: fullUrl,
         filename: filename,
         generated: timestamp,
@@ -57,7 +73,7 @@ async function generateQRCodes() {
       
       qrData.push(qrInfo);
       
-      console.log(`✅ Generated: ${uniqueId} → ${filename}`);
+      console.log(`✅ Generated: ${uniqueId} (${name}) → ${filename}`);
       
     } catch (error) {
       console.error(`❌ Failed to generate QR code for ${uniqueId}:`, error.message);
@@ -70,19 +86,19 @@ async function generateQRCodes() {
       $: { 
         version: '1.0',
         generator: 'Local Bar Tees QR Generator',
-        batchName: batchName,
         generated: timestamp,
         count: qrData.length
       },
       summary: {
         totalFiles: qrData.length + 1, // PNG files + XML file
         totalSize: qrData.reduce((sum, item) => sum + item.fileSize, 0),
-        baseUrl: 'https://locabartees.com',
+        baseUrl: 'https://localbartees.com',
         qrParameter: '?qr'
       },
       codes: {
         code: qrData.map(item => ({
           $: { uniqueId: item.uniqueId },
+          name: item.name,
           url: item.url,
           filename: item.filename,
           size: item.size,
@@ -106,7 +122,7 @@ async function generateQRCodes() {
   // Generate README
   const readmePath = path.join(outputDir, 'README.md');
   const totalSize = qrData.reduce((sum, item) => sum + item.fileSize, 0);
-  const readmeContent = `# Local Bar Tees QR Code Batch: ${batchName}
+  const readmeContent = `# Local Bar Tees QR Codes
 
 **Generated:** ${new Date(timestamp).toLocaleString()}  
 **Total QR Codes:** ${qrData.length}  
@@ -115,18 +131,18 @@ async function generateQRCodes() {
 ## 📁 Directory Structure
 \`\`\`
 qr/
-├── locabartees-qr-shirt-123.png    # QR code images (300x300 PNG)
-├── locabartees-qr-promo-summer.png
-├── locabartees-qr-contact.png
+├── shirt123.png                    # QR code images (300x300 PNG)
+├── promosummer.png
+├── contact.png
 ├── qr.xml                          # All QR code metadata
 └── README.md                       # This file
 \`\`\`
 
 ## 🔗 Generated QR Codes
 
-| Unique ID | URL | Filename |
-|-----------|-----|----------|
-${qrData.map(item => `| \`${item.uniqueId}\` | ${item.url} | ${item.filename} |`).join('\n')}
+| Unique ID | Name | URL | Filename |
+|-----------|------|-----|----------|
+${qrData.map(item => `| \`${item.uniqueId}\` | ${item.name} | ${item.url} | ${item.filename} |`).join('\n')}
 
 ## 📱 Usage Instructions
 
@@ -141,12 +157,13 @@ ${qrData.map(item => `| \`${item.uniqueId}\` | ${item.url} | ${item.filename} |`
 - **Error Correction:** Medium (M) - 15% damage recovery
 - **Colors:** Dark gray (#2d3748) on white (#ffffff)
 - **URL Parameter:** All URLs include \`?qr\` for tracking
+- **Unique ID Format:** Letters and numbers only (no spaces/special characters)
 
 ## 🔄 Regeneration
 
-To regenerate this batch, run:
+To regenerate, run:
 \`\`\`bash
-node generate-qr.js "${uniqueIds.join(',')}" "${batchName}"
+node generate-qr.js "${uniqueIds.join(',')}" "${names.join(',')}"
 \`\`\`
 
 ---
@@ -156,7 +173,7 @@ node generate-qr.js "${uniqueIds.join(',')}" "${batchName}"
   fs.writeFileSync(readmePath, readmeContent);
   
   // Summary output
-  console.log(`\n🎉 Batch generation complete!`);
+  console.log(`\n🎉 Generation complete!`);
   console.log(`📁 Output directory: ${outputDir}`);
   console.log(`📊 Generated: ${qrData.length} QR codes`);
   console.log(`📄 Files created: ${qrData.length} PNGs, 1 XML, 1 README`);

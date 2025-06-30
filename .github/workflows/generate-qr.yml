@@ -5,14 +5,13 @@ on:
   workflow_dispatch:
     inputs:
       unique_ids:
-        description: 'Comma-separated list of unique IDs (e.g., shirt-123,promo-summer,contact)'
+        description: 'Comma-separated list of unique IDs (e.g., shirt123,promosummer,contact)'
         required: true
         type: string
-      batch_name:
-        description: 'Batch name for organization (optional)'
-        required: false
+      names:
+        description: 'Comma-separated list of names (e.g., Blue Shirt,Summer Promo,Contact Page)'
+        required: true
         type: string
-        default: 'qr-batch'
 
 jobs:
   generate-qr-codes:
@@ -32,7 +31,7 @@ jobs:
         npm init -y
         npm install qrcode xml2js
     
-    - name: Generate QR codes and XML
+    - name: QR Code Generator
       run: |
         cat << 'EOF' > generate-qr.js
         const QRCode = require('qrcode');
@@ -42,8 +41,20 @@ jobs:
         
         async function generateQRCodes() {
           const uniqueIds = process.env.UNIQUE_IDS.split(',').map(id => id.trim());
-          const batchName = process.env.BATCH_NAME || 'qr-batch';
+          const names = process.env.NAMES.split(',').map(name => name.trim());
           const timestamp = new Date().toISOString();
+          
+          // Validate unique IDs
+          for (const uniqueId of uniqueIds) {
+            if (!/^[a-zA-Z0-9]+$/.test(uniqueId)) {
+              throw new Error(`Invalid unique ID: "${uniqueId}". Only letters and numbers allowed, no spaces or special characters.`);
+            }
+          }
+          
+          // Validate that we have the same number of IDs and names
+          if (uniqueIds.length !== names.length) {
+            throw new Error(`Mismatch: ${uniqueIds.length} unique IDs but ${names.length} names. Please provide the same number of IDs and names.`);
+          }
           
           // Create output directory (write directly to qr folder)
           const outputDir = `qr`;
@@ -52,14 +63,16 @@ jobs:
           
           const qrData = [];
           
-          for (const uniqueId of uniqueIds) {
+          for (let i = 0; i < uniqueIds.length; i++) {
+            const uniqueId = uniqueIds[i];
+            const name = names[i];
+            
             try {
               // Construct URL
-              const cleanId = uniqueId.replace(/^\/+/, '');
-              const fullUrl = `https://locabartees.com/${cleanId}?qr`;
+              const fullUrl = `https://localbartees.com/${uniqueId}?qr`;
               
               // Generate QR code PNG directly in qr directory
-              const pngPath = path.join(outputDir, `locabartees-qr-${cleanId.replace(/[^a-zA-Z0-9-]/g, '-')}.png`);
+              const pngPath = path.join(outputDir, `${uniqueId}.png`);
               await QRCode.toFile(pngPath, fullUrl, {
                 width: 300,
                 height: 300,
@@ -73,7 +86,8 @@ jobs:
               
               // Collect data for XML
               qrData.push({
-                uniqueId: cleanId,
+                uniqueId: uniqueId,
+                name: name,
                 url: fullUrl,
                 filename: path.basename(pngPath),
                 generated: timestamp,
@@ -81,7 +95,7 @@ jobs:
                 errorCorrection: 'M'
               });
               
-              console.log(`✅ Generated QR code for: ${uniqueId}`);
+              console.log(`✅ Generated QR code for: ${uniqueId} (${name})`);
               
             } catch (error) {
               console.error(`❌ Failed to generate QR code for ${uniqueId}:`, error);
@@ -94,13 +108,13 @@ jobs:
               $: { 
                 version: '1.0',
                 generator: 'Local Bar Tees QR Generator',
-                batchName: batchName,
                 generated: timestamp,
                 count: qrData.length
               },
               codes: {
                 code: qrData.map(item => ({
                   $: { uniqueId: item.uniqueId },
+                  name: item.name,
                   url: item.url,
                   filename: item.filename,
                   size: item.size,
@@ -122,7 +136,7 @@ jobs:
           
           // Generate README
           const readmePath = path.join(outputDir, 'README.md');
-          const readmeContent = `# Local Bar Tees QR Code Batch: ${batchName}
+          const readmeContent = `# Local Bar Tees QR Codes
         
         Generated: ${timestamp}
         Total QR Codes: ${qrData.length}
@@ -143,7 +157,7 @@ jobs:
           
           fs.writeFileSync(readmePath, readmeContent);
           
-          console.log(`\n🎉 Batch complete!`);
+          console.log(`\n🎉 Generation complete!`);
           console.log(`📁 Output directory: ${outputDir}`);
           console.log(`📊 Generated ${qrData.length} QR codes`);
           console.log(`📄 Files: ${qrData.length} PNGs, 1 XML, 1 README`);
@@ -156,12 +170,12 @@ jobs:
         generateQRCodes().catch(console.error);
         EOF
         
-        UNIQUE_IDS="${{ github.event.inputs.unique_ids }}" BATCH_NAME="${{ github.event.inputs.batch_name }}" node generate-qr.js
+        UNIQUE_IDS="${{ github.event.inputs.unique_ids }}" NAMES="${{ github.event.inputs.names }}" node generate-qr.js
     
     - name: Upload QR codes as artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: locabartees-qr-codes-${{ github.event.inputs.batch_name || 'batch' }}-${{ github.run_number }}
+        name: locabartees-qr-codes-${{ github.run_number }}
         path: qr/
         retention-days: 90
     
@@ -171,5 +185,5 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add qr/
-        git commit -m "Generate QR codes batch: ${{ github.event.inputs.batch_name || 'qr-batch' }}" || exit 0
+        git commit -m "Generate QR codes: ${{ github.event.inputs.unique_ids }}" || exit 0
         git push
