@@ -1,12 +1,12 @@
 # Local Bar Tees QR Codes
 
-Generated: 2025-06-30T13:14:51.719Z
+Generated: 2025-06-30T18:49:49.107Z
 Total QR Codes: 1
 
 ## Files Generated
 
 ### PNG Files
-- qr_parasols.png → https://localbartees.com/parasols?qr
+- qr_test.png → https://localbartees.com/test?qr
 
 ### XML Data
 - qr.xml (contains all QR codes metadata)

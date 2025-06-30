@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<qrCodes version="1.0" generator="Local Bar Tees QR Generator" generated="2025-06-30T13:14:51.719Z" count="7">
+<qrCodes version="1.0" generator="Local Bar Tees QR Generator" generated="2025-06-30T18:49:49.107Z" count="8">
   <codes>
     <code uniqueId="traceys">
       <name>Tracey's</name>
@@ -56,6 +56,14 @@
       <size>300x300</size>
       <errorCorrection>M</errorCorrection>
       <generated>2025-06-30T13:14:51.719Z</generated>
+    </code>
+    <code uniqueId="test">
+      <name>Test</name>
+      <url>https://localbartees.com/test?qr</url>
+      <filename>qr_test.png</filename>
+      <size>300x300</size>
+      <errorCorrection>M</errorCorrection>
+      <generated>2025-06-30T18:49:49.107Z</generated>
     </code>
   </codes>
 </qrCodes>
