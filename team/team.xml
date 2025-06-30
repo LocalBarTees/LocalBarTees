@@ -34,10 +34,10 @@
     </member>
     
     <member id="steele">
-        <n>Steele</n>
+        <n>George Steele</n>
         <title>Team Member</title>
-        <phone>504.XXX.XXXX</phone>
-        <email>steele@localbartees.com</email>
+        <phone>617.717.4885</phone>
+        <email>gsteele@localbartees.com</email>
         <website>https://localbartees.com</website>
         <qr_url>https://localbartees.com/steele</qr_url>
         <logo>../assets/lbt_white.png</logo>
