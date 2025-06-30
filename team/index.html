@@ -42,15 +42,9 @@
       align-items: center;
       gap: 16px;
     }
-    .card-logo {
-      width: 52px;
-      height: 52px;
+    
     }
-    .card-logo img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
+    
     .card-identity h2 {
       font-size: 24px;
       font-weight: 700;
@@ -73,9 +67,21 @@
     }
     .card-footer {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
     }
+
+    .card-qr {
+      width: 100px;
+      height: 100px;
+      border: 1px solid #e9ecef;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-left: 0;
+      margin-top: 12px;
+    }
+
     .card-brand {
       display: none;
     }
@@ -124,7 +130,6 @@
     <div class="business-card" onclick="fullscreenCard()">
       <div class="card-content">
         <div class="card-header">
-          <div class="card-logo"><img src="" alt="Logo"></div>
           <div class="card-identity">
             <h2>Loading...</h2>
             <p>Loading...</p>
@@ -156,7 +161,7 @@ function getUrlParameter(name) {
 }
 
 async function loadTeamData() {
-    const memberId = getUrlParameter('member') || 'main';
+    const memberId = getUrlParameter('id') || 'main';
     const paths = ['team.xml', './team.xml', '../assets/team.xml', 'assets/team.xml', '../team.xml'];
     let xml = null;
 
@@ -180,7 +185,7 @@ async function loadTeamData() {
 
     currentMember = {
         id: memberId,
-        name: member.querySelector('n')?.textContent || 'Unknown',
+        name: member.querySelector('name')?.textContent || 'Unknown',
         title: member.querySelector('title')?.textContent || '',
         phone: member.querySelector('phone')?.textContent || '',
         email: member.querySelector('email')?.textContent || '',
@@ -195,8 +200,7 @@ async function loadTeamData() {
 
 function updateCard() {
     document.title = `${currentMember.name}`;
-    document.querySelector('.card-logo img').src = currentMember.logo;
-    document.querySelector('.card-identity h2').textContent = currentMember.name;
+        document.querySelector('.card-identity h2').textContent = currentMember.name;
     document.querySelector('.card-identity p').textContent = currentMember.title;
 
     const contactList = document.querySelector('.card-contact');
@@ -209,7 +213,46 @@ function updateCard() {
 }
 
 function printCard() {
-    window.print();
+    alert('Use Avery Template 5371');
+    const printWindow = window.open('', '', 'width=800,height=1000');
+    if (!printWindow) return;
+
+    const card = document.querySelector('.business-card').outerHTML;
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print Business Cards</title>
+          <style>
+            @page {
+              margin: 0.5in;
+            }
+            body {
+              display: grid;
+              grid-template-columns: repeat(2, 3.5in);
+              grid-template-rows: repeat(5, 2in);
+              gap: 0;
+              padding: 0;
+              margin: 0;
+            }
+            .business-card {
+              width: 3.5in;
+              height: 2in;
+              box-shadow: none;
+              border: 1px solid #ccc;
+              margin: 0;
+              page-break-inside: avoid;
+            }
+          </style>
+        </head>
+        <body>
+          ${card.repeat(10)}
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
 }
 
 function shareCard() {
@@ -222,11 +265,31 @@ function shareCard() {
 
 function fullscreenCard() {
     const modal = document.createElement('div');
-    modal.style.cssText = `position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 1000;`;
+    modal.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 10px;
+    `;
 
     const clone = document.querySelector('.business-card').cloneNode(true);
-    clone.style.transform = 'scale(2.2)';
-    clone.style.boxShadow = '0 20px 40px rgba(0,0,0,0.4)';
+    clone.style.cssText = `
+      width: 90vw;
+      height: auto;
+      max-width: 90vw;
+      max-height: 90vh;
+      transform: none;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      background: white;
+    `;
+
     modal.appendChild(clone);
     document.body.appendChild(modal);
 
@@ -235,7 +298,6 @@ function fullscreenCard() {
         if (e.key === 'Escape') document.body.removeChild(modal);
     }, { once: true });
 }
-
 async function tapToShare() {
     const btn = document.getElementById('nfcBtn');
     if (!('NDEFReader' in window)) return alert('NFC not supported');

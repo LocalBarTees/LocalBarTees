@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <team>
     <member id="main">
-        <n>Local Bar Tees</n>
-        <title>Custom Apparel &amp; Merchandise</title>
+        <name>Local Bar Tees</name>
+        <title>Merch for Bars &amp; Bands</title>
         <phone>504.261.5637</phone>
         <email>info@localbartees.com</email>
         <website>https://localbartees.com</website>
@@ -12,34 +12,34 @@
     </member>
     
     <member id="gale">
-        <n>Michael Gale</n>
+        <name>Michael Gale</name>
         <title>Sales &amp; Product Developer</title>
         <phone>504.261.5637</phone>
         <email>mgale@localbartees.com</email>
         <website>https://localbartees.com</website>
-        <qr_url>https://localbartees.com/gale</qr_url>
+        <qr_url>https://localbartees.com/team/?id=gale</qr_url>
         <logo>../assets/lbt_white.png</logo>
         <company>Local Bar Tees</company>
     </member>
     
     <member id="kolb">
-        <n>Kevin Kolb</n>
+        <name>Kevin Kolb</name>
         <title>Team Member</title>
         <phone>504.581.5652</phone>
         <email>kolb@localbartees.com</email>
         <website>https://localbartees.com</website>
-        <qr_url>https://localbartees.com/kolb</qr_url>
+        <qr_url>https://localbartees.com/team/?id=kolb</qr_url>
         <logo>../assets/lbt_white.png</logo>
         <company>Local Bar Tees</company>
     </member>
     
     <member id="steele">
-        <n>George Steele</n>
+        <name>George Steele</name>
         <title>Team Member</title>
         <phone>617.717.4885</phone>
         <email>gsteele@localbartees.com</email>
         <website>https://localbartees.com</website>
-        <qr_url>https://localbartees.com/steele</qr_url>
+        <qr_url>https://localbartees.com/team/?id=steele</qr_url>
         <logo>../assets/lbt_white.png</logo>
         <company>Local Bar Tees</company>
     </member>
