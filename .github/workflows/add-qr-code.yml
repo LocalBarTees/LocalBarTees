@@ -7,7 +7,7 @@ on:
         required: true
         type: string
       qr_id:
-        description: 'QR Code ID (web shop stem)'
+        description: 'QR Code ID'
         required: true
         type: string
 
@@ -15,38 +15,41 @@ jobs:
   add-qr-code:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
         
-      - name: Add new QR entry to XML
+      - name: Add QR Code
         run: |
-          BAR_NAME="${{ inputs.bar_name }}"
-          QR_ID="${{ inputs.qr_id }}"
-          WEBSITE_URL="https://localbartees.com/${QR_ID}"
+          echo "Bar/Band Name: ${{ github.event.inputs.bar_name }}"
+          echo "QR ID: ${{ github.event.inputs.qr_id }}"
           
-          echo "Adding QR code:"
-          echo "  Bar/Band: ${BAR_NAME}"
-          echo "  QR ID: ${QR_ID}" 
-          echo "  URL: ${WEBSITE_URL}"
-          
-          # Create the new QR entry
-          NEW_ENTRY="  <qr ${QR_ID}=\"${QR_ID}\">
-    <name>${BAR_NAME}</name>
-    <url>${WEBSITE_URL}</url>
-  </qr>"
-          
-          # Insert before </root> using sed
-          sed -i "/<\/root>/i\\${NEW_ENTRY}" assets/qr.xml
-          
-      - name: Show updated XML
-        run: |
-          echo "Updated XML file:"
+          # Read current XML
           cat assets/qr.xml
           
-      - name: Commit and push changes
+          # Create new entry
+          cat >> temp_entry.txt << EOF
+  <qr ${{ github.event.inputs.qr_id }}="${{ github.event.inputs.qr_id }}">
+    <name>${{ github.event.inputs.bar_name }}</name>
+    <url>https://localbartees.com/${{ github.event.inputs.qr_id }}</url>
+  </qr>
+EOF
+          
+          # Insert before </root>
+          head -n -1 assets/qr.xml > temp.xml
+          cat temp_entry.txt >> temp.xml
+          echo "</root>" >> temp.xml
+          mv temp.xml assets/qr.xml
+          
+          # Clean up
+          rm temp_entry.txt
+          
+          echo "New XML:"
+          cat assets/qr.xml
+          
+      - name: Commit
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
           git add assets/qr.xml
-          git commit -m "Add QR code for ${{ inputs.bar_name }}"
+          git commit -m "Add ${{ github.event.inputs.bar_name }}"
           git push
