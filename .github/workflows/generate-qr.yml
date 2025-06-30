@@ -1,5 +1,5 @@
 # .github/workflows/generate-qr.yml
-name: Generate Local Bar Tees QR Codes
+name: QR Code Generator
 
 on:
   workflow_dispatch:
