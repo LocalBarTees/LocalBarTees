@@ -45,7 +45,7 @@ async function generateQRCodes() {
       const fullUrl = `https://localbartees.com/${uniqueId}?qr`;
       
       // Generate QR code PNG directly in qr directory
-      const filename = `${uniqueId}.png`;
+      const filename = `qr_${uniqueId}.png`;
       const pngPath = path.join(outputDir, filename);
       
       await QRCode.toFile(pngPath, fullUrl, {
@@ -80,30 +80,75 @@ async function generateQRCodes() {
     }
   }
   
-  // Generate qr.xml file in qr directory
+  // Generate qr.xml file in qr directory (append to existing or create new)
+  const xmlPath = path.join(outputDir, 'qr.xml');
+  let existingData = [];
+  
+  // Check if qr.xml already exists and read existing data
+  if (fs.existsSync(xmlPath)) {
+    try {
+      const existingXml = fs.readFileSync(xmlPath, 'utf8');
+      const { parseString } = require('xml2js');
+      
+      await new Promise((resolve, reject) => {
+        parseString(existingXml, (err, result) => {
+          if (!err && result && result.qrCodes && result.qrCodes.codes && result.qrCodes.codes[0] && result.qrCodes.codes[0].code) {
+            existingData = result.qrCodes.codes[0].code.map(code => ({
+              uniqueId: code.$.uniqueId,
+              name: code.name ? code.name[0] : '',
+              url: code.url ? code.url[0] : '',
+              filename: code.filename ? code.filename[0] : '',
+              size: code.size ? code.size[0] : '',
+              errorCorrection: code.errorCorrection ? code.errorCorrection[0] : '',
+              fileSizeBytes: code.fileSizeBytes ? parseInt(code.fileSizeBytes[0]) : 0,
+              generated: code.generated ? code.generated[0] : ''
+            }));
+          }
+          resolve();
+        });
+      });
+    } catch (error) {
+      console.log('Note: Could not parse existing XML, creating new file');
+    }
+  }
+  
+  // Merge existing data with new data, avoiding duplicates
+  const allData = [...existingData];
+  for (const newItem of qrData) {
+    const existingIndex = allData.findIndex(item => item.uniqueId === newItem.uniqueId);
+    if (existingIndex >= 0) {
+      // Update existing entry
+      allData[existingIndex] = newItem;
+      console.log(`📝 Updated existing QR code: ${newItem.uniqueId}`);
+    } else {
+      // Add new entry
+      allData.push(newItem);
+    }
+  }
+  
   const xmlData = {
     qrCodes: {
       $: { 
         version: '1.0',
         generator: 'Local Bar Tees QR Generator',
         generated: timestamp,
-        count: qrData.length
+        count: allData.length
       },
       summary: {
-        totalFiles: qrData.length + 1, // PNG files + XML file
-        totalSize: qrData.reduce((sum, item) => sum + item.fileSize, 0),
+        totalFiles: allData.length + 1, // PNG files + XML file
+        totalSize: allData.reduce((sum, item) => sum + (item.fileSize || 0), 0),
         baseUrl: 'https://localbartees.com',
         qrParameter: '?qr'
       },
       codes: {
-        code: qrData.map(item => ({
+        code: allData.map(item => ({
           $: { uniqueId: item.uniqueId },
           name: item.name,
           url: item.url,
           filename: item.filename,
           size: item.size,
           errorCorrection: item.errorCorrection,
-          fileSizeBytes: item.fileSize,
+          fileSizeBytes: item.fileSizeBytes || item.fileSize,
           generated: item.generated
         }))
       }
@@ -116,7 +161,6 @@ async function generateQRCodes() {
   });
   const xml = builder.buildObject(xmlData);
   
-  const xmlPath = path.join(outputDir, 'qr.xml');
   fs.writeFileSync(xmlPath, xml);
   
   // Generate README
@@ -131,9 +175,9 @@ async function generateQRCodes() {
 ## 📁 Directory Structure
 \`\`\`
 qr/
-├── shirt123.png                    # QR code images (300x300 PNG)
-├── promosummer.png
-├── contact.png
+├── qr_shirt123.png                 # QR code images (300x300 PNG)
+├── qr_promosummer.png
+├── qr_contact.png
 ├── qr.xml                          # All QR code metadata
 └── README.md                       # This file
 \`\`\`
