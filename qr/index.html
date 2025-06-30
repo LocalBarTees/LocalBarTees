@@ -2,867 +2,441 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="format-detection" content="telephone=no">
-    <link rel="icon" href="assets/qr_favicon.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="assets/apple-touch-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="assets/apple-touch-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="assets/apple-touch-icon-76x76.png">
-    <meta name="apple-mobile-web-app-title" content="Local Bar Tees">
-    <title>Local Bar Tees Share</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Bar Tees QR Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        :root {
-            --primary-black: #000000;
-            --soft-black: #111111;
-            --border-gray: #333333;
-            --text-gray: #999999;
-            --light-gray: #cccccc;
-            --pure-white: #ffffff;
-            --accent-gray: #f8f8f8;
-            --radius-sm: 12px;
-            --radius-md: 16px;
-            --radius-lg: 24px;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.15);
-        }
-
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-            color: var(--pure-white);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
-            padding: 1rem;
-            position: relative;
-            overflow-x: hidden;
+            justify-content: center;
+            padding: 20px;
+            line-height: 1.6;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
+        .container {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.15);
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: #718096;
+            font-size: 1.1em;
+            font-weight: 400;
+            margin-bottom: 24px;
+        }
+
+        .brand-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.85em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+        }
+
+        .input-group {
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 12px;
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 1em;
+            letter-spacing: -0.2px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: #f7fafc;
+            color: #2d3748;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+            background: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 20px rgba(72, 187, 120, 0.3);
+            margin: 24px 0;
+            width: 100%;
+            letter-spacing: 0.3px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(72, 187, 120, 0.4);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .qr-output {
+            margin-top: 32px;
+            padding: 32px 24px;
+            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .qr-output.has-qr {
+            background: linear-gradient(135deg, #ffffff, #f7fafc);
+            border-color: #48bb78;
+            box-shadow: 0 8px 24px rgba(72, 187, 120, 0.1);
         }
 
         .qr-container {
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-gray);
-            border-radius: var(--radius-lg);
-            padding: 1.5rem;
-            text-align: center;
-            max-width: 480px;
-            width: 100%;
-            box-shadow: var(--shadow-lg);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .qr-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-        }
-
-        .artist-header {
-            margin-bottom: 1.5rem;
-            position: relative;
-        }
-
-        .artist-name {
-            font-size: clamp(2rem, 5vw, 2.75rem);
-            font-weight: 800;
-            color: var(--pure-white);
-            margin-bottom: 0.5rem;
-            line-height: 1.1;
-            letter-spacing: -0.02em;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .artist-subtitle {
-            font-size: 1rem;
-            color: var(--text-gray);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .qr-section {
-            margin: 1.5rem 0;
-            position: relative;
-        }
-
-        .qr-wrapper {
-            display: inline-block;
-            margin-bottom: 1rem;
-            position: relative;
-        }
-
-        .qr-wrapper::before {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            background: linear-gradient(45deg, var(--pure-white), #f0f0f0);
-            border-radius: calc(var(--radius-md) + 4px);
-            z-index: -1;
-        }
-
-        .qr-image, .qr-placeholder {
-            width: 240px;
-            height: 240px;
-            border-radius: var(--radius-md);
-            background: var(--pure-white);
-            box-shadow: var(--shadow);
-            border: 2px solid var(--pure-white);
-        }
-        
-        .qr-placeholder {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2rem;
-            font-weight: 600;
-            color: var(--text-gray);
-        }
-
-        .backup-section {
-            background: linear-gradient(135deg, var(--soft-black), rgba(17, 17, 17, 0.8));
-            border: 1px solid var(--border-gray);
-            border-radius: var(--radius-md);
-            padding: 1.25rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            backdrop-filter: blur(10px);
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            align-items: center;
+            gap: 20px;
         }
 
-        .backup-url {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--pure-white);
-            background: rgba(34, 34, 34, 0.8);
-            padding: 1rem 1.25rem;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-gray);
-            display: block;
+        .placeholder {
+            color: #a0aec0;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
             cursor: pointer;
-            text-decoration: none;
-            font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
-            min-height: 48px;
-            backdrop-filter: blur(10px);
-            text-align: center;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(237, 137, 54, 0.3);
+            letter-spacing: 0.2px;
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
+        .download-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(237, 137, 54, 0.4);
+        }
+
+        .url-info {
+            background: linear-gradient(135deg, #ebf8ff, #bee3f8);
+            border-left: 4px solid #4299e1;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .url-info small {
+            color: #2b6cb0;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .qr-code-table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .qr-code-table td {
+            width: 8px;
+            height: 8px;
+            padding: 0;
             margin: 0;
         }
 
-        .btn {
-            padding: 0.875rem 1.5rem;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            font-size: 0.95rem;
-            border: 1px solid var(--border-gray);
-            cursor: pointer;
+        .url-display {
+            background: #f7fafc;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.85em;
+            color: #4a5568;
+            word-break: break-all;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            max-width: 100%;
+        }
+
+        .loading {
+            color: #4299e1;
+            font-size: 1.1em;
+            font-weight: 500;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            min-width: 130px;
-            min-height: 48px;
-            background: linear-gradient(135deg, #222222, #333333);
-            color: var(--pure-white);
-            border-color: #444444;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            gap: 8px;
         }
 
-        .brand-credit {
-            font-size: 1rem;
-            color: #666666;
-            font-weight: 500;
-            text-decoration: none;
-            margin-top: 0.75rem;
-            display: block;
-            padding: 0.25rem;
-            letter-spacing: 0.02em;
+        .loading::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e2e8f0;
+            border-top: 2px solid #4299e1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
-        /* Desktop/Web Layout - Side by Side */
-        @media (min-width: 1024px) {
-            body {
-                padding: 2rem;
-                align-items: stretch;
-            }
-
-            .qr-container {
-                max-width: 1200px;
-                width: 100%;
-                display: flex;
-                flex-direction: column;
-                gap: 1.5rem;
-                padding: 2.5rem;
-                text-align: center;
-            }
-
-            .artist-header {
-                margin-bottom: 0;
-            }
-
-            .artist-name {
-                font-size: clamp(3rem, 6vw, 4rem);
-                margin-bottom: 1rem;
-            }
-
-            .artist-subtitle {
-                font-size: 1.2rem;
-            }
-
-            .main-content {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 2.5rem;
-                align-items: center;
-            }
-
-            .content-left {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                text-align: center;
-            }
-
-            .content-right {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-            }
-
-            .qr-section {
-                margin: 0;
-            }
-
-            .qr-wrapper {
-                margin-bottom: 0;
-            }
-
-            .qr-image, .qr-placeholder {
-                width: 280px;
-                height: 280px;
-                border: 2px solid var(--pure-white);
-            }
-
-            .backup-section {
-                margin-bottom: 0;
-                width: 100%;
-            }
-
-            .action-buttons {
-                justify-content: center;
-                margin: 0;
-            }
-
-            .btn {
-                flex: 1;
-                max-width: none;
-            }
-
-            .brand-credit {
-                text-align: center;
-                margin: 0;
-            }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        /* Mobile/iPhone App-like Layout */
-        @media (max-width: 1023px) {
-            body {
-                padding: 0;
-                margin: 0;
-                background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-                overflow: hidden;
-            }
-
-            body::before {
-                display: none;
-            }
-            
-            .qr-container {
-                padding: 0;
-                border-radius: 0;
-                border: none;
-                max-width: none;
-                width: 100vw;
-                height: 100vh;
-                height: 100dvh;
-                background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-                backdrop-filter: none;
-                box-shadow: none;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                padding: env(safe-area-inset-top, 20px) 20px env(safe-area-inset-bottom, 20px) 20px;
-                overflow: hidden;
-            }
-
-            .qr-container::before {
-                display: none;
-            }
-
-            .artist-header {
-                margin-bottom: 0;
-                flex-shrink: 0;
-                padding-top: 1rem;
-            }
-            
-            .artist-name {
-                font-size: clamp(1.75rem, 8vw, 2.5rem);
-                margin-bottom: 0.5rem;
-            }
-
-            .artist-subtitle {
-                font-size: clamp(0.85rem, 4vw, 1rem);
-                margin-bottom: 0;
-            }
-
-            .main-content {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                flex-grow: 1;
-                gap: 2rem;
-                overflow: hidden;
-            }
-
-            .content-left {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .content-right {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                width: 100%;
-                max-width: 320px;
-            }
-
-            .qr-section {
-                margin: 0;
-            }
-
-            .qr-wrapper {
-                margin-bottom: 0;
-            }
-            
-            .qr-image, .qr-placeholder {
-                width: min(50vw, 220px);
-                height: min(50vw, 220px);
-                border: 2px solid var(--pure-white);
-            }
-
-            .backup-section {
-                background: rgba(17, 17, 17, 0.6);
-                border: 1px solid rgba(255, 255, 255, 0.1);
+        @media (max-width: 600px) {
+            .container {
+                padding: 32px 24px;
+                margin: 10px;
                 border-radius: 20px;
-                padding: 1rem;
-                margin-bottom: 0;
-                width: 100%;
-                backdrop-filter: blur(20px);
-                gap: 1rem;
-            }
-
-            .backup-url {
-                background: rgba(255, 255, 255, 0.1);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                border-radius: 15px;
-                color: var(--pure-white);
-                font-size: 1rem;
-                padding: 1rem;
-                backdrop-filter: blur(10px);
-                font-family: 'Inter', sans-serif;
-                font-weight: 600;
-                text-align: center;
-                min-height: 50px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
             }
             
-            .action-buttons {
-                display: flex;
-                gap: 1rem;
-                width: 100%;
-            }
-            
-            .btn {
-                flex: 1;
-                background: rgba(34, 34, 34, 0.8);
-                border: 1px solid #444444;
-                border-radius: 15px;
-                color: var(--pure-white);
-                font-size: 0.9rem;
-                font-weight: 600;
-                padding: 1rem 0.75rem;
-                min-height: 50px;
-                backdrop-filter: blur(10px);
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 0.5rem;
+            .header h1 {
+                font-size: 1.8em;
             }
 
-            .brand-credit {
-                text-align: center;
-                margin: 0;
-                padding: 1rem 0;
-                font-size: 0.9rem;
-                color: rgba(255, 255, 255, 0.6);
-                flex-shrink: 0;
+            .subtitle {
+                font-size: 1em;
+            }
+            
+            .qr-code-table td {
+                width: 6px;
+                height: 6px;
+            }
+
+            input[type="text"] {
+                font-size: 1em;
+                padding: 14px 16px;
+            }
+
+            .generate-btn {
+                font-size: 1em;
+                padding: 14px 28px;
             }
         }
 
-        /* Print Styles */
-        @media print {
-            @page {
-                size: letter;
-                margin: 0.5in;
-            }
-            
-            @page :first {
-                margin-top: 0;
-                margin-bottom: 0;
-            }
-            
-            * {
-                -webkit-print-color-adjust: exact !important;
-                color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-            
-            body {
-                background: white !important;
-                color: black !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                font-family: 'Inter', Arial, sans-serif !important;
-                width: 100% !important;
-                height: 100vh !important;
-                display: flex !important;
-                flex-direction: column !important;
-                justify-content: center !important;
-                align-items: center !important;
-            }
-
-            body::before {
-                display: none;
-            }
-            
-            .qr-container {
-                border: none !important;
-                background: white !important;
-                border-radius: 0 !important;
-                padding: 0 !important;
-                max-width: none !important;
-                width: 100% !important;
-                height: auto !important;
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                justify-content: center !important;
-                text-align: center !important;
-                box-shadow: none !important;
-                backdrop-filter: none !important;
-                gap: 40px !important;
-            }
-
-            .qr-container::before {
-                display: none;
-            }
-
-            .main-content {
-                display: contents !important;
-            }
-
-            .content-left,
-            .content-right {
-                display: contents !important;
-            }
-            
-            .artist-header {
-                order: 1 !important;
-                margin: 0 !important;
-                width: 100% !important;
-            }
-            
-            .qr-section {
-                order: 2 !important;
-                margin: 0 !important;
-                width: 100% !important;
-            }
-            
-            .backup-section {
-                order: 3 !important;
-                margin: 0 !important;
-                width: 100% !important;
-                border: none !important;
-                background: transparent !important;
-                padding: 0 !important;
-                display: block !important;
-            }
-            
-            .brand-credit {
-                order: 4 !important;
-                margin: 0 !important;
-                width: 100% !important;
-            }
-            
-            .artist-name {
-                font-size: 36pt !important;
-                color: #000 !important;
-                margin-bottom: 8px !important;
-                text-shadow: none !important;
-                font-weight: 800 !important;
-                line-height: 1 !important;
-                letter-spacing: -2px !important;
-            }
-            
-            .artist-subtitle {
-                font-size: 14pt !important;
-                color: #000 !important;
-                margin-bottom: 0 !important;
-                text-transform: uppercase !important;
-                letter-spacing: 4px !important;
-                font-weight: 500 !important;
-            }
-
-            .qr-wrapper {
-                margin: 0 auto !important;
-                padding: 0 !important;
-                border: none !important;
-                border-radius: 0 !important;
-                background: transparent !important;
-                display: inline-block !important;
-            }
-
-            .qr-wrapper::before {
-                display: none;
-            }
-            
-            .qr-image, .qr-placeholder {
-                width: 3.5in !important;
-                height: 3.5in !important;
-                border: none !important;
-                margin: 0 auto !important;
-                box-shadow: none !important;
-                background: white !important;
-                border-radius: 0 !important;
-            }
-            
-            .backup-url {
-                background: transparent !important;
-                border: none !important;
-                color: #000 !important;
-                font-size: 22pt !important;
-                padding: 0 !important;
-                font-family: 'Inter', Arial, sans-serif !important;
-                font-weight: 700 !important;
-                text-transform: uppercase !important;
-                letter-spacing: 0 !important;
-                margin: 0 !important;
-                display: block !important;
-                text-align: center !important;
-                width: 100% !important;
-                white-space: nowrap !important;
-                overflow: visible !important;
-                word-break: keep-all !important;
-                line-height: 1 !important;
-            }
-            
-            .brand-credit {
-                font-size: 10pt !important;
-                color: #666 !important;
-                text-align: center !important;
-                margin: 0 !important;
-                text-decoration: none !important;
-                font-weight: 400 !important;
-                border-top: none !important;
-                padding: 0 !important;
-            }
-            
-            .action-buttons {
-                display: none !important;
+        @media (max-width: 400px) {
+            .qr-code-table td {
+                width: 5px;
+                height: 5px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="qr-container">
-        <div class="artist-header">
-            <h1 class="artist-name" id="artist-name">LOCAL BAR TEES</h1>
-            <p class="artist-subtitle">official merch</p>
+    <div class="container">
+        <div class="header">
+            <h1>Local Bar Tees</h1>
+            <p class="subtitle">QR Code Generator</p>
+            <div class="brand-badge">Professional QR Codes</div>
         </div>
 
-        <div class="main-content">
-            <div class="content-left">
-                <div class="qr-section">
-                    <div class="qr-wrapper">
-                        <img src="qr_codes/lbt.png" alt="QR Code" class="qr-image" id="qr-image">
-                        <div class="qr-placeholder" id="qr-placeholder" style="display: none;">QR</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="content-right">
-                <div class="backup-section">
-                    <div class="backup-url" id="backup-url">VISIT LOCALBARTEES.COM</div>
-                    
-                    <div class="action-buttons">
-                        <button class="btn btn-print" id="print-btn">print qr</button>
-                        <button class="btn btn-share" id="share-btn">share this shop</button>
-                    </div>
-                </div>
-            </div>
+        <div class="url-info">
+            <small><strong>💡 Quick Start:</strong> Enter your unique identifier and generate instant QR codes for locabartees.com</small>
         </div>
 
-        <a href="https://localbartees.com" target="_blank" class="brand-credit">localbartees.com</a>
+        <div class="input-group">
+            <label for="uniqueid">🔖 Unique ID:</label>
+            <input type="text" id="uniqueid" placeholder="e.g., shirt-123, promo-summer, contact" value="">
+        </div>
+
+        <button class="generate-btn" onclick="generateQR()">
+            🚀 Generate QR Code
+        </button>
+
+        <div class="qr-output" id="qrOutput">
+            <div class="placeholder">Your QR code will appear here</div>
+        </div>
     </div>
 
     <script>
-        let backupUrl = 'https://localbartees.com';
-        
-        function getQRParam() {
-            try {
-                const params = new URLSearchParams(window.location.search);
-                const qrParam = params.get('qr');
-                return qrParam ? qrParam.toLowerCase() : 'lbt';
-            } catch (e) {
-                return 'lbt';
-            }
-        }
-        
-        function showQRImage() {
-            try {
-                const img = document.getElementById('qr-image');
-                const placeholder = document.getElementById('qr-placeholder');
-                if (img && placeholder) {
-                    img.style.display = 'block';
-                    placeholder.style.display = 'none';
-                }
-            } catch (e) {
-                console.log('Error showing QR image');
-            }
-        }
-        
-        function showQRPlaceholder() {
-            try {
-                const img = document.getElementById('qr-image');
-                const placeholder = document.getElementById('qr-placeholder');
-                if (img && placeholder) {
-                    img.style.display = 'none';
-                    placeholder.style.display = 'flex';
-                }
-            } catch (e) {
-                console.log('Error showing placeholder');
-            }
-        }
-        
-        function updateContent(entityName, urlLabel, actualUrl, qrId) {
-            try {
-                document.getElementById('artist-name').textContent = entityName.toUpperCase();
-                document.getElementById('backup-url').textContent = ('visit ' + urlLabel).toUpperCase();
-                document.title = entityName + ' - Official Merch';
-                
-                // Update apple-mobile-web-app-title for iOS home screen
-                let appTitleMeta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
-                if (appTitleMeta) {
-                    appTitleMeta.setAttribute('content', entityName);
-                }
-                
-                const qrImg = document.getElementById('qr-image');
-                qrImg.onload = showQRImage;
-                qrImg.onerror = showQRPlaceholder;
-                qrImg.src = 'qr_codes/' + qrId + '.png';
-                
-                backupUrl = actualUrl;
-            } catch (e) {
-                console.log('Error updating content');
-            }
-        }
-        
-        function loadData() {
-            const qrParam = getQRParam();
-            
-            fetch('assets/qr.xml')
-                .then(response => {
-                    if (!response.ok) throw new Error('XML not found');
-                    return response.text();
-                })
-                .then(xmlText => {
-                    const parser = new DOMParser();
-                    const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
-                    const entries = xmlDoc.querySelectorAll('qr');
-                    let found = null;
-                    
-                    // Look for exact match first
-                    for (let i = 0; i < entries.length; i++) {
-                        const entry = entries[i];
-                        const attributes = entry.attributes;
-                        for (let j = 0; j < attributes.length; j++) {
-                            const attr = attributes[j];
-                            if (attr.value.toLowerCase() === qrParam) {
-                                found = entry;
-                                break;
-                            }
-                        }
-                        if (found) break;
-                    }
-                    
-                    // If no match and not 'lbt', try to find 'lbt' specifically
-                    if (!found && qrParam !== 'lbt') {
-                        for (let i = 0; i < entries.length; i++) {
-                            const entry = entries[i];
-                            const attributes = entry.attributes;
-                            for (let j = 0; j < attributes.length; j++) {
-                                const attr = attributes[j];
-                                if (attr.value.toLowerCase() === 'lbt') {
-                                    found = entry;
-                                    break;
-                                }
-                            }
-                            if (found) break;
-                        }
-                    }
-                    
-                    // Use first entry as last resort
-                    if (!found && entries.length > 0) {
-                        found = entries[0];
-                    }
-                    
-                    if (found) {
-                        const nameEl = found.querySelector('name');
-                        const urlEl = found.querySelector('url');
-                        const entityName = nameEl ? nameEl.textContent : 'Local Bar Tees';
-                        const fullUrl = urlEl ? urlEl.textContent : 'https://localbartees.com';
-                        
-                        let urlLabel = fullUrl;
-                        if (fullUrl.includes('localbartees.com')) {
-                            if (fullUrl === 'https://localbartees.com') {
-                                urlLabel = 'localbartees.com';
-                            } else {
-                                const pathMatch = fullUrl.match(/localbartees\.com\/(.+)/);
-                                urlLabel = pathMatch ? 'localbartees.com/' + pathMatch[1] : 'localbartees.com';
-                            }
-                        }
-                        
-                        // Get qr ID from matching attribute
-                        const attributes = found.attributes;
-                        let qrId = 'lbt';
-                        for (let j = 0; j < attributes.length; j++) {
-                            const attr = attributes[j];
-                            if (attr.value.toLowerCase() === qrParam) {
-                                qrId = attr.value;
-                                break;
-                            }
-                        }
-                        
-                        updateContent(entityName, urlLabel, fullUrl, qrId);
-                    } else {
-                        updateContent('Local Bar Tees', 'localbartees.com', 'https://localbartees.com', 'lbt');
-                    }
-                })
-                .catch(error => {
-                    console.log('Using default lbt content');
-                    updateContent('Local Bar Tees', 'localbartees.com', 'https://localbartees.com', 'lbt');
-                });
-        }
-        
-        function openBackupUrl() {
-            try {
-                if (backupUrl) {
-                    window.open(backupUrl, '_blank');
-                }
-            } catch (e) {
-                console.log('Error opening URL');
-            }
-        }
-        
-        function doPrint() {
-            try {
-                window.print();
-            } catch (e) {
-                console.log('Error printing');
-            }
-        }
-        
-        function doShare() {
-            try {
-                const shareUrl = backupUrl || 'https://localbartees.com';
-                const entityName = document.getElementById('artist-name').textContent;
-                if (navigator.share) {
-                    navigator.share({
-                        title: entityName + ' - Official Merchandise',
-                        text: 'Check out official merchandise from ' + entityName,
-                        url: shareUrl
-                    });
-                } else if (navigator.clipboard) {
-                    navigator.clipboard.writeText(shareUrl).then(() => {
-                        alert('Shop link copied!');
-                    });
-                } else {
-                    alert('Share this shop: ' + shareUrl);
-                }
-            } catch (e) {
-                console.log('Error sharing');
-            }
-        }
-        
+        // Initialize with focus on input
         document.addEventListener('DOMContentLoaded', function() {
-            try {
-                loadData();
-                document.getElementById('backup-url').addEventListener('click', openBackupUrl);
-                document.getElementById('print-btn').addEventListener('click', doPrint);
-                document.getElementById('share-btn').addEventListener('click', doShare);
-            } catch (e) {
-                console.log('Error initializing');
+            document.getElementById('uniqueid').focus();
+            
+            // Generate a sample QR code on page load
+            setTimeout(() => {
+                document.getElementById('uniqueid').value = 'featured-products';
+                generateQR();
+            }, 800);
+        });
+
+        // Add enter key support
+        document.getElementById('uniqueid').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateQR();
             }
         });
+
+        function generateQR() {
+            const uniqueid = document.getElementById('uniqueid').value.trim();
+            const qrOutput = document.getElementById('qrOutput');
+            
+            // Construct the full URL with ?qr parameter
+            let fullUrl;
+            if (uniqueid) {
+                // Remove leading slash if present
+                const cleanId = uniqueid.startsWith('/') ? uniqueid.substring(1) : uniqueid;
+                fullUrl = `https://locabartees.com/${cleanId}?qr`;
+            } else {
+                fullUrl = 'https://locabartees.com/?qr';
+            }
+            
+            // Show loading message
+            qrOutput.innerHTML = '<div class="loading">Generating QR code</div>';
+            qrOutput.classList.remove('has-qr');
+            
+            // Add slight delay for better UX
+            setTimeout(() => {
+                try {
+                    // Create container first
+                    const qrContainer = document.createElement('div');
+                    qrContainer.className = 'qr-container';
+                    
+                    // Create canvas element for QR code
+                    const canvas = document.createElement('canvas');
+                    canvas.style.borderRadius = '8px';
+                    canvas.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.1)';
+                    
+                    // Generate QR code using QRCode library
+                    QRCode.toCanvas(canvas, fullUrl, {
+                        width: 300,
+                        height: 300,
+                        margin: 2,
+                        color: {
+                            dark: '#2d3748',
+                            light: '#ffffff'
+                        },
+                        errorCorrectionLevel: 'M'
+                    }, function (error) {
+                        if (error) {
+                            console.error('QR Generation Error:', error);
+                            qrOutput.innerHTML = '<div style="color: #e53e3e; font-weight: 500;">❌ Generation failed. Please try again.</div>';
+                            return;
+                        }
+                        
+                        // Add URL display
+                        const urlDisplay = document.createElement('div');
+                        urlDisplay.className = 'url-display';
+                        urlDisplay.textContent = fullUrl;
+                        
+                        // Add download button
+                        const downloadBtn = document.createElement('button');
+                        downloadBtn.textContent = '📱 Download PNG';
+                        downloadBtn.className = 'download-btn';
+                        downloadBtn.onclick = () => downloadQR(canvas, fullUrl, uniqueid);
+                        
+                        // Assemble container
+                        qrContainer.appendChild(canvas);
+                        qrContainer.appendChild(urlDisplay);
+                        qrContainer.appendChild(downloadBtn);
+                        
+                        // Update output
+                        qrOutput.innerHTML = '';
+                        qrOutput.appendChild(qrContainer);
+                        qrOutput.classList.add('has-qr');
+                    });
+                    
+                } catch (error) {
+                    console.error('QR Generation Error:', error);
+                    qrOutput.innerHTML = '<div style="color: #e53e3e; font-weight: 500;">❌ Generation failed. Please try again.</div>';
+                }
+            }, 300);
+        }
+        
+        function downloadQR(canvas, url, uniqueid) {
+            if (!canvas) return;
+            
+            try {
+                // Download with descriptive filename
+                const filename = uniqueid ? 
+                    `locabartees-qr-${uniqueid.replace(/[^a-zA-Z0-9-]/g, '-')}.png` : 
+                    `locabartees-qr-${Date.now()}.png`;
+                
+                const link = document.createElement('a');
+                link.download = filename;
+                link.href = canvas.toDataURL('image/png');
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Success feedback
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Downloaded!';
+                btn.style.background = 'linear-gradient(135deg, #48bb78, #38a169)';
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = 'linear-gradient(135deg, #ed8936, #dd6b20)';
+                }, 2500);
+                
+            } catch (error) {
+                console.error('Download Error:', error);
+                alert('Download failed. Please try again.');
+            }
+        }
     </script>
 </body>
 </html>

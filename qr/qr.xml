@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qrCodes version="1.0" generator="Local Bar Tees QR Generator" generated="2025-06-30T13:14:51.719Z" count="7">
+  <codes>
+    <code uniqueId="traceys">
+      <name>Tracey's</name>
+      <url>https://localbartees.com/traceys?qr</url>
+      <filename>traceys.png</filename>
+      <size>300x300</size>
+      <errorCorrection>M</errorCorrection>
+      <generated>2025-06-30T06:35:56.096Z</generated>
+    </code>
+    <code uniqueId="nail">
+      <name>The Rusty Nail</name>
+      <url>https://localbartees.com/nail?qr</url>
+      <filename>qr_nail.png</filename>
+      <size>300x300</size>
+      <errorCorrection>M</errorCorrection>
+      <generated>2025-06-30T06:49:31.822Z</generated>
+    </code>
+    <code uniqueId="jenn">
+      <name>Jenn Howard</name>
+      <url>https://localbartees.com/jenn?qr</url>
+      <filename>qr_jenn.png</filename>
+      <size>300x300</size>
+      <errorCorrection>M</errorCorrection>
+      <generated>2025-06-30T06:58:50.344Z</generated>
+    </code>
+    <code uniqueId="sidecar">
+      <name>Sidecar Patio &amp; Oyster Bar</name>
+      <url>https://localbartees.com/sidecar?qr</url>
+      <filename>qr_sidecar.png</filename>
+      <size>300x300</size>
+      <errorCorrection>M</errorCorrection>
+      <generated>2025-06-30T07:00:18.145Z</generated>
+    </code>
+    <code uniqueId="roundin">
+      <name>Roundin' 3rd</name>
+      <url>https://localbartees.com/roundin?qr</url>
+      <filename>qr_roundin.png</filename>
+      <size>300x300</size>
+      <errorCorrection>M</errorCorrection>
+      <generated>2025-06-30T07:01:44.124Z</generated>
+    </code>
+    <code uniqueId="mayfair">
+      <name>Mayfair Lounge</name>
+      <url>https://localbartees.com/mayfair?qr</url>
+      <filename>qr_mayfair.png</filename>
+      <size>300x300</size>
+      <errorCorrection>M</errorCorrection>
+      <generated>2025-06-30T07:02:25.856Z</generated>
+    </code>
+    <code uniqueId="parasols">
+      <name>Parasol’s</name>
+      <url>https://localbartees.com/parasols?qr</url>
+      <filename>qr_parasols.png</filename>
+      <size>300x300</size>
+      <errorCorrection>M</errorCorrection>
+      <generated>2025-06-30T13:14:51.719Z</generated>
+    </code>
+  </codes>
+</qrCodes>

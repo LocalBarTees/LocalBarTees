@@ -1,0 +1,229 @@
+# .github/workflows/generate-qr.yml
+name: QR Code Generator
+
+on:
+  workflow_dispatch:
+    inputs:
+      unique_ids:
+        description: 'UNIQUE ID'
+        required: true
+        type: string
+      names:
+        description: 'NAME'
+        required: true
+        type: string
+
+jobs:
+  generate-qr-codes:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies
+      run: |
+        npm init -y
+        npm install qrcode xml2js
+    
+    - name: QR Code Generator
+      run: |
+        cat << 'EOF' > generate-qr.js
+        const QRCode = require('qrcode');
+        const fs = require('fs');
+        const path = require('path');
+        const { Builder } = require('xml2js');
+        
+        async function generateQRCodes() {
+          const uniqueIds = process.env.UNIQUE_IDS.split(',').map(id => id.trim());
+          const names = process.env.NAMES.split(',').map(name => name.trim());
+          const timestamp = new Date().toISOString();
+          
+          // Validate unique IDs
+          for (const uniqueId of uniqueIds) {
+            if (!/^[a-zA-Z0-9]+$/.test(uniqueId)) {
+              throw new Error(`Invalid unique ID: "${uniqueId}". Only letters and numbers allowed, no spaces or special characters.`);
+            }
+          }
+          
+          // Validate that we have the same number of IDs and names
+          if (uniqueIds.length !== names.length) {
+            throw new Error(`Mismatch: ${uniqueIds.length} unique IDs but ${names.length} names. Please provide the same number of IDs and names.`);
+          }
+          
+          // Create output directory (write directly to qr folder)
+          const outputDir = `qr`;
+          
+          fs.mkdirSync(outputDir, { recursive: true });
+          
+          const qrData = [];
+          
+          for (let i = 0; i < uniqueIds.length; i++) {
+            const uniqueId = uniqueIds[i];
+            const name = names[i];
+            
+            try {
+              // Construct URL
+              const fullUrl = `https://localbartees.com/${uniqueId}?qr`;
+              
+              // Generate QR code PNG directly in qr directory
+              const pngPath = path.join(outputDir, `qr_${uniqueId}.png`);
+              await QRCode.toFile(pngPath, fullUrl, {
+                width: 300,
+                height: 300,
+                margin: 2,
+                color: {
+                  dark: '#2d3748',
+                  light: '#ffffff'
+                },
+                errorCorrectionLevel: 'M'
+              });
+              
+              // Collect data for XML
+              qrData.push({
+                uniqueId: uniqueId,
+                name: name,
+                url: fullUrl,
+                filename: path.basename(pngPath),
+                generated: timestamp,
+                size: '300x300',
+                errorCorrection: 'M'
+              });
+              
+              console.log(`✅ Generated QR code for: ${uniqueId} (${name})`);
+              
+            } catch (error) {
+              console.error(`❌ Failed to generate QR code for ${uniqueId}:`, error);
+            }
+          }
+          
+          // Generate qr.xml file in qr directory (append to existing or create new)
+          const xmlPath = path.join(outputDir, 'qr.xml');
+          let existingData = [];
+          
+          // Check if qr.xml already exists and read existing data
+          if (fs.existsSync(xmlPath)) {
+            try {
+              const existingXml = fs.readFileSync(xmlPath, 'utf8');
+              const parser = require('xml2js').parseString;
+              
+              parser(existingXml, (err, result) => {
+                if (!err && result && result.qrCodes && result.qrCodes.codes && result.qrCodes.codes[0] && result.qrCodes.codes[0].code) {
+                  existingData = result.qrCodes.codes[0].code.map(code => ({
+                    uniqueId: code.$.uniqueId,
+                    name: code.name ? code.name[0] : '',
+                    url: code.url ? code.url[0] : '',
+                    filename: code.filename ? code.filename[0] : '',
+                    size: code.size ? code.size[0] : '',
+                    errorCorrection: code.errorCorrection ? code.errorCorrection[0] : '',
+                    generated: code.generated ? code.generated[0] : ''
+                  }));
+                }
+              });
+            } catch (error) {
+              console.log('Note: Could not parse existing XML, creating new file');
+            }
+          }
+          
+          // Merge existing data with new data, avoiding duplicates
+          const allData = [...existingData];
+          for (const newItem of qrData) {
+            const existingIndex = allData.findIndex(item => item.uniqueId === newItem.uniqueId);
+            if (existingIndex >= 0) {
+              // Update existing entry
+              allData[existingIndex] = newItem;
+              console.log(`📝 Updated existing QR code: ${newItem.uniqueId}`);
+            } else {
+              // Add new entry
+              allData.push(newItem);
+            }
+          }
+          
+          const xmlData = {
+            qrCodes: {
+              $: { 
+                version: '1.0',
+                generator: 'Local Bar Tees QR Generator',
+                generated: timestamp,
+                count: allData.length
+              },
+              codes: {
+                code: allData.map(item => ({
+                  $: { uniqueId: item.uniqueId },
+                  name: item.name,
+                  url: item.url,
+                  filename: item.filename,
+                  size: item.size,
+                  errorCorrection: item.errorCorrection,
+                  generated: item.generated
+                }))
+              }
+            }
+          };
+          
+          const builder = new Builder({
+            xmldec: { version: '1.0', encoding: 'UTF-8' },
+            pretty: true
+          });
+          const xml = builder.buildObject(xmlData);
+          
+          fs.writeFileSync(xmlPath, xml);
+          
+          // Generate README
+          const readmePath = path.join(outputDir, 'README.md');
+          const readmeContent = `# Local Bar Tees QR Codes
+        
+        Generated: ${timestamp}
+        Total QR Codes: ${qrData.length}
+        
+        ## Files Generated
+        
+        ### PNG Files
+        ${qrData.map(item => `- ${item.filename} → ${item.url}`).join('\n')}
+        
+        ### XML Data
+        - qr.xml (contains all QR codes metadata)
+        
+        ## Usage
+        1. Use PNG files for printing or digital display
+        2. qr.xml contains metadata for all QR codes
+        3. All QR codes redirect to locabartees.com with ?qr parameter
+        `;
+          
+          fs.writeFileSync(readmePath, readmeContent);
+          
+          console.log(`\n🎉 Generation complete!`);
+          console.log(`📁 Output directory: ${outputDir}`);
+          console.log(`📊 Generated ${qrData.length} QR codes`);
+          console.log(`📄 Files: ${qrData.length} PNGs, 1 XML, 1 README`);
+          
+          // Set output for GitHub Actions
+          console.log(`::set-output name=output_dir::${outputDir}`);
+          console.log(`::set-output name=count::${qrData.length}`);
+        }
+        
+        generateQRCodes().catch(console.error);
+        EOF
+        
+        UNIQUE_IDS="${{ github.event.inputs.unique_ids }}" NAMES="${{ github.event.inputs.names }}" node generate-qr.js
+    
+    - name: Upload QR codes as artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: locabartees-qr-codes-${{ github.run_number }}
+        path: qr/
+        retention-days: 90
+    
+    - name: Commit and push to repository (optional)
+      if: github.ref == 'refs/heads/main'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add qr/
+        git commit -m "Generate QR codes: ${{ github.event.inputs.unique_ids }}" || exit 0
+        git push
