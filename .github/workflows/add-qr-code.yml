@@ -7,7 +7,11 @@ on:
         required: true
         type: string
       qr_id:
-        description: 'QR Code ID'
+        description: 'QR Code ID (web shop stem)'
+        required: true
+        type: string
+      website_url:
+        description: 'Website URL'
         required: true
         type: string
 
@@ -15,41 +19,46 @@ jobs:
   add-qr-code:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
         
-      - name: Add QR Code
+      - name: Validate inputs
         run: |
-          echo "Bar/Band Name: ${{ github.event.inputs.bar_name }}"
+          echo "Adding QR code for: ${{ github.event.inputs.bar_name }}"
           echo "QR ID: ${{ github.event.inputs.qr_id }}"
+          echo "URL: ${{ github.event.inputs.website_url }}"
           
-          # Read current XML
-          cat assets/qr.xml
-          
-          # Create new entry
-          cat >> temp_entry.txt << EOF
-  <qr ${{ github.event.inputs.qr_id }}="${{ github.event.inputs.qr_id }}">
-    <name>${{ github.event.inputs.bar_name }}</name>
-    <url>https://localbartees.com/${{ github.event.inputs.qr_id }}</url>
-  </qr>
-EOF
-          
-          # Insert before </root>
-          head -n -1 assets/qr.xml > temp.xml
-          cat temp_entry.txt >> temp.xml
-          echo "</root>" >> temp.xml
-          mv temp.xml assets/qr.xml
-          
-          # Clean up
-          rm temp_entry.txt
-          
-          echo "New XML:"
-          cat assets/qr.xml
-          
-      - name: Commit
+      - name: Add new QR entry to XML
         run: |
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
+          # Create the new QR entry
+          BAR_NAME="${{ github.event.inputs.bar_name }}"
+          QR_ID="${{ github.event.inputs.qr_id }}"
+          WEBSITE_URL="${{ github.event.inputs.website_url }}"
+          
+          NEW_ENTRY="  <qr ${QR_ID}=\"${QR_ID}\">"$'\n'"    <name>${BAR_NAME}</name>"$'\n'"    <url>${WEBSITE_URL}</url>"$'\n'"  </qr>"
+          
+          # Insert before the closing </root> tag
+          sed -i "/<\/root>/i\\${NEW_ENTRY}" assets/qr.xml
+          
+      - name: Validate XML
+        run: |
+          # Check if XML is valid (requires xmllint)
+          if command -v xmllint >/dev/null 2>&1; then
+            xmllint --noout assets/qr.xml
+            echo "XML validation passed"
+          else
+            echo "xmllint not available, skipping validation"
+          fi
+          
+      - name: Show updated XML
+        run: |
+          echo "Updated XML file:"
+          cat assets/qr.xml
+          
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           git add assets/qr.xml
-          git commit -m "Add ${{ github.event.inputs.bar_name }}"
+          git commit -m "Add QR code for ${{ github.event.inputs.bar_name }}"
           git push
