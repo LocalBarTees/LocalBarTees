@@ -1,5 +1,7 @@
 name: Add QR Code
 on:
+  repository_dispatch:
+    types: [add-qr-code]
   workflow_dispatch:
     inputs:
       bar_name:
@@ -88,8 +90,15 @@ EOF
           
       - name: Commit and push changes
         run: |
+          # Handle both event types for commit message
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            COMMIT_MSG="Add QR code for ${{ github.event.client_payload.bar_name }}"
+          else
+            COMMIT_MSG="Add QR code for ${{ github.event.inputs.bar_name }}"
+          fi
+          
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add assets/qr.xml
-          git commit -m "Add QR code for ${{ github.event.inputs.bar_name }}"
+          git commit -m "${COMMIT_MSG}"
           git push
