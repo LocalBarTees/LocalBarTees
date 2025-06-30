@@ -5,11 +5,11 @@ on:
   workflow_dispatch:
     inputs:
       unique_ids:
-        description: 'Comma-separated list of unique IDs (e.g., shirt123,promosummer,contact)'
+        description: 'UNIQUE ID'
         required: true
         type: string
       names:
-        description: 'Comma-separated list of names (e.g., Blue Shirt,Summer Promo,Contact Page)'
+        description: 'NAME'
         required: true
         type: string
 
