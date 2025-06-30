@@ -1,7 +1,5 @@
 name: Add QR Code
 on:
-  repository_dispatch:
-    types: [add-qr-code]
   workflow_dispatch:
     inputs:
       bar_name:
@@ -20,68 +18,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
-      - name: Validate inputs
-        run: |
-          echo "Adding QR code for: ${{ github.event.inputs.bar_name }}"
-          echo "QR ID: ${{ github.event.inputs.qr_id }}"
-          echo "Auto-generated URL: https://localbartees.com/${{ github.event.inputs.qr_id }}"
-          
       - name: Add new QR entry to XML
         run: |
-          # Create variables
-          BAR_NAME="${{ github.event.inputs.bar_name }}"
-          QR_ID="${{ github.event.inputs.qr_id }}"
-          WEBSITE_URL="${{ github.event.inputs.website_url }}"
+          BAR_NAME="${{ inputs.bar_name }}"
+          QR_ID="${{ inputs.qr_id }}"
+          WEBSITE_URL="https://localbartees.com/${QR_ID}"
           
-          # Create a Python script to handle XML insertion
-          cat > add_qr.py << 'EOF'
-import sys
-import re
-
-# Read the XML file
-with open('assets/qr.xml', 'r') as f:
-    content = f.read()
-
-# Get variables from environment
-import os
-bar_name = os.environ['BAR_NAME']
-qr_id = os.environ['QR_ID'] 
-website_url = os.environ['WEBSITE_URL']
-
-# Create the new QR entry (using <name> tag to match your HTML)
-new_entry = f'''  <qr {qr_id}="{qr_id}">
-    <name>{bar_name}</name>
-    <url>{website_url}</url>
-  </qr>'''
-
-# Insert before </root>
-content = content.replace('</root>', new_entry + '\n</root>')
-
-# Write back to file
-with open('assets/qr.xml', 'w') as f:
-    f.write(content)
-
-print(f"Added QR code for {bar_name}")
-EOF
+          echo "Adding QR code:"
+          echo "  Bar/Band: ${BAR_NAME}"
+          echo "  QR ID: ${QR_ID}" 
+          echo "  URL: ${WEBSITE_URL}"
           
-          # Set environment variables and run Python script
-          export BAR_NAME="${BAR_NAME}"
-          export QR_ID="${QR_ID}"
-          export WEBSITE_URL="${WEBSITE_URL}"
-          python3 add_qr.py
+          # Create the new QR entry
+          NEW_ENTRY="  <qr ${QR_ID}=\"${QR_ID}\">
+    <name>${BAR_NAME}</name>
+    <url>${WEBSITE_URL}</url>
+  </qr>"
           
-          # Clean up
-          rm add_qr.py
-          
-      - name: Validate XML
-        run: |
-          # Check if XML is valid
-          if command -v xmllint >/dev/null 2>&1; then
-            xmllint --noout assets/qr.xml
-            echo "XML validation passed"
-          else
-            echo "xmllint not available, skipping validation"
-          fi
+          # Insert before </root> using sed
+          sed -i "/<\/root>/i\\${NEW_ENTRY}" assets/qr.xml
           
       - name: Show updated XML
         run: |
@@ -90,15 +45,8 @@ EOF
           
       - name: Commit and push changes
         run: |
-          # Handle both event types for commit message
-          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
-            COMMIT_MSG="Add QR code for ${{ github.event.client_payload.bar_name }}"
-          else
-            COMMIT_MSG="Add QR code for ${{ github.event.inputs.bar_name }}"
-          fi
-          
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add assets/qr.xml
-          git commit -m "${COMMIT_MSG}"
+          git commit -m "Add QR code for ${{ inputs.bar_name }}"
           git push
