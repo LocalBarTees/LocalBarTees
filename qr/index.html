@@ -2,793 +2,436 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="format-detection" content="telephone=no">
-    <link rel="icon" href="assets/qr_favicon.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="assets/apple-touch-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="assets/apple-touch-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="assets/apple-touch-icon-76x76.png">
-    <meta name="apple-mobile-web-app-title" content="QR Codes for Local Bar Tees">
-    <title>QR Codes for Local Bar Tees</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        :root {
-            --primary-black: #000000;
-            --soft-black: #111111;
-            --border-gray: #333333;
-            --text-gray: #999999;
-            --light-gray: #cccccc;
-            --pure-white: #ffffff;
-            --accent-gray: #f8f8f8;
-            --radius-sm: 12px;
-            --radius-md: 16px;
-            --radius-lg: 24px;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.15);
-        }
-
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-            color: var(--pure-white);
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
-            padding: 1rem;
-            position: relative;
-            overflow-x: hidden;
+            justify-content: center;
+            padding: 20px;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .python-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #3776ab, #ffd43b);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #bdc3c7;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .size-controls {
+            display: flex;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .size-controls > div {
+            flex: 1;
+        }
+
+        .generate-btn {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+            margin: 20px 0;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        .generate-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .qr-output {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            border: 2px dashed #bdc3c7;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .qr-output.has-qr {
+            border-color: #27ae60;
+            background: rgba(255, 255, 255, 0.95);
         }
 
         .qr-container {
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-gray);
-            border-radius: var(--radius-lg);
-            padding: 2rem;
-            text-align: center;
-            max-width: 480px;
-            width: 100%;
-            box-shadow: var(--shadow-lg);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        .qr-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-        }
-
-        .artist-header {
-            position: relative;
-        }
-
-        .artist-name {
-            font-size: clamp(2rem, 5vw, 2.75rem);
-            font-weight: 800;
-            color: var(--pure-white);
-            margin-bottom: 0.5rem;
-            line-height: 1.1;
-            letter-spacing: -0.02em;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .artist-subtitle {
-            font-size: 1rem;
-            color: var(--text-gray);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .qr-section {
-            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1.5rem;
+            gap: 15px;
         }
 
-        .qr-wrapper {
-            display: inline-block;
-            position: relative;
+        .placeholder {
+            color: #7f8c8d;
+            font-style: italic;
+            font-size: 1.1em;
         }
 
-        .qr-wrapper::before {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            background: linear-gradient(45deg, var(--pure-white), #f0f0f0);
-            border-radius: calc(var(--radius-md) + 4px);
-            z-index: -1;
+        .download-btn {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(39, 174, 96, 0.3);
         }
 
-        .qr-image, .qr-placeholder {
-            width: 240px;
-            height: 240px;
-            border-radius: var(--radius-md);
-            background: var(--pure-white);
-            box-shadow: var(--shadow);
-            border: 2px solid var(--pure-white);
-        }
-        
-        .qr-placeholder {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2rem;
-            font-weight: 600;
-            color: var(--text-gray);
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
         }
 
-        .qr-url {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--light-gray);
-            text-align: center;
-            font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
+        .url-info {
+            background: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid #3498db;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: left;
+        }
+
+        .url-info small {
+            color: #2980b9;
+            font-size: 0.9em;
+        }
+
+        .qr-code-table {
+            margin: 10px auto;
+            border-collapse: collapse;
+        }
+
+        .qr-code-table td {
+            width: 8px;
+            height: 8px;
+            padding: 0;
             margin: 0;
         }
 
-        .action-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            justify-content: center;
+        .qr-dark {
+            background-color: #2c3e50;
         }
 
-        .btn {
-            padding: 0.875rem 1.5rem;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            font-size: 0.95rem;
-            border: 1px solid var(--border-gray);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            min-width: 130px;
-            min-height: 48px;
-            background: linear-gradient(135deg, #222222, #333333);
-            color: var(--pure-white);
-            border-color: #444444;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+        .qr-light {
+            background-color: #ffffff;
         }
 
-        .brand-credit {
-            font-size: 1rem;
-            color: #666666;
-            font-weight: 500;
-            text-decoration: none;
-            display: block;
-            padding: 0.25rem;
-            letter-spacing: 0.02em;
-        }
-
-        /* Desktop/Web Layout */
-        @media (min-width: 1024px) {
-            body {
-                padding: 2rem;
-            }
-
-            .qr-container {
-                max-width: 600px;
-                padding: 2.5rem;
-            }
-
-            .artist-name {
-                font-size: clamp(3rem, 6vw, 4rem);
-                margin-bottom: 1rem;
-            }
-
-            .artist-subtitle {
-                font-size: 1.2rem;
-            }
-
-            .qr-section {
-                margin: 2rem 0;
-                gap: 1.5rem;
-            }
-
-            .qr-image, .qr-placeholder {
-                width: 280px;
-                height: 280px;
-            }
-
-            .qr-url {
-                font-size: 1.2rem;
-                color: var(--light-gray);
-            }
-
-            .action-buttons {
-                margin: 2rem 0 0 0;
-            }
-        }
-
-        /* Mobile/iPhone App-like Layout */
-        @media (max-width: 1023px) {
-            body {
-                padding: 0;
-                margin: 0;
-                background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-                overflow: hidden;
-            }
-
-            body::before {
-                display: none;
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
             }
             
-            .qr-container {
-                padding: env(safe-area-inset-top, 2rem) 2rem env(safe-area-inset-bottom, 2rem) 2rem;
-                border-radius: 0;
-                border: none;
-                max-width: none;
-                width: 100vw;
-                height: 100vh;
-                height: 100dvh;
-                background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-                backdrop-filter: none;
-                box-shadow: none;
-                display: flex;
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .size-controls {
                 flex-direction: column;
-                justify-content: space-evenly;
-                gap: 1.5rem;
-                overflow: hidden;
+                gap: 10px;
             }
 
-            .qr-container::before {
-                display: none;
-            }
-
-            .artist-header {
-                flex-shrink: 0;
-            }
-            
-            .artist-name {
-                font-size: clamp(1.75rem, 8vw, 2.5rem);
-                margin-bottom: 0.5rem;
-            }
-
-            .artist-subtitle {
-                font-size: clamp(0.85rem, 4vw, 1rem);
-            }
-
-            .qr-section {
-                flex-grow: 1;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: 1.5rem;
-                max-width: 320px;
-                margin: 0 auto;
-            }
-            
-            .qr-image, .qr-placeholder {
-                width: min(50vw, 220px);
-                height: min(50vw, 220px);
-            }
-
-            .qr-url {
-                color: var(--light-gray);
-                font-size: 1rem;
-                font-family: 'Inter', sans-serif;
-                font-weight: 600;
-                text-align: center;
-                width: 100%;
-            }
-            
-            .action-buttons {
-                display: flex;
-                flex-direction: column;
-                gap: 1rem;
-                width: 100%;
-                flex-shrink: 0;
-            }
-            
-            .btn {
-                width: 100%;
-                background: rgba(34, 34, 34, 0.8);
-                border: 1px solid #444444;
-                border-radius: 15px;
-                color: var(--pure-white);
-                font-size: 0.9rem;
-                font-weight: 600;
-                padding: 1rem 0.75rem;
-                min-height: 50px;
-                backdrop-filter: blur(10px);
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 0.5rem;
-            }
-
-            .brand-credit {
-                text-align: center;
-                padding: 1rem 0;
-                font-size: 0.9rem;
-                color: rgba(255, 255, 255, 0.6);
-                flex-shrink: 0;
-            }
-        }
-
-        /* Print Styles */
-        @media print {
-            @page {
-                size: letter;
-                margin: 0.5in;
-            }
-            
-            @page :first {
-                margin-top: 0;
-                margin-bottom: 0;
-            }
-            
-            * {
-                -webkit-print-color-adjust: exact !important;
-                color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-            
-            body {
-                background: white !important;
-                color: black !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                font-family: 'Inter', Arial, sans-serif !important;
-                width: 100% !important;
-                height: 100vh !important;
-                display: flex !important;
-                flex-direction: column !important;
-                justify-content: center !important;
-                align-items: center !important;
-            }
-
-            body::before {
-                display: none;
-            }
-            
-            .qr-container {
-                border: none !important;
-                background: white !important;
-                border-radius: 0 !important;
-                padding: 0 !important;
-                max-width: none !important;
-                width: 100% !important;
-                height: auto !important;
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                justify-content: center !important;
-                text-align: center !important;
-                box-shadow: none !important;
-                backdrop-filter: none !important;
-                gap: 30px !important;
-            }
-
-            .qr-container::before {
-                display: none;
-            }
-            
-            .artist-header {
-                margin: 0 !important;
-                width: 100% !important;
-            }
-            
-            .qr-section {
-                margin: 0 !important;
-                width: 100% !important;
-                gap: 15px !important;
-            }
-            
-            .brand-credit {
-                margin: 0 !important;
-                width: 100% !important;
-            }
-            
-            .artist-name {
-                font-size: 36pt !important;
-                color: #000 !important;
-                margin-bottom: 8px !important;
-                text-shadow: none !important;
-                font-weight: 800 !important;
-                line-height: 1 !important;
-                letter-spacing: -2px !important;
-            }
-            
-            .artist-subtitle {
-                font-size: 14pt !important;
-                color: #000 !important;
-                margin-bottom: 0 !important;
-                text-transform: uppercase !important;
-                letter-spacing: 4px !important;
-                font-weight: 500 !important;
-            }
-
-            .qr-wrapper {
-                margin: 0 auto !important;
-                padding: 0 !important;
-                border: none !important;
-                border-radius: 0 !important;
-                background: transparent !important;
-                display: inline-block !important;
-            }
-
-            .qr-wrapper::before {
-                display: none;
-            }
-            
-            .qr-image, .qr-placeholder {
-                width: 3.5in !important;
-                height: 3.5in !important;
-                border: none !important;
-                margin: 0 auto !important;
-                box-shadow: none !important;
-                background: white !important;
-                border-radius: 0 !important;
-            }
-            
-            .qr-url {
-                background: transparent !important;
-                border: none !important;
-                color: #000 !important;
-                font-size: 22pt !important;
-                padding: 0 !important;
-                font-family: 'Inter', Arial, sans-serif !important;
-                font-weight: 700 !important;
-                text-transform: uppercase !important;
-                letter-spacing: 0 !important;
-                margin: 0 !important;
-                display: block !important;
-                text-align: center !important;
-                width: 100% !important;
-                white-space: nowrap !important;
-                overflow: visible !important;
-                word-break: keep-all !important;
-                line-height: 1 !important;
-            }
-            
-            .brand-credit {
-                font-size: 10pt !important;
-                color: #666 !important;
-                text-align: center !important;
-                margin: 0 !important;
-                text-decoration: none !important;
-                font-weight: 400 !important;
-                border-top: none !important;
-                padding: 0 !important;
-            }
-            
-            .action-buttons {
-                display: none !important;
+            .qr-code-table td {
+                width: 6px;
+                height: 6px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="qr-container">
-        <div class="artist-header">
-            <h1 class="artist-name" id="artist-name"></h1>
-            <p class="artist-subtitle">official merch</p>
+    <div class="container">
+        <div class="header">
+            <h1>🐍 QR Code Generator</h1>
+            <div class="python-badge">Powered by Python Logic</div>
+            <p style="color: #7f8c8d; margin-top: 10px;">Generate QR codes instantly for your URLs</p>
         </div>
 
-        <div class="qr-section">
-            <div class="qr-wrapper">
-                <img src="" alt="QR Code" class="qr-image" id="qr-image" style="display: none;">
-                <div class="qr-placeholder" id="qr-placeholder">QR</div>
+        <div class="url-info">
+            <small><strong>💡 Tip:</strong> URLs will automatically start with "https://locabartees.com/" - just add your path!</small>
+        </div>
+
+        <div class="input-group">
+            <label for="urlInput">🔗 URL Path:</label>
+            <input type="text" id="urlInput" placeholder="e.g., products/shirt-123, about, contact" value="">
+        </div>
+
+        <div class="size-controls">
+            <div class="input-group">
+                <label for="sizeSelect">📐 QR Code Size:</label>
+                <select id="sizeSelect">
+                    <option value="4">Small</option>
+                    <option value="6" selected>Medium</option>
+                    <option value="8">Large</option>
+                    <option value="10">Extra Large</option>
+                </select>
             </div>
-            <div class="qr-url" id="qr-url"></div>
+            
+            <div class="input-group">
+                <label for="qualitySelect">⚙️ Error Correction:</label>
+                <select id="qualitySelect">
+                    <option value="L">Low (7%)</option>
+                    <option value="M" selected>Medium (15%)</option>
+                    <option value="Q">Quartile (25%)</option>
+                    <option value="H">High (30%)</option>
+                </select>
+            </div>
         </div>
 
-        <div class="action-buttons">
-            <button class="btn btn-print" id="print-btn">print qr</button>
-            <button class="btn btn-share" id="share-btn">share this shop</button>
-        </div>
+        <button class="generate-btn" onclick="generateQR()">
+            🚀 Generate QR Code
+        </button>
 
-        <a href="" target="_blank" class="brand-credit" id="brand-credit"></a>
+        <div class="qr-output" id="qrOutput">
+            <div class="placeholder">QR code will appear here...</div>
+        </div>
     </div>
 
     <script>
-        let backupUrl = 'https://localbartees.com';
-        
-        function getQRParam() {
-            try {
-                const params = new URLSearchParams(window.location.search);
-                const qrParam = params.get('qr');
-                return qrParam ? qrParam.toLowerCase() : null;
-            } catch (e) {
-                return null;
-            }
-        }
-        
-        function showQRImage() {
-            try {
-                const img = document.getElementById('qr-image');
-                const placeholder = document.getElementById('qr-placeholder');
-                if (img && placeholder) {
-                    img.style.display = 'block';
-                    placeholder.style.display = 'none';
-                }
-            } catch (e) {
-                console.log('Error showing QR image');
-            }
-        }
-        
-        function showQRPlaceholder() {
-            try {
-                const img = document.getElementById('qr-image');
-                const placeholder = document.getElementById('qr-placeholder');
-                if (img && placeholder) {
-                    img.style.display = 'none';
-                    placeholder.style.display = 'flex';
-                }
-            } catch (e) {
-                console.log('Error showing placeholder');
-            }
-        }
-        
-        function updateContent(entityName, urlLabel, actualUrl, qrId) {
-            try {
-                document.getElementById('artist-name').textContent = entityName.toUpperCase();
-                document.getElementById('qr-url').textContent = urlLabel.toUpperCase();
-                document.title = 'QR Codes for ' + entityName;
-                
-                // Update apple-mobile-web-app-title for iOS home screen
-                let appTitleMeta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
-                if (appTitleMeta) {
-                    appTitleMeta.setAttribute('content', 'QR Codes for ' + entityName);
-                }
-                
-                const qrImg = document.getElementById('qr-image');
-                qrImg.onload = showQRImage;
-                qrImg.onerror = showQRPlaceholder;
-                qrImg.src = 'qr_codes/' + qrId + '.png';
-                
-                // Update brand credit link
-                const brandCredit = document.getElementById('brand-credit');
-                brandCredit.href = actualUrl;
-                brandCredit.textContent = urlLabel.toLowerCase();
-                
-                backupUrl = actualUrl;
-            } catch (e) {
-                console.log('Error updating content');
-            }
-        }
-        
-        function displayAllRecords(entries) {
-            try {
-                document.getElementById('artist-name').textContent = 'QR CODES FOR LOCAL BAR TEES';
-                document.getElementById('qr-url').textContent = 'SELECT AN OPTION BELOW';
-                document.title = 'QR Codes for Local Bar Tees';
-                
-                // Hide the QR image section
-                const qrSection = document.querySelector('.qr-section');
-                qrSection.style.display = 'none';
-                
-                // Create buttons for each entry
-                const actionButtons = document.querySelector('.action-buttons');
-                actionButtons.innerHTML = '';
-                
-                entries.forEach(entry => {
-                    const nameEl = entry.querySelector('name');
-                    const urlEl = entry.querySelector('url');
-                    const entityName = nameEl ? nameEl.textContent : 'Unknown';
-                    const fullUrl = urlEl ? urlEl.textContent : '#';
-                    
-                    // Get qr ID from first attribute
-                    const attributes = entry.attributes;
-                    let qrId = 'default';
-                    if (attributes.length > 0) {
-                        qrId = attributes[0].value;
-                    }
-                    
-                    const button = document.createElement('button');
-                    button.className = 'btn';
-                    button.textContent = entityName.toUpperCase();
-                    button.addEventListener('click', () => {
-                        window.location.href = '?qr=' + qrId;
-                    });
-                    
-                    actionButtons.appendChild(button);
-                });
-                
-            } catch (e) {
-                console.log('Error displaying all records');
-            }
-        }
-        
-        function loadData() {
-            const qrParam = getQRParam();
-            
-            fetch('assets/qr.xml')
-                .then(response => {
-                    if (!response.ok) throw new Error('XML not found');
-                    return response.text();
-                })
-                .then(xmlText => {
-                    const parser = new DOMParser();
-                    const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
-                    const entries = xmlDoc.querySelectorAll('qr');
-                    
-                    // If no qr parameter, show all records
-                    if (qrParam === null) {
-                        displayAllRecords(entries);
-                        return;
-                    }
-                    
-                    // Otherwise, look for specific record
-                    let found = null;
-                    
-                    // Look for exact match first
-                    for (let i = 0; i < entries.length; i++) {
-                        const entry = entries[i];
-                        const attributes = entry.attributes;
-                        for (let j = 0; j < attributes.length; j++) {
-                            const attr = attributes[j];
-                            if (attr.value.toLowerCase() === qrParam) {
-                                found = entry;
-                                break;
-                            }
-                        }
-                        if (found) break;
-                    }
-                    
-                    // If no match and not 'lbt', try to find 'lbt' specifically
-                    if (!found && qrParam !== 'lbt') {
-                        for (let i = 0; i < entries.length; i++) {
-                            const entry = entries[i];
-                            const attributes = entry.attributes;
-                            for (let j = 0; j < attributes.length; j++) {
-                                const attr = attributes[j];
-                                if (attr.value.toLowerCase() === 'lbt') {
-                                    found = entry;
-                                    break;
-                                }
-                            }
-                            if (found) break;
-                        }
-                    }
-                    
-                    // Use first entry as last resort
-                    if (!found && entries.length > 0) {
-                        found = entries[0];
-                    }
-                    
-                    if (found) {
-                        const nameEl = found.querySelector('name');
-                        const urlEl = found.querySelector('url');
-                        const entityName = nameEl ? nameEl.textContent : 'Unknown';
-                        const fullUrl = urlEl ? urlEl.textContent : '#';
-                        
-                        let urlLabel = fullUrl;
-                        if (fullUrl.includes('localbartees.com')) {
-                            if (fullUrl === 'https://localbartees.com') {
-                                urlLabel = 'localbartees.com';
-                            } else {
-                                const pathMatch = fullUrl.match(/localbartees\.com\/(.+)/);
-                                urlLabel = pathMatch ? 'localbartees.com/' + pathMatch[1] : 'localbartees.com';
-                            }
-                        }
-                        
-                        // Get qr ID from matching attribute
-                        const attributes = found.attributes;
-                        let qrId = qrParam;
-                        for (let j = 0; j < attributes.length; j++) {
-                            const attr = attributes[j];
-                            if (attr.value.toLowerCase() === qrParam) {
-                                qrId = attr.value;
-                                break;
-                            }
-                        }
-                        
-                        updateContent(entityName, urlLabel, fullUrl, qrId);
-                    } else {
-                        // Show error message if no data found
-                        document.getElementById('artist-name').textContent = 'NO DATA FOUND';
-                        document.getElementById('qr-url').textContent = 'CHECK XML FILE';
-                        document.title = 'QR Codes - No Data';
-                    }
-                })
-                .catch(error => {
-                    console.log('Error loading XML file');
-                    // Show error message if XML fails to load
-                    document.getElementById('artist-name').textContent = 'ERROR LOADING';
-                    document.getElementById('qr-url').textContent = 'XML FILE NOT FOUND';
-                    document.title = 'QR Codes - Error';
-                });
-        }
-        
-        function openUrl() {
-            try {
-                if (backupUrl) {
-                    window.open(backupUrl, '_blank');
-                }
-            } catch (e) {
-                console.log('Error opening URL');
-            }
-        }
-        
-        function doPrint() {
-            try {
-                window.print();
-            } catch (e) {
-                console.log('Error printing');
-            }
-        }
-        
-        function doShare() {
-            try {
-                const shareUrl = backupUrl || 'https://localbartees.com';
-                const entityName = document.getElementById('artist-name').textContent;
-                if (navigator.share) {
-                    navigator.share({
-                        title: 'QR Codes for ' + entityName,
-                        text: 'Check out official merchandise from ' + entityName,
-                        url: shareUrl
-                    });
-                } else if (navigator.clipboard) {
-                    navigator.clipboard.writeText(shareUrl).then(() => {
-                        alert('Shop link copied!');
-                    });
-                } else {
-                    alert('Share this shop: ' + shareUrl);
-                }
-            } catch (e) {
-                console.log('Error sharing');
-            }
-        }
-        
+        // Initialize with focus on input
         document.addEventListener('DOMContentLoaded', function() {
-            try {
-                loadData();
-                
-                // Only add these event listeners if we're showing a specific QR code
-                const qrParam = getQRParam();
-                if (qrParam !== null) {
-                    document.getElementById('print-btn').addEventListener('click', doPrint);
-                    document.getElementById('share-btn').addEventListener('click', doShare);
-                }
-            } catch (e) {
-                console.log('Error initializing');
+            document.getElementById('urlInput').focus();
+            
+            // Generate a sample QR code on page load
+            setTimeout(() => {
+                document.getElementById('urlInput').value = 'products/featured';
+                generateQR();
+            }, 500);
+        });
+
+        // Add enter key support
+        document.getElementById('urlInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateQR();
             }
         });
+
+        function generateQR() {
+            const urlInput = document.getElementById('urlInput').value.trim();
+            const cellSize = parseInt(document.getElementById('sizeSelect').value);
+            const errorLevel = document.getElementById('qualitySelect').value;
+            const qrOutput = document.getElementById('qrOutput');
+            
+            // Construct the full URL
+            let fullUrl = urlInput;
+            if (fullUrl && !fullUrl.startsWith('http')) {
+                // Remove leading slash if present
+                if (fullUrl.startsWith('/')) {
+                    fullUrl = fullUrl.substring(1);
+                }
+                fullUrl = 'https://locabartees.com/' + fullUrl;
+            } else if (!fullUrl) {
+                fullUrl = 'https://locabartees.com/';
+            }
+            
+            // Show loading message
+            qrOutput.innerHTML = '<div style="color: #3498db; font-size: 1.2em;">🔄 Generating QR code...</div>';
+            qrOutput.classList.remove('has-qr');
+            
+            try {
+                // Create QR code
+                const qr = qrcode(0, errorLevel);
+                qr.addData(fullUrl);
+                qr.make();
+                
+                // Generate QR code HTML
+                const qrHTML = qr.createTableTag(cellSize, 10);
+                
+                // Create container
+                const qrContainer = document.createElement('div');
+                qrContainer.className = 'qr-container';
+                
+                // Add QR code
+                const qrDiv = document.createElement('div');
+                qrDiv.innerHTML = qrHTML;
+                
+                // Style the table
+                const table = qrDiv.querySelector('table');
+                if (table) {
+                    table.className = 'qr-code-table';
+                    table.style.border = `${cellSize * 2}px solid white`;
+                    table.style.borderRadius = '8px';
+                    table.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                }
+                
+                // Add URL display
+                const urlDisplay = document.createElement('div');
+                urlDisplay.innerHTML = `<strong>URL:</strong> <code style="background: #ecf0f1; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; word-break: break-all;">${fullUrl}</code>`;
+                urlDisplay.style.marginTop = '15px';
+                urlDisplay.style.fontSize = '0.9em';
+                urlDisplay.style.color = '#2c3e50';
+                urlDisplay.style.maxWidth = '100%';
+                
+                // Add download button
+                const downloadBtn = document.createElement('button');
+                downloadBtn.textContent = '📥 Download PNG';
+                downloadBtn.className = 'download-btn';
+                downloadBtn.onclick = () => downloadQR(table, fullUrl);
+                
+                // Assemble container
+                qrContainer.appendChild(qrDiv);
+                qrContainer.appendChild(urlDisplay);
+                qrContainer.appendChild(downloadBtn);
+                
+                // Update output
+                qrOutput.innerHTML = '';
+                qrOutput.appendChild(qrContainer);
+                qrOutput.classList.add('has-qr');
+                
+            } catch (error) {
+                console.error('QR Generation Error:', error);
+                qrOutput.innerHTML = '<div style="color: #e74c3c;">❌ Error generating QR code. Please try again.</div>';
+            }
+        }
+        
+        function downloadQR(table, url) {
+            if (!table) return;
+            
+            try {
+                // Create canvas
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Get table dimensions
+                const rows = table.rows;
+                const cellSize = parseInt(document.getElementById('sizeSelect').value);
+                const padding = cellSize * 2;
+                
+                canvas.width = rows[0].cells.length * cellSize + (padding * 2);
+                canvas.height = rows.length * cellSize + (padding * 2);
+                
+                // Fill background
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw QR code
+                for (let i = 0; i < rows.length; i++) {
+                    const row = rows[i];
+                    for (let j = 0; j < row.cells.length; j++) {
+                        const cell = row.cells[j];
+                        const bgColor = window.getComputedStyle(cell).backgroundColor;
+                        
+                        if (bgColor === 'rgb(44, 62, 80)' || cell.style.backgroundColor === 'rgb(44, 62, 80)') {
+                            ctx.fillStyle = '#2c3e50';
+                            ctx.fillRect(
+                                j * cellSize + padding, 
+                                i * cellSize + padding, 
+                                cellSize, 
+                                cellSize
+                            );
+                        }
+                    }
+                }
+                
+                // Download
+                const link = document.createElement('a');
+                link.download = `qr-code-locabartees-${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Show success feedback
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Downloaded!';
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Download Error:', error);
+                alert('Download failed. Please try right-clicking the QR code and saving the image.');
+            }
+        }
     </script>
 </body>
 </html>
