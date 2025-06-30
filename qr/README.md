@@ -1,12 +1,12 @@
 # Local Bar Tees QR Codes
 
-Generated: 2025-06-30T07:01:44.124Z
+Generated: 2025-06-30T07:02:25.856Z
 Total QR Codes: 1
 
 ## Files Generated
 
 ### PNG Files
-- qr_roundin.png → https://localbartees.com/roundin?qr
+- qr_mayfair.png → https://localbartees.com/mayfair?qr
 
 ### XML Data
 - qr.xml (contains all QR codes metadata)

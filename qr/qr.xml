@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<qrCodes version="1.0" generator="Local Bar Tees QR Generator" generated="2025-06-30T07:01:44.124Z" count="5">
+<qrCodes version="1.0" generator="Local Bar Tees QR Generator" generated="2025-06-30T07:02:25.856Z" count="6">
   <codes>
     <code uniqueId="traceys">
       <name>Tracey's</name>
@@ -40,6 +40,14 @@
       <size>300x300</size>
       <errorCorrection>M</errorCorrection>
       <generated>2025-06-30T07:01:44.124Z</generated>
+    </code>
+    <code uniqueId="mayfair">
+      <name>Mayfair Lounge</name>
+      <url>https://localbartees.com/mayfair?qr</url>
+      <filename>qr_mayfair.png</filename>
+      <size>300x300</size>
+      <errorCorrection>M</errorCorrection>
+      <generated>2025-06-30T07:02:25.856Z</generated>
     </code>
   </codes>
 </qrCodes>
