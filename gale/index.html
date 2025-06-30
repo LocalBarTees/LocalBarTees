@@ -81,6 +81,33 @@
             color: #6c757d;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .live-indicator {
+            width: 8px;
+            height: 8px;
+            background: #28a745;
+            border-radius: 50%;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        .stat-names {
+            font-size: 11px;
+            color: #6c757d;
+            margin-top: 8px;
+            line-height: 1.3;
+            max-width: 200px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .card-grid {
@@ -343,7 +370,11 @@
             <div class="section stats">
                 <h2>Business Overview</h2>
                 <span class="stat-number" id="onboardedCount">-</span>
-                <span class="stat-label">Onboarded</span>
+                <span class="stat-label">
+                    <span class="live-indicator"></span>
+                    Live Clients
+                </span>
+                <div class="stat-names" id="onboardedNames"></div>
             </div>
 
             <div class="section links-section">
@@ -404,13 +435,6 @@
                     <button class="btn" onclick="shareCard()">Share</button>
                     <button class="btn" onclick="fullscreenCard()">Full Screen</button>
                 </div>
-            </div>
-
-            <div class="section">
-                <h2>Notes</h2>
-                <p style="font-size: 14px; color: #6c757d; line-height: 1.5;">
-                    Keep track of bar contacts and follow-ups here. The onboarded count automatically updates from the QR system.
-                </p>
             </div>
         </div>
     </div>
@@ -496,33 +520,69 @@
         }
 
         async function loadData() {
-            try {
-                const response = await fetch('https://localbartees.github.io/LocalBarTees/qr/assets/qr.xml');
-                
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        throw new Error('File not found');
+            // Try multiple possible URLs based on the file structure
+            const urls = [
+                'https://localbartees.github.io/LocalBarTees/qr/qr.xml',
+                'https://raw.githubusercontent.com/localbartees/LocalBarTees/main/qr/qr.xml',
+                'https://raw.githubusercontent.com/localbartees/LocalBarTees/master/qr/qr.xml'
+            ];
+            
+            for (let url of urls) {
+                try {
+                    console.log(`Trying URL: ${url}`);
+                    const response = await fetch(url);
+                    
+                    if (!response.ok) {
+                        console.log(`${url} failed with status: ${response.status}`);
+                        continue;
                     }
-                    throw new Error(`HTTP ${response.status}`);
+                    
+                    const text = await response.text();
+                    console.log('Successfully fetched XML');
+                    
+                    const parser = new DOMParser();
+                    const xml = parser.parseFromString(text, 'text/xml');
+                    
+                    const parseError = xml.querySelector('parsererror');
+                    if (parseError) {
+                        console.log('XML parse error');
+                        continue;
+                    }
+                    
+                    // Get the code elements and extract names
+                    const codeElements = xml.querySelectorAll('code');
+                    const names = [];
+                    
+                    codeElements.forEach(code => {
+                        const nameElement = code.querySelector('name');
+                        if (nameElement) {
+                            names.push(nameElement.textContent);
+                        }
+                    });
+                    
+                    const count = codeElements.length;
+                    console.log(`Found ${count} code elements with names:`, names);
+                    
+                    // Update count
+                    document.getElementById('onboardedCount').textContent = count;
+                    
+                    // Update names list
+                    const namesText = names.join(', ');
+                    document.getElementById('onboardedNames').textContent = namesText;
+                    
+                    return; // Success, exit function
+                    
+                } catch (e) {
+                    console.log(`Error with ${url}:`, e.message);
+                    continue;
                 }
-                
-                const text = await response.text();
-                const parser = new DOMParser();
-                const xml = parser.parseFromString(text, 'text/xml');
-                
-                const parseError = xml.querySelector('parsererror');
-                if (parseError) {
-                    throw new Error('XML parse error');
-                }
-                
-                const qrElements = xml.querySelectorAll('qr');
-                const count = qrElements.length;
-                document.getElementById('onboardedCount').textContent = count;
-                
-            } catch (e) {
-                document.getElementById('onboardedCount').textContent = 'N/A';
-                document.getElementById('onboardedCount').style.fontSize = '32px';
             }
+            
+            // If all URLs failed
+            console.log('All URLs failed');
+            document.getElementById('onboardedCount').textContent = 'N/A';
+            document.getElementById('onboardedNames').textContent = '';
+            document.getElementById('onboardedCount').style.fontSize = '32px';
         }
 
         document.addEventListener('DOMContentLoaded', loadData);
