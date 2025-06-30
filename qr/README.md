@@ -1,12 +1,12 @@
-# Local Bar Tees QR Code Batch: qr-batch
+# Local Bar Tees QR Codes
 
-Generated: 2025-06-30T06:01:07.165Z
+Generated: 2025-06-30T06:30:26.037Z
 Total QR Codes: 1
 
 ## Files Generated
 
 ### PNG Files
-- locabartees-qr-Kolb-s-Restaurant.png → https://locabartees.com/Kolb's Restaurant?qr
+- juans.png → https://localbartees.com/juans?qr
 
 ### XML Data
 - qr.xml (contains all QR codes metadata)
