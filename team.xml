@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <team>
     <member id="main">
-        <name>Local Bar Tees</name>
+        <n>Local Bar Tees</n>
         <title>Merch for Bars &amp; Bands</title>
         <phone>504.261.5637</phone>
         <email>info@localbartees.com</email>
@@ -12,7 +12,7 @@
     </member>
     
     <member id="gale">
-        <name>Michael Gale</name>
+        <n>Michael Gale</n>
         <title>Sales &amp; Product Developer</title>
         <phone>504.261.5637</phone>
         <email>mgale@localbartees.com</email>
@@ -23,7 +23,7 @@
     </member>
     
     <member id="kolb">
-        <name>Kevin Kolb</name>
+        <n>Kevin Kolb</n>
         <title>Team Member</title>
         <phone>504.581.5652</phone>
         <email>kolb@localbartees.com</email>
@@ -34,7 +34,7 @@
     </member>
     
     <member id="steele">
-        <name>George Steele</name>
+        <n>George Steele</n>
         <title>Team Member</title>
         <phone>617.717.4885</phone>
         <email>gsteele@localbartees.com</email>

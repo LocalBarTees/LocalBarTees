@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Bar Tees Team Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            font-size: 16px;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        .main-container {
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .top-bar {
+            background: #00d4ff;
+            padding: 32px 0;
+            position: relative;
+        }
+
+        .top-bar::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .dashboard-title {
+            color: #000;
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .content-area {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 40px;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin-top: 0;
+        }
+
+        .tool-card {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 16px;
+            padding: 40px 32px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .tool-card:hover {
+            background: #1f1f1f;
+            border-color: #3a3a3a;
+            transform: translateY(-2px);
+        }
+
+        .tool-card.featured {
+            background: #ff6b35;
+            border-color: #ff6b35;
+            color: #000;
+        }
+
+        .tool-card.featured:hover {
+            background: #ff7a47;
+            border-color: #ff7a47;
+        }
+
+        .tool-icon {
+            font-size: 36px;
+            margin-bottom: 20px;
+            display: block;
+            line-height: 1;
+        }
+
+        .tool-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            letter-spacing: -0.01em;
+            line-height: 1.3;
+        }
+
+        .tool-description {
+            font-size: 15px;
+            opacity: 0.7;
+            line-height: 1.5;
+        }
+
+        .tool-card.featured .tool-description {
+            opacity: 0.8;
+        }
+
+        .status-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+        }
+
+        .error-state {
+            background: #2a1a1a;
+            color: #ff6b6b;
+            border: 1px solid #3a2020;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .nav-content {
+                padding: 0 24px;
+            }
+
+            .dashboard-title {
+                font-size: 28px;
+            }
+
+            .content-area {
+                padding: 60px 24px;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+                margin-top: 0;
+            }
+
+            .tool-card {
+                padding: 32px 24px;
+                border-radius: 12px;
+            }
+
+            .tool-icon {
+                font-size: 32px;
+                margin-bottom: 16px;
+            }
+
+            .tool-title {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+
+            .tool-description {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .top-bar {
+                padding: 24px 0;
+            }
+
+            .nav-content {
+                padding: 0 20px;
+            }
+
+            .dashboard-title {
+                font-size: 24px;
+            }
+
+            .content-area {
+                padding: 40px 20px;
+            }
+
+            .tool-card {
+                padding: 28px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="top-bar">
+            <div class="nav-content">
+                <h1 class="dashboard-title" id="headerTitle">Team Member Dashboard</h1>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div id="memberInfo">
+                <div class="tools-grid">
+                    <a href="#" class="tool-card featured" id="profileBtn">
+                        <span class="tool-icon">👤</span>
+                        <div class="tool-title">Profile & Business Card</div>
+                        <div class="tool-description">View Edit & Share Your Profile & Business Card</div>
+                    </a>
+
+                    <a href="#" class="tool-card" id="qrBtn">
+                        <span class="tool-icon">📱</span>
+                        <div class="tool-title">QR Codes</div>
+                        <div class="tool-description">Generate QR codes for contact sharing</div>
+                    </a>
+
+                    <a href="#" class="tool-card" id="onboardingBtn">
+                        <span class="tool-icon">📋</span>
+                        <div class="tool-title">Client Onboarding</div>
+                        <div class="tool-description">Access client setup and intake forms</div>
+                    </a>
+
+                    <a href="#" class="tool-card" id="welcomeBtn">
+                        <span class="tool-icon">🎁</span>
+                        <div class="tool-title">Welcome Package</div>
+                        <div class="tool-description">Send welcome materials to new clients</div>
+                    </a>
+
+                    <a href="#" class="tool-card" id="productBtn">
+                        <span class="tool-icon">👕</span>
+                        <div class="tool-title">Add Product</div>
+                        <div class="tool-description">Submit new product requests</div>
+                    </a>
+                </div>
+            </div>
+
+            <div id="loadingMessage" class="status-message">
+                Loading...
+            </div>
+
+            <div id="errorMessage" class="error-state" style="display: none;">
+                Unable to load team data. Please check that team.xml is available.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let teamData = {};
+        let currentMember = null;
+
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name) || 'main';
+        }
+
+        async function loadTeamData() {
+            try {
+                const response = await fetch('team.xml');
+                if (!response.ok) {
+                    throw new Error('Failed to load team.xml');
+                }
+                
+                const xmlText = await response.text();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+                
+                const members = xmlDoc.getElementsByTagName('member');
+                
+                for (let member of members) {
+                    const id = member.getAttribute('id');
+                    const name = member.getElementsByTagName('n')[0].textContent;
+                    const title = member.getElementsByTagName('title')[0].textContent;
+                    const phone = member.getElementsByTagName('phone')[0].textContent;
+                    const email = member.getElementsByTagName('email')[0].textContent;
+                    const website = member.getElementsByTagName('website')[0].textContent;
+                    const qrUrl = member.getElementsByTagName('qr_url')[0].textContent;
+                    const logo = member.getElementsByTagName('logo')[0].textContent;
+                    const company = member.getElementsByTagName('company')[0].textContent;
+                    
+                    teamData[id] = {
+                        name, title, phone, email, website, qrUrl, logo, company
+                    };
+                }
+                
+                const memberId = getUrlParameter('id');
+                displayMember(memberId);
+                
+                document.getElementById('loadingMessage').style.display = 'none';
+                
+            } catch (error) {
+                console.error('Error loading team data:', error);
+                document.getElementById('loadingMessage').style.display = 'none';
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        }
+
+        function displayMember(memberId) {
+            if (!memberId || !teamData[memberId]) {
+                document.getElementById('memberInfo').style.display = 'none';
+                document.getElementById('headerTitle').textContent = 'Team Member Dashboard - Not Found';
+                return;
+            }
+
+            currentMember = teamData[memberId];
+            document.getElementById('headerTitle').textContent = `Team Member Dashboard - ${currentMember.name}`;
+            
+            document.getElementById('profileBtn').href = currentMember.qrUrl;
+            document.getElementById('qrBtn').href = `#qr-${memberId}`;
+            document.getElementById('onboardingBtn').href = `#onboarding-${memberId}`;
+            document.getElementById('welcomeBtn').href = `#welcome-${memberId}`;
+            document.getElementById('productBtn').href = `#product-${memberId}`;
+            
+            document.getElementById('memberInfo').style.display = 'block';
+        }
+
+        document.getElementById('profileBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (currentMember) {
+                const memberId = getUrlParameter('id');
+                const url = `https://localbartees.github.io/LocalBarTees/biz-card.html?id=${memberId}`;
+                window.open(url, '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
+            }
+        });
+
+        document.getElementById('qrBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('🚀 Coming Soon!\n\nQR Codes feature is currently in development.');
+        });
+
+        document.getElementById('onboardingBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('🚀 Coming Soon!\n\nClient Onboarding feature is currently in development.');
+        });
+
+        document.getElementById('welcomeBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('🚀 Coming Soon!\n\nWelcome Package feature is currently in development.');
+        });
+
+        document.getElementById('productBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('🚀 Coming Soon!\n\nAdd Product feature is currently in development.');
+        });
+
+        loadTeamData();
+    </script>
+</body>
+</html>
