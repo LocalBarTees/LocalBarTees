@@ -139,6 +139,39 @@
             text-align: center;
         }
 
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .dashboard-button {
+            background: #000;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .featured .dashboard-button {
+            background: #000;
+            color: #fff;
+        }
+
+        .dashboard-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
         @media (max-width: 768px) {
             .nav-content {
                 padding: 0 24px;
@@ -212,11 +245,16 @@
         <div class="content-area">
             <div id="memberInfo">
                 <div class="tools-grid">
-                    <a href="#" class="tool-card featured" id="profileBtn">
+                    <div class="tool-card featured">
                         <span class="tool-icon">👤</span>
                         <div class="tool-title">Profile & Business Card</div>
                         <div class="tool-description">View Edit & Share Your Profile & Business Card</div>
-                    </a>
+                        <div class="button-container">
+                            <a href="#" class="dashboard-button" id="profileBtn">My Profile</a>
+                            <a href="https://admin.shopify.com/store/xj0eqa-yk/pages?selectedView=all" class="dashboard-button">Edit Profile</a>
+                            <button class="dashboard-button" id="printCardBtn" type="button">Print Business Card</button>
+                        </div>
+                    </div>
 
                     <a href="#" class="tool-card" id="qrBtn">
                         <span class="tool-icon">📱</span>
@@ -260,12 +298,12 @@
 
         function getUrlParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name) || 'main';
+            return urlParams.get(name) || 'gale';
         }
 
         async function loadTeamData() {
             try {
-                const response = await fetch('team.xml');
+                const response = await fetch('team/team.xml');
                 if (!response.ok) {
                     throw new Error('Failed to load team.xml');
                 }
@@ -314,8 +352,8 @@
             currentMember = teamData[memberId];
             document.getElementById('headerTitle').textContent = `Team Member Dashboard - ${currentMember.name}`;
             
-            // Set direct link to biz-card.html with member ID
-            document.getElementById('profileBtn').href = `biz-card.html?id=${memberId}`;
+            // Set direct link to member's profile
+            document.getElementById('profileBtn').href = `https://localbartees.com/${memberId}`;
             document.getElementById('qrBtn').href = `#qr-${memberId}`;
             document.getElementById('onboardingBtn').href = `#onboarding-${memberId}`;
             document.getElementById('welcomeBtn').href = `#welcome-${memberId}`;
@@ -343,6 +381,12 @@
         document.getElementById('productBtn').addEventListener('click', function(e) {
             e.preventDefault();
             alert('🚀 Coming Soon!\n\nAdd Product feature is currently in development.');
+        });
+
+        // Add event listener for Print Business Card button
+        document.getElementById('printCardBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('🚀 Coming Soon!\n\nPrint Business Card feature is currently in development.');
         });
 
         loadTeamData();
