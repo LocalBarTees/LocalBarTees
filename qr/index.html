@@ -2,431 +2,922 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Executive Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="icon" href="assets/qr_favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="assets/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="assets/apple-touch-icon-76x76.png">
+    <meta name="apple-mobile-web-app-title" content="Local Bar Tees">
+    <title>Local Bar Tees Share</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #000000;
-            color: #ffffff;
-            min-height: 100vh;
-            padding: 16px;
-            line-height: 1.5;
+        :root {
+            --primary-black: #000000;
+            --soft-black: #111111;
+            --border-gray: #333333;
+            --text-gray: #999999;
+            --light-gray: #cccccc;
+            --pure-white: #ffffff;
+            --accent-gray: #f8f8f8;
+            --radius-sm: 12px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.15);
         }
 
-        .dashboard-container {
-            max-width: 100%;
-            margin: 0 auto;
-            background: rgba(20, 20, 20, 0.95);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            color: var(--pure-white);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .qr-container {
+            background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(20px);
+            border: 1px solid var(--border-gray);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            text-align: center;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+            position: relative;
             overflow: hidden;
         }
 
-        .header {
-            background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
-            padding: 24px 20px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        .qr-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
         }
 
-        .exec-name {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, #ffffff 0%, #cccccc 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .artist-header {
+            margin-bottom: 1.5rem;
+            position: relative;
         }
 
-        .exec-title {
+        .artist-name {
+            font-size: clamp(2rem, 5vw, 2.75rem);
+            font-weight: 800;
+            color: var(--pure-white);
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .artist-subtitle {
             font-size: 1rem;
-            color: #aaaaaa;
+            color: var(--text-gray);
             font-weight: 500;
-            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
 
-        .exec-company {
+        .qr-section {
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .qr-wrapper {
+            display: inline-block;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .qr-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            background: linear-gradient(45deg, var(--pure-white), #f0f0f0);
+            border-radius: calc(var(--radius-md) + 4px);
+            z-index: -1;
+        }
+
+        .qr-image, .qr-placeholder {
+            width: 240px;
+            height: 240px;
+            border-radius: var(--radius-md);
+            background: var(--pure-white);
+            box-shadow: var(--shadow);
+            border: 2px solid var(--pure-white);
+        }
+        
+        .qr-placeholder {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-gray);
+        }
+
+        .scan-description {
+            color: var(--light-gray);
             font-size: 0.9rem;
-            color: #888888;
+            margin-bottom: 1rem;
+            line-height: 1.4;
             font-weight: 400;
+            white-space: pre-line;
         }
 
-        .main-content {
-            padding: 20px;
+        .backup-section {
+            background: linear-gradient(135deg, var(--soft-black), rgba(17, 17, 17, 0.8));
+            border: 1px solid var(--border-gray);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
         }
 
-
+        .backup-url {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--pure-white);
+            background: rgba(34, 34, 34, 0.8);
+            padding: 1rem 1.25rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-gray);
+            display: block;
+            cursor: pointer;
+            text-decoration: none;
+            font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
+            min-height: 48px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
 
         .action-buttons {
             display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin: 24px 0;
+            gap: 1rem;
+            justify-content: center;
+            margin: 0;
         }
 
-        .action-btn {
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 1px solid var(--border-gray);
+            cursor: pointer;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 24px 16px;
-            background: rgba(30, 30, 30, 0.8);
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 12px;
-            font-weight: 600;
-            text-align: center;
-            transition: all 0.2s ease;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            min-height: 100px;
-            width: 100%;
-        }
-
-        .action-btn:active {
-            transform: scale(0.98);
-            background: rgba(40, 40, 40, 0.8);
-        }
-
-        .action-btn:nth-child(1) {
-            background: rgba(0, 123, 255, 0.15);
-            border: 1px solid rgba(0, 123, 255, 0.2);
-        }
-
-        .action-btn:nth-child(1):active {
-            background: rgba(0, 123, 255, 0.25);
-        }
-
-        .action-btn:nth-child(2) {
-            background: rgba(220, 53, 69, 0.15);
-            border: 1px solid rgba(220, 53, 69, 0.2);
-        }
-
-        .action-btn:nth-child(2):active {
-            background: rgba(220, 53, 69, 0.25);
-        }
-
-        .action-btn:nth-child(3) {
-            background: rgba(40, 167, 69, 0.15);
-            border: 1px solid rgba(40, 167, 69, 0.2);
-        }
-
-        .action-btn:nth-child(3):active {
-            background: rgba(40, 167, 69, 0.25);
-        }
-
-        .btn-icon {
-            font-size: 2rem;
-            margin-bottom: 8px;
-            filter: grayscale(0.2);
-        }
-
-        .btn-label {
-            font-size: 0.9rem;
-            color: #cccccc;
+            gap: 0.5rem;
+            min-width: 130px;
+            min-height: 48px;
+            background: none;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-print {
+            background: linear-gradient(135deg, #222222, #333333);
+            color: var(--pure-white);
+            border-color: #444444;
+        }
+
+        .btn-share {
+            background: linear-gradient(135deg, #222222, #333333);
+            color: var(--pure-white);
+            border-color: #444444;
+        }
+
+        .brand-credit {
+            font-size: 1rem;
+            color: #666666;
             font-weight: 500;
+            text-decoration: none;
+            margin-top: 0.75rem;
+            display: block;
+            padding: 0.25rem;
+            letter-spacing: 0.02em;
         }
 
-        /* Larger screens */
-        @media (min-width: 480px) {
+        .print-instructions {
+            display: none;
+        }
+
+        .scan-instruction {
+            display: none;
+        }
+
+        /* Desktop/Web Layout - Side by Side */
+        @media (min-width: 1024px) {
             body {
-                padding: 20px;
+                padding: 2rem;
+                align-items: stretch;
             }
-            
-            .dashboard-container {
-                max-width: 480px;
+
+            .qr-container {
+                max-width: 1200px;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 2.5rem;
+                text-align: center;
             }
-            
-            .header {
-                padding: 32px 24px;
+
+            .artist-header {
+                margin-bottom: 0;
             }
-            
-            .exec-name {
-                font-size: 2.2rem;
+
+            .artist-name {
+                font-size: clamp(3rem, 6vw, 4rem);
+                margin-bottom: 1rem;
             }
-            
+
+            .artist-subtitle {
+                font-size: 1.2rem;
+            }
+
             .main-content {
-                padding: 24px;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 2.5rem;
+                align-items: center;
             }
-            
-            .metrics-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
+
+            .content-left {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
             }
-            
-            .metric-card {
-                padding: 24px 20px;
+
+            .content-right {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
             }
-            
-            .quick-stats {
-                gap: 16px;
+
+            .qr-section {
+                margin: 0;
+            }
+
+            .qr-wrapper {
+                margin-bottom: 0;
+            }
+
+            .qr-image, .qr-placeholder {
+                width: 280px;
+                height: 280px;
+                border: 2px solid var(--pure-white);
+            }
+
+            .scan-description {
+                display: none !important;
+            }
+
+            .backup-section {
+                margin-bottom: 0;
+                width: 100%;
+            }
+
+            .action-buttons {
+                justify-content: center;
+                margin: 0;
+            }
+
+            .brand-credit {
+                text-align: center;
+                margin: 0;
             }
         }
 
-        @media (min-width: 768px) {
-            .dashboard-container {
-                max-width: 600px;
+        /* Mobile/iPhone App-like Layout */
+        @media (max-width: 1023px) {
+            body {
+                padding: 0;
+                margin: 0;
+                background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+                overflow: hidden;
+            }
+
+            body::before {
+                display: none;
+            }
+            
+            .qr-container {
+                padding: 0;
+                border-radius: 0;
+                border: none;
+                max-width: none;
+                width: 100vw;
+                height: 100vh;
+                height: 100dvh;
+                background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+                backdrop-filter: none;
+                box-shadow: none;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: env(safe-area-inset-top, 20px) 20px env(safe-area-inset-bottom, 20px) 20px;
+                overflow: hidden;
+            }
+
+            .qr-container::before {
+                display: none;
+            }
+
+            .artist-header {
+                margin-bottom: 0;
+                flex-shrink: 0;
+                padding-top: 1rem;
+            }
+            
+            .artist-name {
+                font-size: clamp(1.75rem, 8vw, 2.5rem);
+                margin-bottom: 0.5rem;
+            }
+
+            .artist-subtitle {
+                font-size: clamp(0.85rem, 4vw, 1rem);
+                margin-bottom: 0;
+            }
+
+            .main-content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                flex-grow: 1;
+                gap: 2rem;
+                overflow: hidden;
+            }
+
+            .content-left {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .content-right {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                max-width: 320px;
+            }
+
+            .qr-section {
+                margin: 0;
+            }
+
+            .qr-wrapper {
+                margin-bottom: 0;
+            }
+            
+            .qr-image, .qr-placeholder {
+                width: min(50vw, 220px);
+                height: min(50vw, 220px);
+                border: 2px solid var(--pure-white);
+            }
+
+            .backup-section {
+                background: rgba(17, 17, 17, 0.6);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 20px;
+                padding: 1rem;
+                margin-bottom: 0;
+                width: 100%;
+                backdrop-filter: blur(20px);
+                gap: 1rem;
+            }
+
+            .backup-url {
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 15px;
+                color: var(--pure-white);
+                font-size: 1rem;
+                padding: 1rem;
+                backdrop-filter: blur(10px);
+                font-family: 'Inter', sans-serif;
+                font-weight: 600;
+                text-align: center;
+                min-height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
             
             .action-buttons {
-                flex-direction: row;
+                display: flex;
+                gap: 1rem;
+                width: 100%;
+            }
+            
+            .btn {
+                flex: 1;
+                background: rgba(34, 34, 34, 0.8);
+                border: 1px solid #444444;
+                border-radius: 15px;
+                color: var(--pure-white);
+                font-size: 0.9rem;
+                font-weight: 600;
+                padding: 1rem 0.75rem;
+                min-height: 50px;
+                backdrop-filter: blur(10px);
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+
+            .brand-credit {
+                text-align: center;
+                margin: 0;
+                padding: 1rem 0;
+                font-size: 0.9rem;
+                color: rgba(255, 255, 255, 0.6);
+                flex-shrink: 0;
+            }
+
+            .scan-description {
+                display: none !important;
             }
         }
 
-        /* Dark theme optimizations */
-        ::selection {
-            background: rgba(255, 255, 255, 0.2);
-        }
+        /* Print Styles */
+        @media print {
+            @page {
+                size: letter;
+                margin: 0.75in;
+            }
+            
+            * {
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            body {
+                background: white !important;
+                color: black !important;
+                padding: 0;
+                margin: 0;
+                font-family: 'Inter', Arial, sans-serif !important;
+            }
 
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
+            body::before {
+                display: none;
+            }
+            
+            .qr-container {
+                border: none !important;
+                background: white !important;
+                border-radius: 0 !important;
+                padding: 0 !important;
+                max-width: none !important;
+                width: 100% !important;
+                height: auto !important;
+                display: block !important;
+                text-align: center !important;
+                box-shadow: none !important;
+                backdrop-filter: none !important;
+                box-sizing: border-box !important;
+            }
 
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-        }
+            .qr-container::before {
+                display: none;
+            }
 
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
-        }
+            .main-content {
+                display: block !important;
+            }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.3);
+            .content-left,
+            .content-right {
+                display: block !important;
+                text-align: center !important;
+            }
+            
+            .artist-header {
+                margin: 0 0 40px 0 !important;
+                border-bottom: none !important;
+                padding-bottom: 0 !important;
+            }
+            
+            .artist-name {
+                font-size: 36pt !important;
+                color: #000 !important;
+                margin-bottom: 10px !important;
+                text-shadow: none !important;
+                font-weight: 800 !important;
+                line-height: 1 !important;
+                letter-spacing: -2px !important;
+            }
+            
+            .artist-subtitle {
+                font-size: 14pt !important;
+                color: #000 !important;
+                margin-bottom: 0 !important;
+                text-transform: uppercase !important;
+                letter-spacing: 4px !important;
+                font-weight: 500 !important;
+            }
+            
+            .qr-section {
+                display: block !important;
+                margin: 0 0 40px 0 !important;
+                text-align: center !important;
+            }
+
+            .qr-wrapper {
+                margin: 0 auto !important;
+                padding: 0 !important;
+                border: none !important;
+                border-radius: 0 !important;
+                background: transparent !important;
+                display: inline-block !important;
+            }
+
+            .qr-wrapper::before {
+                display: none;
+            }
+            
+            .qr-image, .qr-placeholder {
+                width: 3.5in !important;
+                height: 3.5in !important;
+                border: none !important;
+                margin: 0 auto !important;
+                box-shadow: none !important;
+                background: white !important;
+                border-radius: 0 !important;
+            }
+
+            .scan-instruction {
+                display: none !important;
+            }
+            
+            .backup-section {
+                border: none !important;
+                background: transparent !important;
+                margin: 0 0 40px 0 !important;
+                padding: 0 !important;
+                backdrop-filter: none !important;
+                gap: 0 !important;
+                border-radius: 0 !important;
+                display: block !important;
+                text-align: center !important;
+            }
+
+            .backup-section::before {
+                display: none !important;
+            }
+            
+            .backup-url {
+                background: transparent !important;
+                border: none !important;
+                color: #000 !important;
+                font-size: 20pt !important;
+                padding: 0 !important;
+                backdrop-filter: none !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                font-family: 'Inter', Arial, sans-serif !important;
+                font-weight: 700 !important;
+                text-transform: uppercase !important;
+                letter-spacing: 1px !important;
+                margin: 0 !important;
+                display: block !important;
+                text-align: center !important;
+            }
+            
+            .brand-credit {
+                font-size: 10pt !important;
+                color: #666 !important;
+                text-align: center !important;
+                margin: 20px 0 0 0 !important;
+                text-decoration: none !important;
+                font-weight: 400 !important;
+                border-top: none !important;
+                padding: 0 !important;
+            }
+
+            .brand-credit::before {
+                display: none !important;
+            }
+            
+            .action-buttons {
+                display: none !important;
+            }
+
+            .scan-description {
+                display: none !important;
+            }
+
+            .print-instructions {
+                display: none !important;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <div class="header">
-            <h1 class="exec-name" id="execName">Loading...</h1>
-            <p class="exec-title" id="execTitle">Loading...</p>
-            <p class="exec-company" id="execCompany">Loading...</p>
+    <div class="qr-container">
+        <div class="artist-header">
+            <h1 class="artist-name" id="artist-name">LOCAL BAR TEES</h1>
+            <p class="artist-subtitle">official merch</p>
         </div>
 
         <div class="main-content">
-
-
-            <div class="action-buttons">
-                <a href="https://localbartees.com" class="action-btn" target="_blank">
-                    <div class="btn-icon">🌐</div>
-                    <div class="btn-label">Visit LocalBarTees.com</div>
-                </a>
-                <a href="#" class="action-btn" id="businessCardBtn">
-                    <div class="btn-icon">💼</div>
-                    <div class="btn-label">View Business Card</div>
-                </a>
-                <a href="#" class="action-btn" id="qrCodeBtn">
-                    <div class="btn-icon">📱</div>
-                    <div class="btn-label">QR Codes</div>
-                </a>
+            <div class="content-left">
+                <div class="qr-section">
+                    <div class="qr-wrapper">
+                        <img src="qr_codes/lbt.png?v=1" alt="QR Code" class="qr-image" id="qr-image">
+                        <div class="qr-placeholder" id="qr-placeholder" style="display: none;">QR</div>
+                    </div>
+                </div>
             </div>
+
+            <div class="content-right">
+                <div class="backup-section">
+                    <div class="backup-url" id="backup-url">visit localbartees.com</div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-print" id="print-btn">
+                            print
+                        </button>
+                        <button class="btn btn-share" id="share-btn">
+                            share
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p class="scan-instruction" style="display: none;">Scan with your phone's camera to browse and buy merchandise</p>
+
+        <a href="https://localbartees.com" target="_blank" class="brand-credit">localbartees.com</a>
+
+        <div class="print-instructions">
+            Scan QR code with your phone's camera app • Generated: <span id="print-date"></span>
         </div>
     </div>
 
     <script>
-        // Function to get URL parameters
-        function getUrlParameter(name) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
-        }
-
-        // Global team data object
-        let teamData = {};
-
-        // Function to load and parse XML from uploaded file
-        async function loadTeamData() {
+        let backupUrl = 'https://localbartees.com';
+        
+        function getQRParam() {
             try {
-                console.log('Attempting to load team.xml...');
-                // Try to read the team.xml file using the file API
-                const xmlContent = await window.fs.readFile('team.xml', { encoding: 'utf8' });
-                console.log('XML file loaded successfully:', xmlContent.substring(0, 200) + '...');
-                
-                const parser = new DOMParser();
-                const xmlDoc = parser.parseFromString(xmlContent, 'text/xml');
-                
-                // Check for parsing errors
-                const parseError = xmlDoc.getElementsByTagName('parsererror');
-                if (parseError.length > 0) {
-                    throw new Error('XML parsing error: ' + parseError[0].textContent);
+                const params = new URLSearchParams(window.location.search);
+                return params.get('qr') || 'lbt';
+            } catch (e) {
+                return 'lbt';
+            }
+        }
+        
+        function showQRImage() {
+            try {
+                const img = document.getElementById('qr-image');
+                const placeholder = document.getElementById('qr-placeholder');
+                if (img && placeholder) {
+                    img.style.display = 'block';
+                    placeholder.style.display = 'none';
                 }
-                
-                const members = xmlDoc.getElementsByTagName('member');
-                console.log('Found', members.length, 'team members in XML');
-                
-                for (let member of members) {
-                    const id = member.getAttribute('id');
-                    teamData[id] = {
-                        name: member.querySelector('n')?.textContent || '',
-                        title: member.querySelector('title')?.textContent || '',
-                        phone: member.querySelector('phone')?.textContent || '',
-                        email: member.querySelector('email')?.textContent || '',
-                        website: member.querySelector('website')?.textContent || '',
-                        qr_url: member.querySelector('qr_url')?.textContent || '',
-                        company: member.querySelector('company')?.textContent || ''
-                    };
-                    console.log('Loaded team member:', id, teamData[id]);
+            } catch (e) {
+                console.log('Error showing QR image');
+            }
+        }
+        
+        function showQRPlaceholder() {
+            try {
+                const img = document.getElementById('qr-image');
+                const placeholder = document.getElementById('qr-placeholder');
+                if (img && placeholder) {
+                    img.style.display = 'none';
+                    placeholder.style.display = 'flex';
                 }
+            } catch (e) {
+                console.log('Error showing placeholder');
+            }
+        }
+        
+        function updateContent(entityName, urlLabel, actualUrl, qrId) {
+            try {
+                document.getElementById('artist-name').textContent = entityName.toUpperCase();
+                document.getElementById('backup-url').textContent = 'visit ' + urlLabel;
+                document.title = entityName + ' Share';
                 
-                console.log('Team data loaded from XML successfully:', teamData);
+                const qrImg = document.getElementById('qr-image');
+                qrImg.onload = showQRImage;
+                qrImg.onerror = showQRPlaceholder;
+                qrImg.src = 'qr_codes/' + qrId + '.png';
                 
-            } catch (error) {
-                console.error('Error loading team.xml file:', error);
-                console.log('Using fallback team data...');
-                // Fallback to default data if XML fails to load
-                teamData = {
-                    main: {
-                        name: "Local Bar Tees",
-                        title: "Merch for Bars & Bands",
-                        phone: "504.261.5637",
-                        email: "info@localbartees.com",
-                        website: "https://localbartees.com",
-                        qr_url: "https://localbartees.com",
-                        company: "Local Bar Tees"
-                    },
-                    gale: {
-                        name: "Michael Gale",
-                        title: "Sales & Product Developer",
-                        phone: "504.261.5637",
-                        email: "mgale@localbartees.com",
-                        website: "https://localbartees.com",
-                        qr_url: "https://localbartees.com/team/?id=gale",
-                        company: "Local Bar Tees"
-                    },
-                    kolb: {
-                        name: "Kevin Kolb",
-                        title: "Team Member",
-                        phone: "504.581.5652",
-                        email: "kolb@localbartees.com",
-                        website: "https://localbartees.com",
-                        qr_url: "https://localbartees.com/team/?id=kolb",
-                        company: "Local Bar Tees"
-                    },
-                    steele: {
-                        name: "George Steele",
-                        title: "Team Member",
-                        phone: "617.717.4885",
-                        email: "gsteele@localbartees.com",
-                        website: "https://localbartees.com",
-                        qr_url: "https://localbartees.com/team/?id=steele",
-                        company: "Local Bar Tees"
+                // Use the actual URL for navigation
+                backupUrl = actualUrl;
+            } catch (e) {
+                console.log('Error updating content');
+            }
+        }
+        
+        function loadData() {
+            const qrParam = getQRParam().toLowerCase();
+            
+            fetch('assets/qr.xml')
+                .then(response => {
+                    if (!response.ok) throw new Error('XML not found');
+                    return response.text();
+                })
+                .then(xmlText => {
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+                    
+                    // Look for qr elements with the matching attribute
+                    const entries = xmlDoc.querySelectorAll('qr');
+                    let found = null;
+                    
+                    // Look for exact match using the qr attribute
+                    for (let i = 0; i < entries.length; i++) {
+                        const entry = entries[i];
+                        // Check all attributes to find the matching one
+                        const attributes = entry.attributes;
+                        for (let j = 0; j < attributes.length; j++) {
+                            const attr = attributes[j];
+                            if (attr.value.toLowerCase() === qrParam) {
+                                found = entry;
+                                break;
+                            }
+                        }
+                        if (found) break;
                     }
-                };
+                    
+                    // Use first entry if no match
+                    if (!found && entries.length > 0) {
+                        found = entries[0];
+                    }
+                    
+                    // Try to find lbt specifically
+                    if (!found) {
+                        for (let i = 0; i < entries.length; i++) {
+                            const entry = entries[i];
+                            const attributes = entry.attributes;
+                            for (let j = 0; j < attributes.length; j++) {
+                                const attr = attributes[j];
+                                if (attr.value.toLowerCase() === 'lbt') {
+                                    found = entry;
+                                    break;
+                                }
+                            }
+                            if (found) break;
+                        }
+                    }
+                    
+                    if (found) {
+                        const nameEl = found.querySelector('name');
+                        const urlEl = found.querySelector('url');
+                        const entityName = nameEl ? nameEl.textContent : 'Local Bar Tees';
+                        const fullUrl = urlEl ? urlEl.textContent : 'https://localbartees.com';
+                        
+                        // Extract display label from URL (remove https:// and localbartees.com/ if present)
+                        let urlLabel = fullUrl;
+                        if (fullUrl.includes('localbartees.com')) {
+                            if (fullUrl === 'https://localbartees.com') {
+                                urlLabel = 'localbartees.com';
+                            } else {
+                                // Extract the path part for display
+                                const pathMatch = fullUrl.match(/localbartees\.com\/(.+)/);
+                                if (pathMatch) {
+                                    urlLabel = 'localbartees.com/' + pathMatch[1];
+                                } else {
+                                    urlLabel = 'localbartees.com';
+                                }
+                            }
+                        }
+                        
+                        // Get the qr ID from the attribute
+                        const attributes = found.attributes;
+                        let qrId = 'lbt';
+                        for (let j = 0; j < attributes.length; j++) {
+                            const attr = attributes[j];
+                            if (attr.value.toLowerCase() === qrParam) {
+                                qrId = attr.value;
+                                break;
+                            }
+                        }
+                        
+                        updateContent(entityName, urlLabel, fullUrl, qrId);
+                    } else {
+                        // Use defaults
+                        updateContent('Local Bar Tees', 'localbartees.com', 'https://localbartees.com', 'lbt');
+                    }
+                })
+                .catch(error => {
+                    console.log('Using default lbt content');
+                    updateContent('Local Bar Tees', 'localbartees.com', 'https://localbartees.com', 'lbt');
+                });
+        }
+        
+        function openBackupUrl() {
+            try {
+                if (backupUrl) {
+                    window.open(backupUrl, '_blank');
+                }
+            } catch (e) {
+                console.log('Error opening URL');
             }
-            
-            // Update dashboard after loading data
-            updateDashboard();
         }
-
-        // Function to update dashboard content
-        function updateDashboard() {
-            console.log('Updating dashboard...');
-            
-            // Get member ID from URL parameter
-            const memberId = getUrlParameter('id') || 'gale';
-            console.log('Selected member ID:', memberId);
-            
-            const member = teamData[memberId] || teamData.gale || {};
-            console.log('Selected member data:', member);
-            
-            // Allow URL parameters to override team data
-            const name = getUrlParameter('name') || member.name || 'Unknown';
-            const title = getUrlParameter('title') || member.title || 'Team Member';
-            const company = getUrlParameter('company') || member.company || 'Local Bar Tees';
-            const phone = getUrlParameter('phone') || member.phone || '';
-            const email = getUrlParameter('email') || member.email || '';
-            
-            // Metrics can still be customized via URL
-            const revenue = getUrlParameter('revenue') || '$2.4M';
-            const team = getUrlParameter('team') || '127';
-            const goals = getUrlParameter('goals') || '89%';
-            const growth = getUrlParameter('growth') || '+24%';
-            const meetings = getUrlParameter('meetings') || '12';
-            const emails = getUrlParameter('emails') || '47';
-            const projects = getUrlParameter('projects') || '8';
-            const notifications = getUrlParameter('notifications') || '3';
-            
-            // Set business card and QR code URLs
-            const businessCardUrl = getUrlParameter('businesscard') || `mailto:${email}`;
-            const qrCodeUrl = getUrlParameter('qrcode') || 'qr/';
-
-            console.log('Final data:', { name, title, company, email, qrCodeUrl });
-
-            // Update DOM elements
-            document.getElementById('execName').textContent = name;
-            document.getElementById('execTitle').textContent = title;
-            document.getElementById('execCompany').textContent = company;
-            document.getElementById('revenue').textContent = revenue;
-            document.getElementById('team').textContent = team;
-            document.getElementById('goals').textContent = goals;
-            document.getElementById('growth').textContent = growth;
-            document.getElementById('meetings').textContent = meetings;
-            document.getElementById('emails').textContent = emails;
-            document.getElementById('projects').textContent = projects;
-            document.getElementById('notifications').textContent = notifications;
-            
-            // Update button links
-            document.getElementById('businessCardBtn').href = businessCardUrl;
-            document.getElementById('qrCodeBtn').href = qrCodeUrl;
-            
-            // Update page title
-            document.title = `${name} - Executive Dashboard`;
-            
-            console.log('Dashboard updated successfully');
+        
+        function doPrint() {
+            try {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+                const dateEl = document.getElementById('print-date');
+                if (dateEl) {
+                    dateEl.textContent = dateStr;
+                }
+                window.print();
+            } catch (e) {
+                console.log('Error printing');
+            }
         }
-
-        // Initialize dashboard when page loads
+        
+        function doShare() {
+            try {
+                const url = window.location.href;
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Official Merchandise',
+                        url: url
+                    });
+                } else if (navigator.clipboard) {
+                    navigator.clipboard.writeText(url).then(() => {
+                        alert('Link copied!');
+                    });
+                } else {
+                    alert('Share: ' + url);
+                }
+            } catch (e) {
+                console.log('Error sharing');
+            }
+        }
+        
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Page loaded, starting initialization...');
-            loadTeamData();
-        });
-
-        // Add touch feedback for mobile
-        function addTouchFeedback() {
-            const touchElements = document.querySelectorAll('.action-btn');
-            
-            touchElements.forEach(element => {
-                element.addEventListener('touchstart', function() {
-                    this.style.opacity = '0.8';
-                });
+            try {
+                loadData();
                 
-                element.addEventListener('touchend', function() {
-                    this.style.opacity = '1';
-                });
-                
-                element.addEventListener('touchcancel', function() {
-                    this.style.opacity = '1';
-                });
-            });
-        }
-
-        // Add click handlers for action buttons
-        document.getElementById('businessCardBtn').addEventListener('click', function(e) {
-            if (this.href === '#' || this.href.endsWith('#')) {
-                e.preventDefault();
-                alert('Please configure the business card URL parameter');
+                document.getElementById('backup-url').addEventListener('click', openBackupUrl);
+                document.getElementById('print-btn').addEventListener('click', doPrint);
+                document.getElementById('share-btn').addEventListener('click', doShare);
+            } catch (e) {
+                console.log('Error initializing');
             }
         });
-
-        document.getElementById('qrCodeBtn').addEventListener('click', function(e) {
-            if (this.href === '#' || this.href.endsWith('#')) {
-                e.preventDefault();
-                alert('Please configure the QR code generator URL parameter');
-            }
-        });
-
-        // Initialize touch feedback
-        addTouchFeedback();
     </script>
 </body>
 </html>

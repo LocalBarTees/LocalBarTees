@@ -314,7 +314,8 @@
             currentMember = teamData[memberId];
             document.getElementById('headerTitle').textContent = `Team Member Dashboard - ${currentMember.name}`;
             
-            document.getElementById('profileBtn').href = currentMember.qrUrl;
+            // Set direct link to biz-card.html with member ID
+            document.getElementById('profileBtn').href = `biz-card.html?id=${memberId}`;
             document.getElementById('qrBtn').href = `#qr-${memberId}`;
             document.getElementById('onboardingBtn').href = `#onboarding-${memberId}`;
             document.getElementById('welcomeBtn').href = `#welcome-${memberId}`;
@@ -323,15 +324,7 @@
             document.getElementById('memberInfo').style.display = 'block';
         }
 
-        document.getElementById('profileBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            if (currentMember) {
-                const memberId = getUrlParameter('id');
-                const url = `https://localbartees.github.io/LocalBarTees/biz-card.html?id=${memberId}`;
-                window.open(url, '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
-            }
-        });
-
+        // Keep event listeners for other buttons that show "Coming Soon" alerts
         document.getElementById('qrBtn').addEventListener('click', function(e) {
             e.preventDefault();
             alert('🚀 Coming Soon!\n\nQR Codes feature is currently in development.');

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>QR Code Generator with Logo</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      text-align: center;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px 0;
+      width: 90%;
+      font-size: 16px;
+    }
+    #qrcode {
+      margin-top: 20px;
+    }
+    .url-preview {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #555;
+      word-break: break-word;
+    }
+    #downloadBtn {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>QR Code Generator 🍸</h1>
+  <p>Enter a handle to generate a QR linking to:</p>
+  <code>https://localbartees.com/{handle}?qr=yes</code>
+
+  <input type="text" id="handle" placeholder="Enter handle (e.g., kolb)" />
+  <button onclick="generateQR()">Generate QR Code</button>
+
+  <div class="url-preview" id="urlPreview"></div>
+  <canvas id="qrcode" width="300" height="300"></canvas>
+  <br>
+  <button id="downloadBtn" onclick="downloadQR()">Download QR Code</button>
+
+  <script>
+    const logo = new Image();
+    logo.src = 'assets/qr_center.png'; // ← Updated path
+
+    function generateQR() {
+      const handle = document.getElementById('handle').value.trim();
+      if (!handle) return;
+
+      const url = `https://localbartees.com/${handle}?qr=yes`;
+      document.getElementById('urlPreview').textContent = url;
+
+      const canvas = document.getElementById('qrcode');
+      const ctx = canvas.getContext('2d');
+
+      QRCode.toCanvas(canvas, url, {
+        width: 300,
+        margin: 2,
+        color: {
+          dark: '#2d3748',
+          light: '#ffffff'
+        }
+      }, function (error) {
+        if (error) {
+          console.error(error);
+          return;
+        }
+
+        const size = 60;
+        const x = (canvas.width - size) / 2;
+        const y = (canvas.height - size) / 2;
+
+        if (logo.complete) {
+          ctx.drawImage(logo, x, y, size, size);
+        } else {
+          logo.onload = () => ctx.drawImage(logo, x, y, size, size);
+        }
+
+        document.getElementById('downloadBtn').style.display = 'inline-block';
+      });
+    }
+
+    function downloadQR() {
+      const handle = document.getElementById('handle').value.trim();
+      const canvas = document.getElementById('qrcode');
+      const link = document.createElement('a');
+      link.download = `qr_${handle}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+  </script>
+</body>
+</html>
