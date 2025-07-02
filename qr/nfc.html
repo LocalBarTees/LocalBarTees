@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFC Contact Share</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .nfc-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .share-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .share-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .share-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .contact-info {
+            text-align: left;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .contact-info h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .vcf-input {
+            width: 100%;
+            margin: 20px 0;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            height: 100px;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nfc-icon">📱</div>
+        <h1>Share Contact via NFC</h1>
+        <p class="subtitle">Tap to activate NFC sharing</p>
+        
+        <div class="contact-info">
+            <h3>Contact Preview:</h3>
+            <div id="contactPreview">
+                <strong>John Doe</strong><br>
+                john.doe@example.com<br>
+                +1 (555) 123-4567<br>
+                Software Developer
+            </div>
+        </div>
+
+        <textarea class="vcf-input" id="vcfInput" placeholder="Paste your .vcf content here or edit the default contact...">BEGIN:VCARD
+VERSION:3.0
+FN:John Doe
+N:Doe;John;;;
+EMAIL:john.doe@example.com
+TEL:+15551234567
+ORG:Tech Company
+TITLE:Software Developer
+END:VCARD</textarea>
+
+        <button class="share-button" id="shareButton" onclick="shareContact()">
+            Activate NFC Sharing
+        </button>
+        
+        <div id="status"></div>
+    </div>
+
+    <script>
+        let nfcSupported = false;
+        let nfcPermission = false;
+
+        // Check if Web NFC is supported
+        if ('NDEFReader' in window) {
+            nfcSupported = true;
+        }
+
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+
+        function parseVCard(vcfContent) {
+            const lines = vcfContent.split('\n');
+            const contact = {};
+            
+            lines.forEach(line => {
+                if (line.startsWith('FN:')) {
+                    contact.name = line.substring(3);
+                } else if (line.startsWith('EMAIL:')) {
+                    contact.email = line.substring(6);
+                } else if (line.startsWith('TEL:')) {
+                    contact.phone = line.substring(4);
+                } else if (line.startsWith('ORG:')) {
+                    contact.organization = line.substring(4);
+                } else if (line.startsWith('TITLE:')) {
+                    contact.title = line.substring(6);
+                }
+            });
+            
+            return contact;
+        }
+
+        function updateContactPreview() {
+            const vcfContent = document.getElementById('vcfInput').value;
+            const contact = parseVCard(vcfContent);
+            const previewDiv = document.getElementById('contactPreview');
+            
+            let preview = '';
+            if (contact.name) preview += `<strong>${contact.name}</strong><br>`;
+            if (contact.email) preview += `${contact.email}<br>`;
+            if (contact.phone) preview += `${contact.phone}<br>`;
+            if (contact.title) preview += `${contact.title}`;
+            if (contact.organization && contact.title) preview += ` at ${contact.organization}`;
+            else if (contact.organization) preview += `${contact.organization}`;
+            
+            previewDiv.innerHTML = preview || 'No contact information found';
+        }
+
+        async function shareContact() {
+            const button = document.getElementById('shareButton');
+            const vcfContent = document.getElementById('vcfInput').value.trim();
+            
+            if (!vcfContent) {
+                updateStatus('Please enter vCard content first', 'error');
+                return;
+            }
+
+            if (!nfcSupported) {
+                updateStatus('NFC is not supported on this device/browser', 'error');
+                return;
+            }
+
+            try {
+                button.disabled = true;
+                updateStatus('Requesting NFC permission...', 'info');
+                
+                const ndef = new NDEFReader();
+                await ndef.scan();
+                
+                updateStatus('Hold your device near another NFC-enabled device to share contact...', 'info');
+                
+                // Write the vCard to NFC
+                await ndef.write({
+                    records: [{
+                        recordType: "text",
+                        data: vcfContent,
+                        mediaType: "text/vcard"
+                    }]
+                });
+                
+                updateStatus('Contact shared successfully via NFC!', 'success');
+                
+            } catch (error) {
+                console.error('NFC Error:', error);
+                let errorMessage = 'NFC sharing failed: ';
+                
+                if (error.name === 'NotAllowedError') {
+                    errorMessage += 'Permission denied. Please allow NFC access.';
+                } else if (error.name === 'NotSupportedError') {
+                    errorMessage += 'NFC not supported on this device.';
+                } else if (error.name === 'NotReadableError') {
+                    errorMessage += 'NFC hardware is busy or unavailable.';
+                } else {
+                    errorMessage += error.message || 'Unknown error occurred.';
+                }
+                
+                updateStatus(errorMessage, 'error');
+            } finally {
+                button.disabled = false;
+            }
+        }
+
+        // Update preview when VCF content changes
+        document.getElementById('vcfInput').addEventListener('input', updateContactPreview);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContactPreview();
+            
+            if (!nfcSupported) {
+                updateStatus('NFC not supported on this browser/device. Try Chrome on Android.', 'error');
+                document.getElementById('shareButton').disabled = true;
+            } else {
+                updateStatus('Ready to share contact via NFC', 'info');
+            }
+        });
+    </script>
+</body>
+</html>
