@@ -168,8 +168,9 @@
         }
 
         .dashboard-button:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.3);
+            background: #00d4ff;
+            color: #000;
+            border-color: #00d4ff;
         }
 
         @media (max-width: 768px) {
@@ -232,6 +233,13 @@
                 padding: 28px 20px;
             }
         }
+
+        .featured-helper-text {
+            font-size: 13px;
+            color: #000;
+            margin: 4px 0 8px 0;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -246,12 +254,13 @@
             <div id="memberInfo">
                 <div class="tools-grid">
                     <div class="tool-card featured">
-                        <span class="tool-icon">👤</span>
-                        <div class="tool-title">Profile & Business Card</div>
-                        <div class="tool-description">View Edit & Share Your Profile & Business Card</div>
+                        <span class="tool-icon">🪪</span>
+                        <div class="tool-title">Digital Business Card</div>
                         <div class="button-container">
-                            <a href="#" class="dashboard-button" id="profileBtn">My Profile</a>
-                            <a href="https://admin.shopify.com/store/xj0eqa-yk/pages?selectedView=all" class="dashboard-button">Edit Profile</a>
+                            <a href="#" class="dashboard-button" id="profileBtn">&lt;n&gt;</a>
+                            <div class="featured-helper-text">⬆️ Bookmark this on your phone. Better yet, save it to your phone's home screen.</div>
+                            <a href="https://admin.shopify.com/store/xj0eqa-yk/pages?selectedView=all" class="dashboard-button">Edit Business Card</a>
+                            <div class="featured-helper-text" style="margin-top:0;">Sorry, you'll have to login to Shopify to edit.</div>
                             <button class="dashboard-button" id="printCardBtn" type="button">Print Business Card</button>
                         </div>
                     </div>
@@ -303,7 +312,7 @@
 
         async function loadTeamData() {
             try {
-                const response = await fetch('dashboard/team.xml');
+                const response = await fetch('team.xml');
                 if (!response.ok) {
                     throw new Error('Failed to load team.xml');
                 }
@@ -332,7 +341,6 @@
                 
                 const memberId = getUrlParameter('id');
                 displayMember(memberId);
-                
                 document.getElementById('loadingMessage').style.display = 'none';
                 
             } catch (error) {
@@ -345,15 +353,20 @@
         function displayMember(memberId) {
             if (!memberId || !teamData[memberId]) {
                 document.getElementById('memberInfo').style.display = 'none';
-                document.getElementById('headerTitle').textContent = 'Team Member Dashboard - Not Found';
-                document.getElementById('memberName').textContent = '';
+                document.getElementById('headerTitle').innerHTML = 'Team Member Dashboard <span id="memberName"></span>';
+                document.getElementById('profileBtn').setAttribute('href', '#');
+                document.getElementById('profileBtn').textContent = '<n>';
                 return;
             }
 
             currentMember = teamData[memberId];
-            document.getElementById('headerTitle').childNodes[0].textContent = 'Team Member Dashboard ';
-            document.getElementById('memberName').textContent = currentMember.name;
-            document.getElementById('profileBtn').href = `https://localbartees.com/${memberId}`;
+            document.getElementById('headerTitle').innerHTML = `Team Member Dashboard &mdash; <span id="memberName">${currentMember.name}</span>`;
+            var profileBtn = document.getElementById('profileBtn');
+            var absUrl = 'https://localbartees.com/' + memberId;
+            profileBtn.setAttribute('href', absUrl);
+            profileBtn.href = absUrl;
+            profileBtn.textContent = absUrl;
+            console.log('Set My Profile href to:', profileBtn.href);
             document.getElementById('qrBtn').href = `#qr-${memberId}`;
             document.getElementById('onboardingBtn').href = `#onboarding-${memberId}`;
             document.getElementById('welcomeBtn').href = `#welcome-${memberId}`;
