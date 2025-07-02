@@ -238,7 +238,7 @@
     <div class="main-container">
         <div class="top-bar">
             <div class="nav-content">
-                <h1 class="dashboard-title" id="headerTitle">Team Member Dashboard</h1>
+                <h1 class="dashboard-title" id="headerTitle">Team Member Dashboard <span id="memberName"></span></h1>
             </div>
         </div>
 
@@ -346,19 +346,18 @@
             if (!memberId || !teamData[memberId]) {
                 document.getElementById('memberInfo').style.display = 'none';
                 document.getElementById('headerTitle').textContent = 'Team Member Dashboard - Not Found';
+                document.getElementById('memberName').textContent = '';
                 return;
             }
 
             currentMember = teamData[memberId];
-            document.getElementById('headerTitle').textContent = `Team Member Dashboard - ${currentMember.name}`;
-            
-            // Set direct link to member's profile
+            document.getElementById('headerTitle').childNodes[0].textContent = 'Team Member Dashboard ';
+            document.getElementById('memberName').textContent = currentMember.name;
             document.getElementById('profileBtn').href = `https://localbartees.com/${memberId}`;
             document.getElementById('qrBtn').href = `#qr-${memberId}`;
             document.getElementById('onboardingBtn').href = `#onboarding-${memberId}`;
             document.getElementById('welcomeBtn').href = `#welcome-${memberId}`;
             document.getElementById('productBtn').href = `#product-${memberId}`;
-            
             document.getElementById('memberInfo').style.display = 'block';
         }
 
