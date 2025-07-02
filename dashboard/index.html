@@ -303,7 +303,7 @@
 
         async function loadTeamData() {
             try {
-                const response = await fetch('team/team.xml');
+                const response = await fetch('dashboard/team.xml');
                 if (!response.ok) {
                     throw new Error('Failed to load team.xml');
                 }
