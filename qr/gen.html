@@ -42,8 +42,11 @@
   </style>
 </head>
 <body>
+  <div style="text-align:center;">
+    <button type="button" id="backBtn" style="margin-bottom:24px; float:none; display:inline-block;">⬅️ Back</button>
+  </div>
   <h1>QR Code Generator 🍸</h1>
-    <p>Only works locally at the moment, meaning contact KK for a QR code.</p>
+  <p>Only works locally at the moment, meaning contact KK for a QR code.</p>
   <p>Enter a handle to generate a QR linking to:</p>
   <code>https://localbartees.com/{handle}?qr=yes</code>
 
@@ -69,7 +72,7 @@
 
   <script>
     const logo = new Image();
-    logo.src = 'assets/qr_center.png';
+    logo.src = 'qr_center.png';
 
     document.getElementById('qrForm').onsubmit = function(e) {
       e.preventDefault();
@@ -161,6 +164,10 @@
           setTimeout(() => { status.style.display = 'none'; }, 1200);
         });
       }
+    };
+
+    document.getElementById('backBtn').onclick = function() {
+      window.history.back();
     };
   </script>
 </body>
