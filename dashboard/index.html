@@ -257,7 +257,7 @@
                         <span class="tool-icon">🪪</span>
                         <div class="tool-title">Digital Business Card</div>
                         <div class="button-container">
-                            <a href="#" class="dashboard-button" id="profileBtn">&lt;n&gt;</a>
+                            <a href="#" class="dashboard-button" id="profileBtn"></a>
                             <div class="featured-helper-text">⬆️ Bookmark this on your phone. Better yet, save it to your phone's home screen.</div>
                             <a href="https://admin.shopify.com/store/xj0eqa-yk/pages?selectedView=all" class="dashboard-button">Edit Business Card</a>
                             <div class="featured-helper-text" style="margin-top:0;">Sorry, you'll have to login to Shopify to edit.</div>
@@ -265,11 +265,13 @@
                         </div>
                     </div>
 
-                    <a href="#" class="tool-card" id="qrBtn">
+                    <div class="tool-card" id="qrCard">
                         <span class="tool-icon">📱</span>
                         <div class="tool-title">QR Codes</div>
-                        <div class="tool-description">Generate QR codes for merch</div>
-                    </a>
+                        <div class="button-container" style="margin-top:16px;">
+                            <a href="../qr/gen.html" class="dashboard-button" style="margin-top:0;">Generator</a>
+                        </div>
+                    </div>
 
                     <a href="#" class="tool-card" id="onboardingBtn">
                         <span class="tool-icon">📋</span>
@@ -367,18 +369,11 @@
             profileBtn.href = absUrl;
             profileBtn.textContent = absUrl;
             console.log('Set My Profile href to:', profileBtn.href);
-            document.getElementById('qrBtn').href = `#qr-${memberId}`;
             document.getElementById('onboardingBtn').href = `#onboarding-${memberId}`;
             document.getElementById('welcomeBtn').href = `#welcome-${memberId}`;
             document.getElementById('productBtn').href = `#product-${memberId}`;
             document.getElementById('memberInfo').style.display = 'block';
         }
-
-        // Keep event listeners for other buttons that show "Coming Soon" alerts
-        document.getElementById('qrBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('🚀 Coming Soon!\n\nQR Codes feature is currently in development.');
-        });
 
         document.getElementById('onboardingBtn').addEventListener('click', function(e) {
             e.preventDefault();
@@ -395,7 +390,6 @@
             alert('🚀 Coming Soon!\n\nAdd Product feature is currently in development.');
         });
 
-        // Add event listener for Print Business Card button
         document.getElementById('printCardBtn').addEventListener('click', function(e) {
             e.preventDefault();
             alert('🚀 Coming Soon!\n\nPrint Business Card feature is currently in development.');

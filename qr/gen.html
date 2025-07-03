@@ -30,60 +30,117 @@
     #downloadBtn {
       display: none;
     }
+    form {
+      margin-top: 24px;
+    }
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      font-size: 14px;
+      margin-top: 8px;
+    }
   </style>
 </head>
 <body>
   <h1>QR Code Generator 🍸</h1>
+    <p>Only works locally at the moment, meaning contact KK for a QR code.</p>
   <p>Enter a handle to generate a QR linking to:</p>
   <code>https://localbartees.com/{handle}?qr=yes</code>
 
-  <input type="text" id="handle" placeholder="Enter handle (e.g., kolb)" />
-  <button onclick="generateQR()">Generate QR Code</button>
-
+  <form id="qrForm">
+    <input type="text" id="handle" placeholder="Enter handle (e.g., gale)" required />
+    <input type="text" id="clientName" placeholder="Client/Bar Name (e.g., Cocktail Gale's)" required />
+    <input type="text" id="filename" placeholder="Filename (e.g., qr_gale.png)" />
+    <button type="submit">Generate QR Code & XML</button>
+  </form>
   <div class="url-preview" id="urlPreview"></div>
   <canvas id="qrcode" width="300" height="300"></canvas>
   <br>
   <button id="downloadBtn" onclick="downloadQR()">Download QR Code</button>
+  <div style="margin-top:8px; color:#888; font-size:13px;">
+    Save to <b>qr/</b> folder in your project.
+  </div>
+  <div style="margin-top:24px;">
+    <label for="xmlOutput"><b>Copy this &lt;code&gt; entry to qr/assets/qr.xml:</b></label>
+    <textarea id="xmlOutput"></textarea>
+    <button type="button" id="copyXmlBtn" style="margin-top:8px;">Copy Code</button>
+    <span id="copyStatus" style="margin-left:10px;color:#00b894;font-size:13px;display:none;">Copied!</span>
+  </div>
 
   <script>
     const logo = new Image();
-    logo.src = 'assets/qr_center.png'; // ← Updated path
+    logo.src = 'assets/qr_center.png';
 
-    function generateQR() {
+    document.getElementById('qrForm').onsubmit = function(e) {
+      e.preventDefault();
+      generateQRandXML();
+    };
+
+    document.getElementById('handle').addEventListener('input', function() {
+      const handle = this.value.trim();
+      const filenameInput = document.getElementById('filename');
+      // Only update if the user hasn't manually changed the filename
+      if (!filenameInput.dataset.userEdited || filenameInput.value === '' || filenameInput.value === filenameInput.dataset.lastAuto) {
+        const autoFilename = handle ? `qr_${handle}.png`.toLowerCase() : '';
+        filenameInput.value = autoFilename;
+        filenameInput.dataset.lastAuto = autoFilename;
+        filenameInput.dataset.userEdited = '';
+      }
+    });
+    document.getElementById('filename').addEventListener('input', function() {
+      // Mark as user-edited if the value doesn't match the last auto-generated value
+      if (this.value !== this.dataset.lastAuto) {
+        this.dataset.userEdited = 'true';
+      } else {
+        this.dataset.userEdited = '';
+      }
+      // Always force .png to lowercase
+      if (this.value.endsWith('.PNG')) {
+        this.value = this.value.slice(0, -4) + '.png';
+      }
+    });
+
+    function escapeXml(str) {
+      return str.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&apos;');
+    }
+
+    function generateQRandXML() {
       const handle = document.getElementById('handle').value.trim();
-      if (!handle) return;
-
-      const url = `https://localbartees.com/${handle}?qr=yes`;
+      const clientName = document.getElementById('clientName').value.trim();
+      let filename = document.getElementById('filename').value.trim();
+      if (!handle || !clientName) return;
+      if (!filename || filename === `qr_.png`) filename = `qr_${handle}.png`;
+      filename = filename.replace(/\.PNG$/i, '.png');
+      document.getElementById('filename').value = filename;
+      const url = `https://localbartees.com/${handle}?qr`;
       document.getElementById('urlPreview').textContent = url;
-
+      // Generate QR code
       const canvas = document.getElementById('qrcode');
       const ctx = canvas.getContext('2d');
-
       QRCode.toCanvas(canvas, url, {
         width: 300,
         margin: 2,
-        color: {
-          dark: '#000000',
-          light: '#ffffff'
-        }
+        color: { dark: '#000000', light: '#ffffff' }
       }, function (error) {
-        if (error) {
-          console.error(error);
-          return;
-        }
-
+        if (error) { console.error(error); return; }
         const size = 60;
         const x = (canvas.width - size) / 2;
         const y = (canvas.height - size) / 2;
-
         if (logo.complete) {
           ctx.drawImage(logo, x, y, size, size);
         } else {
           logo.onload = () => ctx.drawImage(logo, x, y, size, size);
         }
-
         document.getElementById('downloadBtn').style.display = 'inline-block';
       });
+      // Generate XML snippet with escaped values
+      const now = new Date().toISOString();
+      const xml = `<code uniqueId="${escapeXml(handle)}">\n  <name>${escapeXml(clientName)}</name>\n  <url>${escapeXml(url)}</url>\n  <filename>${escapeXml(filename)}</filename>\n  <size>300x300</size>\n  <errorCorrection>M</errorCorrection>\n  <generated>${escapeXml(now)}</generated>\n</code>`;
+      document.getElementById('xmlOutput').value = xml;
     }
 
     function downloadQR() {
@@ -94,6 +151,17 @@
       link.href = canvas.toDataURL('image/png');
       link.click();
     }
+
+    document.getElementById('copyXmlBtn').onclick = function() {
+      const xml = document.getElementById('xmlOutput').value;
+      if (xml) {
+        navigator.clipboard.writeText(xml).then(function() {
+          const status = document.getElementById('copyStatus');
+          status.style.display = 'inline';
+          setTimeout(() => { status.style.display = 'none'; }, 1200);
+        });
+      }
+    };
   </script>
 </body>
 </html>

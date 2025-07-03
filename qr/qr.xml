@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qrCodes version="1.0" generator="Local Bar Tees QR Generator" generated="2025-06-30T18:49:49.107Z" count="8">
+  <codes>
+<code uniqueId="nail">
+  <name>The Rusty Nail</name>
+  <url>https://localbartees.com/nail?qr</url>
+  <filename>qr_nail.png</filename>
+  <size>300x300</size>
+  <errorCorrection>M</errorCorrection>
+  <generated>2025-07-03T18:42:30.058Z</generated>
+</code>
+<code uniqueId="sidecar">
+  <name>Sidecar Patio &amp; Oyster Bar</name>
+  <url>https://localbartees.com/sidecar?qr</url>
+  <filename>qr_sidecar.png</filename>
+  <size>300x300</size>
+  <errorCorrection>M</errorCorrection>
+  <generated>2025-07-03T18:45:49.647Z</generated>
+</code>
+<code uniqueId="mayfair">
+  <name>The Mayfair Lounge</name>
+  <url>https://localbartees.com/mayfair?qr</url>
+  <filename>qr_mayfair.png</filename>
+  <size>300x300</size>
+  <errorCorrection>M</errorCorrection>
+  <generated>2025-07-03T20:01:21.607Z</generated>
+</code>
+</codes>
+</qrCodes>
