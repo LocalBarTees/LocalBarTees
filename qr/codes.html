@@ -1,1 +1,518 @@
-coming soon
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Bar Tees QR Code Package</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: white;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                font-size: 12pt;
+                line-height: 1.5;
+            }
+            
+            .page {
+                width: 8.5in;
+                height: 11in;
+                margin: 0;
+                padding: 0.75in;
+                page-break-after: always;
+                box-sizing: border-box;
+            }
+            
+            .page:last-child {
+                page-break-after: avoid;
+            }
+            
+            .no-print {
+                display: none;
+            }
+        }
+
+        /* Screen styles */
+        @media screen {
+            body {
+                background: #f0f0f0;
+                padding: 20px;
+            }
+            
+            .page {
+                width: 8.5in;
+                height: 11in;
+                margin: 0 auto 20px;
+                padding: 0.75in;
+                background: white;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                border: 1px solid #ddd;
+                box-sizing: border-box;
+            }
+            
+            .print-button {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #000;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                cursor: pointer;
+                font-size: 16px;
+                border-radius: 4px;
+                z-index: 1000;
+            }
+            
+            .print-button:hover {
+                background: #333;
+            }
+        }
+
+        /* Page 1: Instructions */
+        .instructions-page {
+            text-align: left;
+        }
+
+        .instructions-page h1 {
+            font-size: 24pt;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .instructions-page h2 {
+            font-size: 18pt;
+            margin: 25px 0 15px 0;
+            font-weight: bold;
+        }
+
+        .instructions-page p {
+            font-size: 12pt;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .instructions-page ul {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+
+        .instructions-page li {
+            font-size: 12pt;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .url-highlight {
+            font-weight: bold;
+            font-size: 14pt;
+            background: #f0f0f0;
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        /* Page 2: Business Info */
+        .business-info-page {
+            text-align: center;
+        }
+
+        .logo {
+            width: 300px;
+            height: auto;
+            margin: 0 auto 40px;
+            display: block;
+        }
+
+        .business-name {
+            font-size: 28pt;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #000;
+        }
+
+        .business-url {
+            font-size: 16pt;
+            font-weight: bold;
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 30px 0;
+            word-break: break-all;
+        }
+
+        .qr-preview {
+            width: 200px;
+            height: 200px;
+            margin: 30px auto;
+            background: #f0f0f0;
+            border: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12pt;
+            color: #666;
+        }
+
+        /* Page 3: QR Code Sheet */
+        .qr-sheet-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+        }
+
+        .qr-code-large {
+            width: 400px;
+            height: 400px;
+            background: #f0f0f0;
+            border: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14pt;
+            color: #666;
+            margin: 20px auto;
+        }
+
+        .qr-code-small {
+            width: 200px;
+            height: 200px;
+            background: #f0f0f0;
+            border: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12pt;
+            color: #666;
+            margin: 10px;
+        }
+
+        .powered-by {
+            font-size: 12pt;
+            color: #666;
+            margin-top: 20px;
+        }
+
+        .qr-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .qr-item {
+            text-align: center;
+        }
+
+        /* Page 4: Various Sizes */
+        .sizes-page {
+            text-align: center;
+        }
+
+        .size-section {
+            margin: 30px 0;
+        }
+
+        .size-label {
+            font-size: 14pt;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .qr-code-tiny {
+            width: 100px;
+            height: 100px;
+            background: #f0f0f0;
+            border: 2px solid #ddd;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10pt;
+            color: #666;
+            margin: 5px;
+        }
+
+        .qr-code-medium {
+            width: 150px;
+            height: 150px;
+            background: #f0f0f0;
+            border: 2px solid #ddd;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11pt;
+            color: #666;
+            margin: 10px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 18pt;
+            color: #666;
+        }
+
+        .error {
+            text-align: center;
+            padding: 50px;
+            font-size: 16pt;
+            color: #d00;
+        }
+
+        @media (max-width: 768px) {
+            .page {
+                width: 100%;
+                height: auto;
+                min-height: 11in;
+                margin: 0 0 20px;
+            }
+            
+            .print-button {
+                position: static;
+                display: block;
+                margin: 20px auto;
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-button no-print" onclick="window.print()">🖨️ Print All Pages</button>
+    
+    <div id="loading" class="loading">Loading QR code package...</div>
+    
+    <div id="error" class="error" style="display: none;"></div>
+    
+    <div id="pages" style="display: none;">
+        <!-- Page 1: Instructions -->
+        <div class="page instructions-page">
+            <h1>Welcome to Local Bar Tees</h1>
+            
+            <p>Your shop can be found at <span class="url-highlight" id="businessUrl">https://localbartees.com/{uniqueId}</span></p>
+            
+            <h2>QR Code Printing Instructions</h2>
+            
+            <p>This package contains everything you need to display your Local Bar Tees QR codes:</p>
+            
+            <ul>
+                <li><strong>Page 1:</strong> These instructions</li>
+                <li><strong>Page 2:</strong> Business information and QR code preview</li>
+                <li><strong>Page 3:</strong> Large QR codes for posting</li>
+                <li><strong>Page 4:</strong> Various sizes for different uses</li>
+            </ul>
+            
+            <h2>How to Use Your QR Codes</h2>
+            
+            <ul>
+                <li>Print the QR codes on white paper for best scanning results</li>
+                <li>Place QR codes where customers can easily see and scan them</li>
+                <li>Consider laminating for durability in high-traffic areas</li>
+                <li>Test scan each QR code after printing to ensure quality</li>
+            </ul>
+            
+            <h2>Placement Suggestions</h2>
+            
+            <ul>
+                <li>Near the entrance or host stand</li>
+                <li>On tables or bar tops</li>
+                <li>In restrooms or waiting areas</li>
+                <li>On receipt holders or menu stands</li>
+                <li>At the point of sale</li>
+            </ul>
+            
+            <h2>Support</h2>
+            
+            <p>For questions or support, visit <strong>poweredbylocalbartees.com</strong> or contact the Local Bar Tees team.</p>
+        </div>
+        
+        <!-- Page 2: Business Info -->
+        <div class="page business-info-page">
+            <img src="lbt_neon_blk.png" alt="Local Bar Tees Logo" class="logo">
+            
+            <div class="business-name" id="businessName">Business Name</div>
+            
+            <div class="business-url" id="businessUrlPage2">https://localbartees.com/{uniqueId}</div>
+            
+            <div class="qr-preview" id="qrPreview">QR Code Preview</div>
+            
+            <p style="font-size: 14pt; margin-top: 30px;">
+                Scan the QR code to visit your Local Bar Tees shop
+            </p>
+            
+            <p style="font-size: 12pt; color: #666; margin-top: 20px;">
+                powered by localbartees.com
+            </p>
+        </div>
+        
+        <!-- Page 3: QR Code Sheet -->
+        <div class="page qr-sheet-page">
+            <div class="qr-code-large" id="qrCodeLarge1">
+                Large QR Code
+            </div>
+            
+            <div class="qr-grid">
+                <div class="qr-item">
+                    <div class="qr-code-small" id="qrCodeSmall1">QR Code</div>
+                    <div class="powered-by">poweredbylocalbartees.com</div>
+                </div>
+                <div class="qr-item">
+                    <div class="qr-code-small" id="qrCodeSmall2">QR Code</div>
+                    <div class="powered-by">poweredbylocalbartees.com</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Page 4: Various Sizes -->
+        <div class="page sizes-page">
+            <h1 style="margin-bottom: 30px;">QR Code Sizes</h1>
+            
+            <div class="size-section">
+                <div class="size-label">Large (4" x 4")</div>
+                <div class="qr-code-large" id="qrCodeLarge2" style="width: 300px; height: 300px;">
+                    QR Code
+                </div>
+                <div class="powered-by">poweredbylocalbartees.com</div>
+            </div>
+            
+            <div class="size-section">
+                <div class="size-label">Medium (2" x 2")</div>
+                <div class="qr-code-medium" id="qrCodeMedium1">QR Code</div>
+                <div class="qr-code-medium" id="qrCodeMedium2">QR Code</div>
+                <div class="powered-by">poweredbylocalbartees.com</div>
+            </div>
+            
+            <div class="size-section">
+                <div class="size-label">Small (1" x 1")</div>
+                <div class="qr-code-tiny" id="qrCodeTiny1">QR</div>
+                <div class="qr-code-tiny" id="qrCodeTiny2">QR</div>
+                <div class="qr-code-tiny" id="qrCodeTiny3">QR</div>
+                <div class="qr-code-tiny" id="qrCodeTiny4">QR</div>
+                <div class="powered-by">poweredbylocalbartees.com</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let businessData = null;
+
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        async function loadBusinessData() {
+            try {
+                const response = await fetch('./qr.xml');
+                const xmlText = await response.text();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+                
+                if (xmlDoc.querySelector('parsererror')) {
+                    throw new Error('Failed to parse XML');
+                }
+
+                const uniqueId = getUrlParameter('qr');
+                if (!uniqueId) {
+                    throw new Error('No QR code ID specified in URL');
+                }
+
+                const codes = xmlDoc.querySelectorAll('code');
+                let foundBusiness = null;
+
+                for (const code of codes) {
+                    if (code.getAttribute('uniqueId') === uniqueId) {
+                        foundBusiness = {
+                            uniqueId: code.getAttribute('uniqueId'),
+                            name: code.querySelector('name')?.textContent || 'Unknown',
+                            url: code.querySelector('url')?.textContent || '',
+                            filename: code.querySelector('filename')?.textContent || '',
+                            generated: code.querySelector('generated')?.textContent || ''
+                        };
+                        break;
+                    }
+                }
+
+                if (!foundBusiness) {
+                    throw new Error(`Business with ID '${uniqueId}' not found`);
+                }
+
+                businessData = foundBusiness;
+                populatePages();
+                
+            } catch (error) {
+                console.error('Error loading business data:', error);
+                document.getElementById('error').textContent = `Error: ${error.message}`;
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        function populatePages() {
+            if (!businessData) return;
+
+            const businessUrl = `https://localbartees.com/${businessData.uniqueId}`;
+            
+            // Update URLs
+            document.getElementById('businessUrl').textContent = businessUrl;
+            document.getElementById('businessUrlPage2').textContent = businessUrl;
+            
+            // Update business name
+            document.getElementById('businessName').textContent = businessData.name;
+            
+            // Generate QR code URL
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(businessUrl)}`;
+            
+            // Update all QR code placeholders with actual QR codes
+            const qrElements = [
+                'qrPreview', 'qrCodeLarge1', 'qrCodeLarge2', 
+                'qrCodeSmall1', 'qrCodeSmall2', 
+                'qrCodeMedium1', 'qrCodeMedium2',
+                'qrCodeTiny1', 'qrCodeTiny2', 'qrCodeTiny3', 'qrCodeTiny4'
+            ];
+            
+            qrElements.forEach(elementId => {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.innerHTML = `<img src="${qrUrl}" alt="QR Code for ${escapeHtml(businessData.name)}" style="width: 100%; height: 100%; object-fit: contain;">`;
+                }
+            });
+            
+            // Show pages and hide loading
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('pages').style.display = 'block';
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadBusinessData);
+
+        // Auto-print on mobile if requested
+        if (window.location.search.includes('print=true')) {
+            window.addEventListener('load', () => {
+                setTimeout(() => window.print(), 1000);
+            });
+        }
+    </script>
+</body>
+</html>
