@@ -3,372 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Local Bar Tees QR Code Package</title>
+    <title>QR Codes</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
             color: #333;
-            background: white;
+            margin: 0;
+            padding: 20px;
         }
 
-        /* Print styles */
-        @media print {
-            body {
-                margin: 0;
-                padding: 0;
-                font-size: 12pt;
-                line-height: 1.5;
-            }
-            
-            .page {
-                width: 8.5in;
-                height: 11in;
-                margin: 0;
-                padding: 0.75in;
-                page-break-after: always;
-                box-sizing: border-box;
-            }
-            
-            .page:last-child {
-                page-break-after: avoid;
-            }
-            
-            .no-print {
-                display: none;
-            }
-        }
-
-        /* Screen styles */
-        @media screen {
-            body {
-                background: #f0f0f0;
-                padding: 20px;
-            }
-            
-            .page {
-                width: 8.5in;
-                height: 11in;
-                margin: 0 auto 20px;
-                padding: 0.75in;
-                background: white;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-                border: 1px solid #ddd;
-                box-sizing: border-box;
-            }
-            
-            .print-button {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: #000;
-                color: white;
-                border: none;
-                padding: 12px 24px;
-                cursor: pointer;
-                font-size: 16px;
-                border-radius: 4px;
-                z-index: 1000;
-            }
-            
-            .print-button:hover {
-                background: #333;
-            }
-        }
-
-        /* Page 1: Instructions */
-        .instructions-page {
-            text-align: left;
-        }
-
-        .instructions-page h1 {
-            font-size: 24pt;
-            margin-bottom: 30px;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .instructions-page h2 {
-            font-size: 18pt;
-            margin: 25px 0 15px 0;
-            font-weight: bold;
-        }
-
-        .instructions-page p {
-            font-size: 12pt;
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-
-        .instructions-page ul {
-            margin: 15px 0;
-            padding-left: 30px;
-        }
-
-        .instructions-page li {
-            font-size: 12pt;
-            margin-bottom: 10px;
-            line-height: 1.5;
-        }
-
-        .url-highlight {
-            font-weight: bold;
-            font-size: 14pt;
-            background: #f0f0f0;
-            padding: 5px;
-            border-radius: 3px;
-        }
-
-        /* Page 2: Super Large QR Page */
-        .business-info-page {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            text-align: center;
-            height: 100%;
-        }
-
-        .logo {
-            width: 280px;
-            height: auto;
+        .container {
+            max-width: 900px;
             margin: 0 auto;
-            display: block;
-            flex-shrink: 0;
-        }
-
-        .business-name {
-            font-size: 32pt;
-            font-weight: bold;
-            margin: 40px 0 20px 0;
-            color: #000;
-            line-height: 1.2;
-            flex-shrink: 0;
-        }
-
-        .qr-container {
             background: white;
             padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            border: 3px solid #f0f0f0;
-            margin: 40px auto;
-            flex-shrink: 0;
+            border: 1px solid #ddd;
         }
 
-        .qr-preview {
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .thumbnail-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .thumbnail-box {
+            background: #fafafa;
+            padding: 15px;
+            border: 1px solid #ddd;
             width: 400px;
-            height: 400px;
-            margin: 0 auto;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14pt;
-            color: #666;
         }
 
-        .powered-by-large {
-            font-size: 18pt;
-            color: #666;
-            font-weight: 300;
-            margin: 0 0 30px 0;
-            flex-shrink: 0;
-        }
-
-        /* Page 3: QR Code Sheet */
-        .qr-sheet-page {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            text-align: center;
-        }
-
-        .qr-code-large {
-            width: 400px;
-            height: 400px;
-            background: #f0f0f0;
-            border: 2px solid #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14pt;
-            color: #666;
-            margin: 20px auto;
-        }
-
-        .qr-code-small {
-            width: 200px;
-            height: 200px;
-            background: #f0f0f0;
-            border: 2px solid #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12pt;
-            color: #666;
-            margin: 10px;
-        }
-
-        .powered-by {
-            font-size: 12pt;
-            color: #666;
-            margin-top: 20px;
-        }
-
-        .qr-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            width: 100%;
-            margin: 20px 0;
-        }
-
-        .qr-item {
-            text-align: center;
-        }
-
-        /* Page 4: Various Sizes */
-        .sizes-page {
-            text-align: center;
-        }
-
-        .size-section {
-            margin: 30px 0;
-        }
-
-        .size-label {
-            font-size: 14pt;
-            font-weight: bold;
+        .thumbnail-box img {
+            max-width: 100%;
+            height: auto;
+            display: block;
             margin-bottom: 10px;
         }
 
-        .qr-code-tiny {
-            width: 100px;
-            height: 100px;
-            background: #f0f0f0;
-            border: 2px solid #ddd;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10pt;
-            color: #666;
-            margin: 5px;
-        }
-
-        .qr-code-medium {
-            width: 150px;
-            height: 150px;
-            background: #f0f0f0;
-            border: 2px solid #ddd;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11pt;
-            color: #666;
-            margin: 10px;
+        .size-options label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
         }
 
         .loading {
             text-align: center;
+            font-size: 1.2rem;
             padding: 50px;
-            font-size: 18pt;
-            color: #666;
         }
 
         .error {
             text-align: center;
-            padding: 50px;
-            font-size: 16pt;
-            color: #d00;
-        }
-
-        @media (max-width: 768px) {
-            .page {
-                width: 100%;
-                height: auto;
-                min-height: 11in;
-                margin: 0 0 20px;
-            }
-            
-            .print-button {
-                position: static;
-                display: block;
-                margin: 20px auto;
-                width: 200px;
-            }
+            color: red;
         }
     </style>
 </head>
 <body>
-    <button class="print-button no-print" onclick="window.print()">🖨️ Print All Pages</button>
-    
-    <div id="loading" class="loading">Loading QR code package...</div>
-    
-    <div id="error" class="error" style="display: none;"></div>
-    
-    <div id="pages" style="display: none;">
-        <!-- Page 1: Instructions -->
-        <div class="page instructions-page">
-            <h1>Welcome to Local Bar Tees</h1>
-            
-            <p>Your shop can be found at <span class="url-highlight" id="businessUrl">https://localbartees.com/{uniqueId}</span></p>
-            
-            <h2>QR Code Printing Instructions</h2>
-            
-            <p>This package contains everything you need to display your Local Bar Tees QR codes:</p>
-            
-            <ul>
-                <li><strong>Page 1:</strong> These instructions</li>
-                <li><strong>Page 2:</strong> Business information and QR code preview</li>
-                <li><strong>Page 3:</strong> Large QR codes for posting</li>
-                <li><strong>Page 4:</strong> Various sizes for different uses</li>
-            </ul>
-            
-            <h2>How to Use Your QR Codes</h2>
-            
-            <ul>
-                <li>Print the QR codes on white paper for best scanning results</li>
-                <li>Place QR codes where customers can easily see and scan them</li>
-                <li>Consider laminating for durability in high-traffic areas</li>
-                <li>Test scan each QR code after printing to ensure quality</li>
-            </ul>
-            
-            <h2>Placement Suggestions</h2>
-            
-            <ul>
-                <li>Near the entrance or host stand</li>
-                <li>On tables or bar tops</li>
-                <li>In restrooms or waiting areas</li>
-                <li>On receipt holders or menu stands</li>
-                <li>At the point of sale</li>
-            </ul>
-            
-            <h2>Support</h2>
-            
-            <p>For questions or support, visit <strong>vip@localbartees.com</strong></p>
-        </div>
-        
-        <!-- Page 2: Full Page QR Code -->
-        <div class="page" style="display: flex; align-items: center; justify-content: center; height: 100%;">
-            <div id="qrPreview" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-                QR Code Preview
+    <div class="container">
+        <h1 id="title">Loading...</h1>
+        <h2>QR Codes</h2>
+
+        <div id="content" class="thumbnail-section" style="display: none;">
+            <div class="thumbnail-box">
+                <img id="image1" src="" alt="3x2 QR code">
+                <div class="size-options">
+                    <label><input type="radio" name="size1" value="small"> Small</label>
+                    <label><input type="radio" name="size1" value="medium" checked> Medium</label>
+                    <label><input type="radio" name="size1" value="large"> Large</label>
+                </div>
+            </div>
+            <div class="thumbnail-box">
+                <img id="image2" src="" alt="2x3 QR code">
+                <div class="size-options">
+                    <label><input type="radio" name="size2" value="small"> Small</label>
+                    <label><input type="radio" name="size2" value="medium" checked> Medium</label>
+                    <label><input type="radio" name="size2" value="large"> Large</label>
+                </div>
             </div>
         </div>
-    </div>
-    <script>
-        let businessData = null;
 
-        function getUrlParameter(name) {
+        <div id="error" class="error"></div>
+    </div>
+
+    <script>
+        function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
+            return urlParams.get(param);
         }
 
         function escapeHtml(text) {
@@ -377,82 +110,41 @@
             return div.innerHTML;
         }
 
-        async function loadBusinessData() {
+        async function loadData() {
+            const uniqueId = getQueryParam('qr');
+            if (!uniqueId) {
+                document.getElementById('error').textContent = 'Missing ?qr= parameter.';
+                return;
+            }
+
             try {
                 const response = await fetch('./qr.xml');
                 const xmlText = await response.text();
                 const parser = new DOMParser();
                 const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
-                
-                if (xmlDoc.querySelector('parsererror')) {
-                    throw new Error('Failed to parse XML');
+
+                const match = Array.from(xmlDoc.querySelectorAll('code'))
+                    .find(code => code.getAttribute('uniqueId') === uniqueId);
+
+                if (!match) {
+                    document.getElementById('error').textContent = 'No matching QR code record found.';
+                    return;
                 }
 
-                const uniqueId = getUrlParameter('qr');
-                if (!uniqueId) {
-                    throw new Error('No QR code ID specified in URL');
-                }
+                const name = match.querySelector('name')?.textContent || 'Unknown';
+                const filename = match.querySelector('filename')?.textContent || '';
 
-                const codes = xmlDoc.querySelectorAll('code');
-                let foundBusiness = null;
-
-                for (const code of codes) {
-                    if (code.getAttribute('uniqueId') === uniqueId) {
-                        foundBusiness = {
-                            uniqueId: code.getAttribute('uniqueId'),
-                            name: code.querySelector('name')?.textContent || 'Unknown',
-                            url: code.querySelector('url')?.textContent || '',
-                            filename: code.querySelector('filename')?.textContent || '',
-                            generated: code.querySelector('generated')?.textContent || ''
-                        };
-                        break;
-                    }
-                }
-
-                if (!foundBusiness) {
-                    throw new Error(`Business with ID '${uniqueId}' not found`);
-                }
-
-                businessData = foundBusiness;
-                populatePages();
-                
+                document.getElementById('title').textContent = escapeHtml(name);
+                document.getElementById('image1').src = `./thumbnails/${filename}_3x2.png`;
+                document.getElementById('image2').src = `./thumbnails/${filename}_2x3.png`;
+                document.getElementById('content').style.display = 'flex';
             } catch (error) {
-                console.error('Error loading business data:', error);
-                document.getElementById('error').textContent = `Error: ${error.message}`;
-                document.getElementById('error').style.display = 'block';
-                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').textContent = 'Error loading QR code data.';
+                console.error(error);
             }
         }
 
-        function populatePages() {
-            if (!businessData) return;
-
-            const businessUrl = `https://localbartees.com/${businessData.uniqueId}`;
-            document.getElementById('businessUrl').textContent = businessUrl;
-
-            // Use static QR image from GitHub Pages (case-sensitive path)
-            const qrUrl = `https://localbartees.github.io/LocalBarTees/qr/qr_${businessData.uniqueId}.png`;
-
-            // Only update qrPreview for page 2
-            const qrPreview = document.getElementById('qrPreview');
-            if (qrPreview) {
-                qrPreview.innerHTML = `<img src="${qrUrl}" alt="QR Code for ${escapeHtml(businessData.name)}" style="width: 100%; height: 100%; object-fit: contain;">`;
-            }
-
-            // Show pages and hide loading
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('pages').style.display = 'block';
-        }
-
-        // Load data when page loads
-        document.addEventListener('DOMContentLoaded', loadBusinessData);
-
-        // Auto-print on mobile if requested
-        if (window.location.search.includes('print=true')) {
-            window.addEventListener('load', () => {
-                setTimeout(() => window.print(), 1000);
-            });
-        }
+        document.addEventListener('DOMContentLoaded', loadData);
     </script>
 </body>
 </html>
