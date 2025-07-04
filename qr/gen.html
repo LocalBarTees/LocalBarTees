@@ -18,8 +18,20 @@
       width: 90%;
       font-size: 16px;
     }
-    #qrcode {
+    .qr-container {
+      display: inline-block;
+      border-radius: 18px;
+      padding: 0;
+      background: #fff;
       margin-top: 20px;
+    }
+    #qrcode {
+      display: block;
+      margin: 0 auto;
+      background: #fff;
+    }
+    .powered-by {
+      display: none; /* Not needed, text is drawn on canvas */
     }
     .url-preview {
       margin-top: 10px;
@@ -57,7 +69,12 @@
     <button type="submit">Generate QR Code & XML</button>
   </form>
   <div class="url-preview" id="urlPreview"></div>
-  <canvas id="qrcode" width="300" height="300"></canvas>
+  <div class="qr-container">
+    <canvas id="qrcode" width="1200" height="600"></canvas>
+  </div>
+  <!-- Poster canvas for download (hidden) -->
+  <canvas id="poster" width="900" height="1200" style="display:none;"></canvas>
+  <div class="powered-by">Powered by LocalBarTees.com</div>
   <br>
   <button id="downloadBtn" onclick="downloadQR()">Download QR Code</button>
   <div style="margin-top:8px; color:#888; font-size:13px;">
@@ -121,28 +138,94 @@
       document.getElementById('filename').value = filename;
       const url = `https://localbartees.com/${handle}?qr`;
       document.getElementById('urlPreview').textContent = url;
-      // Generate QR code
+
+      // 4:3 ratio canvas (portrait: 900x1200)
       const canvas = document.getElementById('qrcode');
+      canvas.width = 900;
+      canvas.height = 1200;
       const ctx = canvas.getContext('2d');
-      QRCode.toCanvas(canvas, url, {
-        width: 300,
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Border and padding
+      const borderRadius = 48;
+      const borderWidth = 12;
+      const padding = 40;
+
+      // Draw rounded border
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(padding + borderRadius, padding);
+      ctx.lineTo(canvas.width - padding - borderRadius, padding);
+      ctx.quadraticCurveTo(canvas.width - padding, padding, canvas.width - padding, padding + borderRadius);
+      ctx.lineTo(canvas.width - padding, canvas.height - padding - borderRadius);
+      ctx.quadraticCurveTo(canvas.width - padding, canvas.height - padding, canvas.width - padding - borderRadius, canvas.height - padding);
+      ctx.lineTo(padding + borderRadius, canvas.height - padding);
+      ctx.quadraticCurveTo(padding, canvas.height - padding, padding, canvas.height - padding - borderRadius);
+      ctx.lineTo(padding, padding + borderRadius);
+      ctx.quadraticCurveTo(padding, padding, padding + borderRadius, padding);
+      ctx.closePath();
+      ctx.lineWidth = borderWidth;
+      ctx.strokeStyle = "#000";
+      ctx.stroke();
+      ctx.restore();
+
+      // White background inside border
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(padding + borderRadius, padding);
+      ctx.lineTo(canvas.width - padding - borderRadius, padding);
+      ctx.quadraticCurveTo(canvas.width - padding, padding, canvas.width - padding, padding + borderRadius);
+      ctx.lineTo(canvas.width - padding, canvas.height - padding - borderRadius);
+      ctx.quadraticCurveTo(canvas.width - padding, canvas.height - padding, canvas.width - padding - borderRadius, canvas.height - padding);
+      ctx.lineTo(padding + borderRadius, canvas.height - padding);
+      ctx.quadraticCurveTo(padding, canvas.height - padding, padding, canvas.height - padding - borderRadius);
+      ctx.lineTo(padding, padding + borderRadius);
+      ctx.quadraticCurveTo(padding, padding, padding + borderRadius, padding);
+      ctx.closePath();
+      ctx.clip();
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(padding, padding, canvas.width - 2 * padding, canvas.height - 2 * padding);
+      ctx.restore();
+
+      // "SCAN HERE FOR {name} merch" above QR
+      ctx.font = "bold 48px Arial";
+      ctx.fillStyle = "#000";
+      ctx.textAlign = "center";
+      ctx.fillText(`SCAN HERE FOR`, canvas.width / 2, padding + 60);
+      ctx.font = "bold 42px Arial";
+      ctx.fillText(`${clientName} merch`, canvas.width / 2, padding + 120);
+
+      // Generate high-res QR code to temp canvas
+      QRCode.toCanvas(document.createElement('canvas'), url, {
+        width: 400,
         margin: 2,
         color: { dark: '#000000', light: '#ffffff' }
-      }, function (error) {
+      }, function (error, tempCanvas) {
         if (error) { console.error(error); return; }
-        const size = 60;
+        // Center QR code horizontally, vertically in the middle section
+        const qrX = (canvas.width - 400) / 2;
+        const qrY = padding + 150;
+        ctx.drawImage(tempCanvas, qrX, qrY, 400, 400);
+        // Draw logo if loaded
+        const size = 100;
         const x = (canvas.width - size) / 2;
-        const y = (canvas.height - size) / 2;
+        const y = qrY + (400 - size) / 2;
         if (logo.complete) {
           ctx.drawImage(logo, x, y, size, size);
         } else {
           logo.onload = () => ctx.drawImage(logo, x, y, size, size);
         }
+        // "powered by localbartees.com" below QR, all lowercase, dark gray
+        ctx.font = "bold 32px Arial";
+        ctx.fillStyle = "#444";
+        ctx.textAlign = "center";
+        ctx.fillText("powered by localbartees.com", canvas.width / 2, canvas.height - padding - 30);
         document.getElementById('downloadBtn').style.display = 'inline-block';
       });
+
       // Generate XML snippet with escaped values
       const now = new Date().toISOString();
-      const xml = `<code uniqueId="${escapeXml(handle)}">\n  <name>${escapeXml(clientName)}</name>\n  <url>${escapeXml(url)}</url>\n  <filename>${escapeXml(filename)}</filename>\n  <size>300x300</size>\n  <errorCorrection>M</errorCorrection>\n  <generated>${escapeXml(now)}</generated>\n</code>`;
+      const xml = `<code uniqueId="${escapeXml(handle)}">\n  <name>${escapeXml(clientName)}</name>\n  <url>${escapeXml(url)}</url>\n  <filename>${escapeXml(filename)}</filename>\n  <size>900x1200</size>\n  <errorCorrection>M</errorCorrection>\n  <generated>${escapeXml(now)}</generated>\n</code>`;
       document.getElementById('xmlOutput').value = xml;
     }
 

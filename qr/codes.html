@@ -125,46 +125,61 @@
             border-radius: 3px;
         }
 
-        /* Page 2: Business Info */
+        /* Page 2: Super Large QR Page */
         .business-info-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
             text-align: center;
+            height: 100%;
         }
 
         .logo {
-            width: 300px;
+            width: 280px;
             height: auto;
-            margin: 0 auto 40px;
+            margin: 0 auto;
             display: block;
+            flex-shrink: 0;
         }
 
         .business-name {
-            font-size: 28pt;
+            font-size: 32pt;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin: 40px 0 20px 0;
             color: #000;
+            line-height: 1.2;
+            flex-shrink: 0;
         }
 
-        .business-url {
-            font-size: 16pt;
-            font-weight: bold;
-            background: #f0f0f0;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 30px 0;
-            word-break: break-all;
+        .qr-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 3px solid #f0f0f0;
+            margin: 40px auto;
+            flex-shrink: 0;
         }
 
         .qr-preview {
-            width: 200px;
-            height: 200px;
-            margin: 30px auto;
-            background: #f0f0f0;
-            border: 2px solid #ddd;
+            width: 400px;
+            height: 400px;
+            margin: 0 auto;
+            background: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12pt;
+            font-size: 14pt;
             color: #666;
+        }
+
+        .powered-by-large {
+            font-size: 18pt;
+            color: #666;
+            font-weight: 300;
+            margin: 0 0 30px 0;
+            flex-shrink: 0;
         }
 
         /* Page 3: QR Code Sheet */
@@ -338,76 +353,16 @@
             
             <h2>Support</h2>
             
-            <p>For questions or support, visit <strong>poweredbylocalbartees.com</strong> or contact the Local Bar Tees team.</p>
+            <p>For questions or support, visit <strong>vip@localbartees.com</strong></p>
         </div>
         
-        <!-- Page 2: Business Info -->
-        <div class="page business-info-page">
-            <img src="lbt_neon_blk.png" alt="Local Bar Tees Logo" class="logo">
-            
-            <div class="business-name" id="businessName">Business Name</div>
-            
-            <div class="business-url" id="businessUrlPage2">https://localbartees.com/{uniqueId}</div>
-            
-            <div class="qr-preview" id="qrPreview">QR Code Preview</div>
-            
-            <p style="font-size: 14pt; margin-top: 30px;">
-                Scan the QR code to visit your Local Bar Tees shop
-            </p>
-            
-            <p style="font-size: 12pt; color: #666; margin-top: 20px;">
-                powered by localbartees.com
-            </p>
-        </div>
-        
-        <!-- Page 3: QR Code Sheet -->
-        <div class="page qr-sheet-page">
-            <div class="qr-code-large" id="qrCodeLarge1">
-                Large QR Code
-            </div>
-            
-            <div class="qr-grid">
-                <div class="qr-item">
-                    <div class="qr-code-small" id="qrCodeSmall1">QR Code</div>
-                    <div class="powered-by">poweredbylocalbartees.com</div>
-                </div>
-                <div class="qr-item">
-                    <div class="qr-code-small" id="qrCodeSmall2">QR Code</div>
-                    <div class="powered-by">poweredbylocalbartees.com</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Page 4: Various Sizes -->
-        <div class="page sizes-page">
-            <h1 style="margin-bottom: 30px;">QR Code Sizes</h1>
-            
-            <div class="size-section">
-                <div class="size-label">Large (4" x 4")</div>
-                <div class="qr-code-large" id="qrCodeLarge2" style="width: 300px; height: 300px;">
-                    QR Code
-                </div>
-                <div class="powered-by">poweredbylocalbartees.com</div>
-            </div>
-            
-            <div class="size-section">
-                <div class="size-label">Medium (2" x 2")</div>
-                <div class="qr-code-medium" id="qrCodeMedium1">QR Code</div>
-                <div class="qr-code-medium" id="qrCodeMedium2">QR Code</div>
-                <div class="powered-by">poweredbylocalbartees.com</div>
-            </div>
-            
-            <div class="size-section">
-                <div class="size-label">Small (1" x 1")</div>
-                <div class="qr-code-tiny" id="qrCodeTiny1">QR</div>
-                <div class="qr-code-tiny" id="qrCodeTiny2">QR</div>
-                <div class="qr-code-tiny" id="qrCodeTiny3">QR</div>
-                <div class="qr-code-tiny" id="qrCodeTiny4">QR</div>
-                <div class="powered-by">poweredbylocalbartees.com</div>
+        <!-- Page 2: Full Page QR Code -->
+        <div class="page" style="display: flex; align-items: center; justify-content: center; height: 100%;">
+            <div id="qrPreview" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                QR Code Preview
             </div>
         </div>
     </div>
-
     <script>
         let businessData = null;
 
@@ -473,32 +428,17 @@
             if (!businessData) return;
 
             const businessUrl = `https://localbartees.com/${businessData.uniqueId}`;
-            
-            // Update URLs
             document.getElementById('businessUrl').textContent = businessUrl;
-            document.getElementById('businessUrlPage2').textContent = businessUrl;
-            
-            // Update business name
-            document.getElementById('businessName').textContent = businessData.name;
-            
-            // Generate QR code URL
-            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(businessUrl)}`;
-            
-            // Update all QR code placeholders with actual QR codes
-            const qrElements = [
-                'qrPreview', 'qrCodeLarge1', 'qrCodeLarge2', 
-                'qrCodeSmall1', 'qrCodeSmall2', 
-                'qrCodeMedium1', 'qrCodeMedium2',
-                'qrCodeTiny1', 'qrCodeTiny2', 'qrCodeTiny3', 'qrCodeTiny4'
-            ];
-            
-            qrElements.forEach(elementId => {
-                const element = document.getElementById(elementId);
-                if (element) {
-                    element.innerHTML = `<img src="${qrUrl}" alt="QR Code for ${escapeHtml(businessData.name)}" style="width: 100%; height: 100%; object-fit: contain;">`;
-                }
-            });
-            
+
+            // Use static QR image from GitHub Pages
+            const qrUrl = `https://localbartees.github.io/localbartees/qr/qr_${businessData.uniqueId}.png`;
+
+            // Only update qrPreview for page 2
+            const qrPreview = document.getElementById('qrPreview');
+            if (qrPreview) {
+                qrPreview.innerHTML = `<img src="${qrUrl}" alt="QR Code for ${escapeHtml(businessData.name)}" style="width: 100%; height: 100%; object-fit: contain;">`;
+            }
+
             // Show pages and hide loading
             document.getElementById('loading').style.display = 'none';
             document.getElementById('pages').style.display = 'block';
