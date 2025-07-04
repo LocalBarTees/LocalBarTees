@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Local Bar Tees QR Code Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         .gradient-bg {
             background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 50%, #fecaca 100%);
+            font-family: 'Inter', sans-serif;
         }
         .gradient-text {
             background: linear-gradient(135deg, #d97706 0%, #ea580c 100%);
@@ -73,6 +75,16 @@
                             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
                         />
                     </div>
+                    
+                    <div>
+                        <input
+                            type="text"
+                            id="storeNameInput"
+                            placeholder="Store Nickname"
+                            value="Merch"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
+                        />
+                    </div>
                 </div>
 
                 <!-- QR Code Display Section -->
@@ -81,11 +93,11 @@
                     
                     <div class="bg-gray-50 rounded-2xl p-8 w-full max-w-sm">
                         <div id="qrContainer" class="text-center">
-                            <div id="emptyState" class="py-16">
+                            <div class="py-16">
                                 <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path>
                                 </svg>
-                                <p class="text-gray-500">Enter a URL to generate your QR code</p>
+                                <p class="text-gray-500">Enter details to generate your QR code</p>
                             </div>
                         </div>
                     </div>
@@ -104,38 +116,23 @@
                 </div>
             </div>
         </div>
-
-        <div class="text-center mt-8 text-gray-500 text-sm">
-            <p>Team Members Only</p>
-        </div>
     </div>
 
     <script>
         // Global variables
         var currentUrl = '';
         var businessNameInput = document.getElementById('businessNameInput');
+        var storeNameInput = document.getElementById('storeNameInput');
         var idInput = document.getElementById('idInput');
         var backBtn = document.getElementById('backBtn');
         var qrContainer = document.getElementById('qrContainer');
         var actionButtons = document.getElementById('actionButtons');
         var downloadBtn = document.getElementById('downloadBtn');
 
-        // Get QR parameter from URL - but don't use for URL generation
-        function getQRParam() {
-            var urlParams = new URLSearchParams(window.location.search);
-            var qrValue = urlParams.get('qr');
-            
-            if (qrValue) {
-                return 'https://localbartees.com/' + qrValue;
-            } else {
-                return 'https://localbartees.com';
-            }
-        }
-
         // Build URL from form inputs
         function buildURL() {
             var baseUrl = 'https://localbartees.com';
-            var id = idInput.value.trim();
+            var id = idInput.value.trim().toLowerCase();
             
             if (id) {
                 baseUrl += '/' + id;
@@ -144,19 +141,10 @@
             return baseUrl;
         }
 
-        // Format URL with https if missing
-        function formatUrl(url) {
-            if (!url.trim()) return '';
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                return 'https://' + url;
-            }
-            return url;
-        }
-
-        // Generate QR code with business name
+        // Generate QR code
         function generateQR(url) {
             if (!url.trim()) {
-                url = 'https://localbartees.com'; // Default URL
+                url = 'https://localbartees.com';
             }
 
             // Add ?qr=yes parameter
@@ -167,55 +155,69 @@
                 qrUrl = qrUrl + '&qr=yes';
             }
 
-            // Generate QR code image
-            var encodedData = encodeURIComponent(qrUrl);
-            var apiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodedData + '&format=png&margin=10';
-            
-            var businessName = businessNameInput.value.trim();
-            
-            // Create image element and load QR code
-            var qrImg = new Image();
-            qrImg.crossOrigin = 'anonymous';
-            qrImg.onload = function() {
-                createCompositeImage(qrImg, businessName);
-            };
-            qrImg.src = apiUrl;
-            
             // Show loading state
             qrContainer.innerHTML = '<div class="text-center"><div class="w-full h-auto rounded-xl shadow-lg bg-white p-4 max-w-xs mx-auto flex items-center justify-center" style="height: 300px;"><p class="text-gray-500">Loading...</p></div></div>';
             actionButtons.style.display = 'flex';
+
+            // Generate QR code image at higher resolution
+            var encodedData = encodeURIComponent(qrUrl);
+            var apiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=' + encodedData + '&format=png&margin=10';
+            
+            var businessName = businessNameInput.value.trim();
+            var storeName = storeNameInput.value.trim();
+            
+            // Create and load QR code image
+            var qrImg = new Image();
+            qrImg.crossOrigin = 'anonymous';
+            qrImg.onload = function() {
+                createCompositeImage(qrImg, businessName, storeName);
+            };
+            qrImg.onerror = function() {
+                qrContainer.innerHTML = '<div class="text-center py-16"><p class="text-red-500">Error loading QR code</p></div>';
+            };
+            qrImg.src = apiUrl;
         }
         
-        // Create composite image with business name, logo in QR, and powered by text
-        function createCompositeImage(qrImg, businessName) {
+        // Create composite image with business name, store name, logo, and branding
+        function createCompositeImage(qrImg, businessName, storeName) {
             var canvas = document.createElement('canvas');
             var ctx = canvas.getContext('2d');
             
-            // Calculate canvas size
-            var padding = 40;
-            var businessTextHeight = businessName ? 60 : 0;
-            var poweredByHeight = 30;
-            var qrSize = 300;
+            // Calculate canvas dimensions (doubled for higher quality)
+            var padding = 60;
+            var businessTextHeight = businessName ? 80 : 0;
+            var storeTextHeight = storeName ? 80 : 0;
+            var textSpacing = (businessName && storeName) ? 15 : 0; // Reduced spacing between texts
+            var poweredByHeight = 50;
+            var qrSize = 600;
+            var borderRadius = 40;
             
             canvas.width = qrSize + (padding * 2);
-            canvas.height = qrSize + businessTextHeight + poweredByHeight + (padding * 2);
+            canvas.height = qrSize + businessTextHeight + storeTextHeight + textSpacing + poweredByHeight + (padding * 2);
             
-            // Fill background
+            // Draw rounded rectangle background
             ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            drawRoundedRect(ctx, 0, 0, canvas.width, canvas.height, borderRadius);
+            ctx.fill();
+            
+            // Draw border around the image
+            ctx.strokeStyle = '#374151';
+            ctx.lineWidth = 6;
+            drawRoundedRect(ctx, 3, 3, canvas.width - 6, canvas.height - 6, borderRadius);
+            ctx.stroke();
             
             var currentY = padding;
             
             // Draw business name if provided
             if (businessName) {
                 ctx.fillStyle = '#1f2937';
-                ctx.font = 'bold 24px Arial, sans-serif';
+                ctx.font = 'bold 48px Inter, Arial, sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 
                 var maxWidth = canvas.width - (padding * 2);
                 var businessLines = wrapText(ctx, businessName, maxWidth);
-                var lineHeight = 30;
+                var lineHeight = 50;
                 var startY = currentY + (businessTextHeight / 2) - ((businessLines.length - 1) * lineHeight / 2);
                 
                 for (var i = 0; i < businessLines.length; i++) {
@@ -225,14 +227,38 @@
                 currentY += businessTextHeight;
             }
             
+            // Draw store nickname if provided
+            if (storeName) {
+                // Add spacing between business name and store nickname
+                if (businessName) {
+                    currentY += textSpacing;
+                }
+                
+                ctx.fillStyle = '#1f2937';
+                ctx.font = 'bold 48px Inter, Arial, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                var maxWidth = canvas.width - (padding * 2);
+                var storeLines = wrapText(ctx, storeName, maxWidth);
+                var lineHeight = 50;
+                var startY = currentY + (storeTextHeight / 2) - ((storeLines.length - 1) * lineHeight / 2);
+                
+                for (var i = 0; i < storeLines.length; i++) {
+                    ctx.fillText(storeLines[i], canvas.width / 2, startY + (i * lineHeight));
+                }
+                
+                currentY += storeTextHeight;
+            }
+            
             // Draw QR code
             ctx.drawImage(qrImg, padding, currentY, qrSize, qrSize);
             
-            // Load and draw logo in the middle of QR code
+            // Load and draw logo in center of QR code
             var logoImg = new Image();
             logoImg.crossOrigin = 'anonymous';
             logoImg.onload = function() {
-                // Calculate logo size (about 15% of QR code size)
+                // Calculate logo size and position
                 var logoSize = qrSize * 0.15;
                 var logoX = padding + (qrSize - logoSize) / 2;
                 var logoY = currentY + (qrSize - logoSize) / 2;
@@ -240,52 +266,64 @@
                 // Draw white background circle for logo
                 ctx.fillStyle = '#ffffff';
                 ctx.beginPath();
-                ctx.arc(logoX + logoSize/2, logoY + logoSize/2, logoSize/2 + 5, 0, 2 * Math.PI);
+                ctx.arc(logoX + logoSize/2, logoY + logoSize/2, logoSize/2 + 10, 0, 2 * Math.PI);
                 ctx.fill();
                 
                 // Draw logo
                 ctx.drawImage(logoImg, logoX, logoY, logoSize, logoSize);
                 
-                // Draw "Powered by localbartees.com" text
+                // Draw "Powered by" text
                 ctx.fillStyle = '#000000';
-                ctx.font = '14px Arial, sans-serif';
+                ctx.font = '28px Inter, Arial, sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText('Powered by localbartees.com', canvas.width / 2, currentY + qrSize + (poweredByHeight / 2));
                 
-                // Display the final composite image
-                var compositeImg = document.createElement('img');
-                compositeImg.src = canvas.toDataURL();
-                compositeImg.alt = 'Generated QR Code';
-                compositeImg.className = 'w-full h-auto rounded-xl shadow-lg bg-white max-w-xs mx-auto';
-                
-                qrContainer.innerHTML = '<div class="text-center"></div>';
-                qrContainer.firstChild.appendChild(compositeImg);
-                
-                // Store canvas for download
-                qrContainer.canvas = canvas;
+                // Display final image
+                displayFinalImage(canvas);
             };
             logoImg.onerror = function() {
-                // If logo fails to load, continue without it
+                // Continue without logo if it fails to load
                 ctx.fillStyle = '#000000';
-                ctx.font = '14px Arial, sans-serif';
+                ctx.font = '28px Inter, Arial, sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText('Powered by localbartees.com', canvas.width / 2, currentY + qrSize + (poweredByHeight / 2));
                 
-                var compositeImg = document.createElement('img');
-                compositeImg.src = canvas.toDataURL();
-                compositeImg.alt = 'Generated QR Code';
-                compositeImg.className = 'w-full h-auto rounded-xl shadow-lg bg-white max-w-xs mx-auto';
-                
-                qrContainer.innerHTML = '<div class="text-center"></div>';
-                qrContainer.firstChild.appendChild(compositeImg);
-                
-                qrContainer.canvas = canvas;
+                displayFinalImage(canvas);
             };
             logoImg.src = 'https://localbartees.github.io/LocalBarTees/qr/lbt_neon_blk.png';
         }
         
+        // Display final composite image
+        function displayFinalImage(canvas) {
+            var compositeImg = document.createElement('img');
+            compositeImg.src = canvas.toDataURL();
+            compositeImg.alt = 'Generated QR Code';
+            compositeImg.className = 'w-full h-auto rounded-xl shadow-lg bg-white max-w-xs mx-auto';
+            
+            qrContainer.innerHTML = '<div class="text-center"></div>';
+            qrContainer.firstChild.appendChild(compositeImg);
+            
+            // Store canvas for download
+            qrContainer.canvas = canvas;
+        }
+        
+        // Helper function to draw rounded rectangle
+        function drawRoundedRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+
         // Helper function to wrap text
         function wrapText(ctx, text, maxWidth) {
             var words = text.split(' ');
@@ -306,53 +344,41 @@
             return lines;
         }
 
-        // Update QR code when input changes
+        // Update QR code when inputs change
         function updateQR() {
-            // Build URL from ID
             var url = buildURL();
             currentUrl = url;
             generateQR(url);
         }
 
-        // Go back
+        // Go back in browser history
         function goBack() {
             window.history.back();
         }
 
-        // Download QR code
+        // Download QR code with dynamic filename
         function downloadQR() {
             if (!currentUrl) return;
             
-            // Get ID for filename
-            var id = idInput.value.trim();
+            var id = idInput.value.trim().toLowerCase();
             var filename = id ? 'qr_' + id + '.png' : 'qr_code.png';
             
-            // Use the canvas if available (composite image)
             if (qrContainer.canvas) {
                 var link = document.createElement('a');
                 link.download = filename;
                 link.href = qrContainer.canvas.toDataURL();
                 link.click();
-            } else {
-                // Fallback to regular image download
-                var img = qrContainer.querySelector('img');
-                if (img) {
-                    var link = document.createElement('a');
-                    link.download = filename;
-                    link.href = img.src;
-                    link.click();
-                }
             }
         }
 
         // Initialize app
         function init() {
-            // Generate initial QR code
             updateQR();
         }
 
         // Event listeners
         businessNameInput.addEventListener('input', updateQR);
+        storeNameInput.addEventListener('input', updateQR);
         idInput.addEventListener('input', updateQR);
         backBtn.addEventListener('click', goBack);
         downloadBtn.addEventListener('click', downloadQR);
