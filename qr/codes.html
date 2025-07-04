@@ -422,12 +422,35 @@
         function printPage() {
             const printSize = document.querySelector('input[name="printSize"]:checked').value;
             
+            // Remove any existing temporary print styles
+            const existingStyles = document.getElementById('tempPrintStyles');
+            if (existingStyles) {
+                existingStyles.remove();
+            }
+            
             if (printSize === 'small') {
                 // Add temporary print styles for 5.5 x 8.5 format
                 const printStyles = document.createElement('style');
                 printStyles.id = 'tempPrintStyles';
                 printStyles.innerHTML = `
                     @media print {
+                        @page {
+                            size: 8.5in 11in portrait;
+                            margin: 0;
+                        }
+                        
+                        html, body {
+                            width: 100%;
+                            height: 100%;
+                            margin: 0;
+                            padding: 0;
+                            background: white;
+                        }
+                        
+                        * {
+                            visibility: hidden;
+                        }
+                        
                         .qr-image {
                             visibility: visible !important;
                             position: absolute !important;
@@ -440,19 +463,6 @@
                             margin: 0 !important;
                             padding: 0 !important;
                             background: none !important;
-                        }
-                        .qr-image::after {
-                            content: '';
-                            position: absolute;
-                            left: 0;
-                            top: 150%;
-                            width: 100%;
-                            height: 100%;
-                            background-image: inherit;
-                            background-size: contain;
-                            background-repeat: no-repeat;
-                            background-position: center;
-                            transform: rotate(0deg);
                         }
                     }
                 `;
@@ -467,8 +477,53 @@
                     }, 1000);
                 }, 100);
             } else {
-                // Normal 8.5 x 11 print at 7.5 inches wide
-                window.print();
+                // 8.5 x 11 print at 7.5 inches wide - add temporary styles
+                const printStyles = document.createElement('style');
+                printStyles.id = 'tempPrintStyles';
+                printStyles.innerHTML = `
+                    @media print {
+                        @page {
+                            size: 8.5in 11in portrait;
+                            margin: 0;
+                        }
+                        
+                        html, body {
+                            width: 100%;
+                            height: 100%;
+                            margin: 0;
+                            padding: 0;
+                            background: white;
+                        }
+                        
+                        * {
+                            visibility: hidden;
+                        }
+                        
+                        .qr-image {
+                            visibility: visible !important;
+                            position: absolute !important;
+                            left: 50% !important;
+                            top: 50% !important;
+                            transform: translate(-50%, -50%) !important;
+                            width: 7.5in !important;
+                            height: auto !important;
+                            border: none !important;
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            background: none !important;
+                        }
+                    }
+                `;
+                document.head.appendChild(printStyles);
+                
+                setTimeout(() => {
+                    window.print();
+                    // Clean up after printing
+                    setTimeout(() => {
+                        const tempStyles = document.getElementById('tempPrintStyles');
+                        if (tempStyles) tempStyles.remove();
+                    }, 1000);
+                }, 100);
             }
         }
 
