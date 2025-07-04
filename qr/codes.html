@@ -430,8 +430,8 @@
             const businessUrl = `https://localbartees.com/${businessData.uniqueId}`;
             document.getElementById('businessUrl').textContent = businessUrl;
 
-            // Use static QR image from GitHub Pages
-            const qrUrl = `https://localbartees.github.io/localbartees/qr/qr_${businessData.uniqueId}.png`;
+            // Use static QR image from GitHub Pages (case-sensitive path)
+            const qrUrl = `https://localbartees.github.io/LocalBarTees/qr/qr_${businessData.uniqueId}.png`;
 
             // Only update qrPreview for page 2
             const qrPreview = document.getElementById('qrPreview');
