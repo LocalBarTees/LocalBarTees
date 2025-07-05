@@ -26,7 +26,7 @@
     </style>
 </head>
 <body class="gradient-bg min-h-screen">
-    <div class="container mx-auto px-4 py-8 max-w-4xl">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
         <!-- Header -->
         <div class="text-center mb-8">
             <div class="flex justify-start mb-4">
@@ -48,7 +48,7 @@
             <h1 class="text-4xl font-bold gradient-text mb-2">
                 Local Bar Tees QR Code Generator
             </h1>
-            <p class="text-gray-600 text-lg">Team Members Only</p>
+            <p class="text-gray-600 text-lg">Business Card SVG Generator</p>
         </div>
 
         <!-- Main Content -->
@@ -85,32 +85,56 @@
                             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
                         />
                     </div>
+
+                    <button
+                        id="generateBtn"
+                        class="w-full flex items-center justify-center gap-2 px-6 py-3 gradient-button text-white rounded-xl hover:opacity-90 transition-all duration-200 font-medium shadow-lg"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        Generate QR Codes
+                    </button>
                 </div>
 
                 <!-- QR Code Display Section -->
                 <div class="flex flex-col items-center space-y-6">
-                    <h2 class="text-2xl font-semibold text-gray-800">Generated QR Code</h2>
+                    <h2 class="text-2xl font-semibold text-gray-800">Business Card QR Codes</h2>
                     
-                    <div class="bg-gray-50 rounded-2xl p-8 w-full max-w-sm">
-                        <div id="qrContainer" class="text-center">
-                            <div class="py-16">
-                                <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path>
-                                </svg>
-                                <p class="text-gray-500">Enter details to generate your QR code</p>
-                            </div>
+                    <!-- Landscape Version (Standard business card) -->
+                    <div class="bg-gray-50 rounded-2xl p-4 w-full">
+                        <h3 class="text-lg font-medium text-gray-700 mb-3 text-center">Landscape (3.5" × 2")</h3>
+                        <div id="qrContainerLandscape" class="text-center flex items-center justify-center">
+                            <p class="text-gray-500 text-sm">Click Generate to create QR codes</p>
                         </div>
                     </div>
 
-                    <div id="actionButtons" class="flex gap-4 w-full max-w-sm" style="display: none;">
+                    <!-- Portrait Version -->
+                    <div class="bg-gray-50 rounded-2xl p-4 w-full">
+                        <h3 class="text-lg font-medium text-gray-700 mb-3 text-center">Portrait (2" × 3.5")</h3>
+                        <div id="qrContainerPortrait" class="text-center flex items-center justify-center">
+                            <p class="text-gray-500 text-sm">Click Generate to create QR codes</p>
+                        </div>
+                    </div>
+
+                    <div id="actionButtons" class="flex gap-4 w-full" style="display: none;">
                         <button
-                            id="downloadBtn"
-                            class="w-full flex items-center justify-center gap-2 px-6 py-3 gradient-button text-white rounded-xl hover:opacity-90 transition-all duration-200 font-medium shadow-lg"
+                            id="downloadLandscapeBtn"
+                            class="flex-1 flex items-center justify-center gap-2 px-4 py-3 gradient-button text-white rounded-xl hover:opacity-90 transition-all duration-200 font-medium shadow-lg"
                         >
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                             </svg>
-                            Download
+                            Landscape SVG
+                        </button>
+                        <button
+                            id="downloadPortraitBtn"
+                            class="flex-1 flex items-center justify-center gap-2 px-4 py-3 gradient-button text-white rounded-xl hover:opacity-90 transition-all duration-200 font-medium shadow-lg"
+                        >
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                            </svg>
+                            Portrait SVG
                         </button>
                     </div>
                 </div>
@@ -125,9 +149,15 @@
         var storeNameInput = document.getElementById('storeNameInput');
         var idInput = document.getElementById('idInput');
         var backBtn = document.getElementById('backBtn');
-        var qrContainer = document.getElementById('qrContainer');
+        var generateBtn = document.getElementById('generateBtn');
+        var qrContainerPortrait = document.getElementById('qrContainerPortrait');
+        var qrContainerLandscape = document.getElementById('qrContainerLandscape');
         var actionButtons = document.getElementById('actionButtons');
-        var downloadBtn = document.getElementById('downloadBtn');
+        var downloadPortraitBtn = document.getElementById('downloadPortraitBtn');
+        var downloadLandscapeBtn = document.getElementById('downloadLandscapeBtn');
+
+        var portraitSvg = '';
+        var landscapeSvg = '';
 
         // Build URL from form inputs
         function buildURL() {
@@ -141,8 +171,11 @@
             return baseUrl;
         }
 
-        // Generate QR code
-        function generateQR(url) {
+        // Generate QR code data (SVG path)
+        function generateQRData() {
+            var url = buildURL();
+            currentUrl = url;
+            
             if (!url.trim()) {
                 url = 'https://localbartees.com';
             }
@@ -155,200 +188,217 @@
                 qrUrl = qrUrl + '&qr=yes';
             }
 
-            // Show loading state
-            qrContainer.innerHTML = '<div class="text-center"><div class="w-full h-auto rounded-xl shadow-lg bg-white p-4 max-w-xs mx-auto flex items-center justify-center" style="height: 300px;"><p class="text-gray-500">Loading...</p></div></div>';
-            actionButtons.style.display = 'flex';
+            // Show loading
+            qrContainerPortrait.innerHTML = '<p class="text-gray-500">Generating...</p>';
+            qrContainerLandscape.innerHTML = '<p class="text-gray-500">Generating...</p>';
 
-            // Generate QR code image at higher resolution
             var encodedData = encodeURIComponent(qrUrl);
-            var apiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=' + encodedData + '&format=png&margin=10';
+            var apiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodedData + '&format=svg&margin=0';
             
+            return fetch(apiUrl)
+                .then(response => response.text())
+                .then(svgText => {
+                    createBothSVGs(svgText);
+                })
+                .catch(error => {
+                    console.error('Error generating QR code:', error);
+                    qrContainerPortrait.innerHTML = '<p class="text-red-500">Error generating QR code</p>';
+                    qrContainerLandscape.innerHTML = '<p class="text-red-500">Error generating QR code</p>';
+                });
+        }
+
+        // Create both portrait and landscape SVGs
+        function createBothSVGs(qrSvgContent) {
             var businessName = businessNameInput.value.trim();
             var storeName = storeNameInput.value.trim();
             
-            // Create and load QR code image
-            var qrImg = new Image();
-            qrImg.crossOrigin = 'anonymous';
-            qrImg.onload = function() {
-                createCompositeImage(qrImg, businessName, storeName);
-            };
-            qrImg.onerror = function() {
-                qrContainer.innerHTML = '<div class="text-center py-16"><p class="text-red-500">Error loading QR code</p></div>';
-            };
-            qrImg.src = apiUrl;
+            // Extract SVG path from QR SVG content
+            var parser = new DOMParser();
+            var qrDoc = parser.parseFromString(qrSvgContent, 'image/svg+xml');
+            var qrPaths = qrDoc.querySelectorAll('path, rect');
+            var qrPathsString = '';
+            qrPaths.forEach(function(path) {
+                qrPathsString += path.outerHTML;
+            });
+
+            // Create landscape SVG (3.5" wide x 2" tall) - Standard business card
+            landscapeSvg = createLandscapeSVG(qrPathsString, businessName, storeName);
+            
+            // Create portrait SVG (2" wide x 3.5" tall)
+            portraitSvg = createPortraitSVG(qrPathsString, businessName, storeName);
+
+            // Display both SVGs with proper aspect ratios
+            displaySVG(qrContainerLandscape, landscapeSvg, '350px'); // Wider for landscape
+            displaySVG(qrContainerPortrait, portraitSvg, '200px');   // Narrower for portrait
+            
+            actionButtons.style.display = 'flex';
         }
-        
-        // Create composite image with business name, store name, logo, and branding
-        function createCompositeImage(qrImg, businessName, storeName) {
-            var canvas = document.createElement('canvas');
-            var ctx = canvas.getContext('2d');
+
+        // Helper function to fit text within available width
+        function createTextElement(text, x, y, maxWidth, fontSize, className) {
+            // Rough estimation: average character width is about 60% of font size
+            var avgCharWidth = fontSize * 0.6;
+            var estimatedWidth = text.length * avgCharWidth;
             
-            // Calculate canvas dimensions (doubled for higher quality)
-            var padding = 60;
-            var businessTextHeight = businessName ? 80 : 0;
-            var storeTextHeight = storeName ? 80 : 0;
-            var textSpacing = (businessName && storeName) ? 15 : 0; // Reduced spacing between texts
-            var poweredByHeight = 50;
-            var qrSize = 600;
-            var borderRadius = 40;
+            if (estimatedWidth > maxWidth) {
+                // If text is too long, reduce font size to fit
+                var scaleFactor = maxWidth / estimatedWidth;
+                fontSize = Math.max(fontSize * scaleFactor, 8); // Minimum font size of 8
+            }
             
-            canvas.width = qrSize + (padding * 2);
-            canvas.height = qrSize + businessTextHeight + storeTextHeight + textSpacing + poweredByHeight + (padding * 2);
+            return `<text x="${x}" y="${y}" font-size="${fontSize}" class="${className}">${text}</text>`;
+        }
+
+        // Create landscape SVG (3.5" × 2" = 252pt × 144pt)
+        function createLandscapeSVG(qrPaths, businessName, storeName) {
+            var width = 252;  // 3.5 inches * 72pt/inch  
+            var height = 144; // 2 inches * 72pt/inch
+            var qrSize = 100; // QR code size in points
+            var qrPadding = 8; // White space inside QR border
+            var qrBorderWidth = 2; // Black border thickness
+            var qrTotalSize = qrSize + (qrPadding * 2) + (qrBorderWidth * 2); // Total QR area
+            var cardPadding = 12;
+            var borderRadius = 8;
             
-            // Draw rounded rectangle background
-            ctx.fillStyle = '#ffffff';
-            drawRoundedRect(ctx, 0, 0, canvas.width, canvas.height, borderRadius);
-            ctx.fill();
+            var svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <style>
+                        .business-text { font-family: 'Inter', Arial, sans-serif; font-weight: bold; fill: white; }
+                        .store-text { font-family: 'Inter', Arial, sans-serif; font-weight: bold; fill: white; }
+                        .powered-text { font-family: 'Inter', Arial, sans-serif; font-weight: normal; fill: white; }
+                    </style>
+                </defs>
+                
+                <!-- Green background with black border -->
+                <rect width="${width}" height="${height}" fill="#22c55e" stroke="#000000" stroke-width="2" rx="${borderRadius}" ry="${borderRadius}"/>
+                
+                <!-- Black rounded border for QR -->
+                <rect x="${cardPadding}" y="${(height - qrTotalSize) / 2}" width="${qrTotalSize}" height="${qrTotalSize}" 
+                      fill="#000000" rx="8" ry="8"/>
+                
+                <!-- White background inside border -->
+                <rect x="${cardPadding + qrBorderWidth}" y="${(height - qrTotalSize) / 2 + qrBorderWidth}" 
+                      width="${qrSize + (qrPadding * 2)}" height="${qrSize + (qrPadding * 2)}" 
+                      fill="white" rx="6" ry="6"/>
+                
+                <!-- QR Code centered and middled in the white area -->
+                <g transform="translate(${cardPadding + qrBorderWidth + qrPadding}, ${(height - qrSize) / 2}) scale(${qrSize / 300})">
+                    ${qrPaths}
+                </g>`;
+
+            var textStartX = cardPadding + qrTotalSize + 16;
+            var centerY = height / 2;
+
+            if (businessName && storeName) {
+                svg += `<text x="${textStartX}" y="${centerY - 15}" font-size="20" class="business-text">${businessName}</text>`;
+                svg += `<text x="${textStartX}" y="${centerY + 5}" font-size="16" class="store-text">${storeName}</text>`;
+                svg += `<text x="${textStartX}" y="${centerY + 25}" font-size="10" class="powered-text">Powered by localbartees.com</text>`;
+            } else if (businessName) {
+                svg += `<text x="${textStartX}" y="${centerY - 5}" font-size="22" class="business-text">${businessName}</text>`;
+                svg += `<text x="${textStartX}" y="${centerY + 20}" font-size="10" class="powered-text">Powered by localbartees.com</text>`;
+            } else if (storeName) {
+                svg += `<text x="${textStartX}" y="${centerY - 5}" font-size="22" class="store-text">${storeName}</text>`;
+                svg += `<text x="${textStartX}" y="${centerY + 20}" font-size="10" class="powered-text">Powered by localbartees.com</text>`;
+            } else {
+                svg += `<text x="${textStartX}" y="${centerY}" font-size="14" class="powered-text">Powered by localbartees.com</text>`;
+            }
             
-            // Draw border around the image
-            ctx.strokeStyle = '#374151';
-            ctx.lineWidth = 6;
-            drawRoundedRect(ctx, 3, 3, canvas.width - 6, canvas.height - 6, borderRadius);
-            ctx.stroke();
+            svg += '</svg>';
+            return svg;
+        }
+
+        // Create portrait SVG (2" × 3.5" = 144pt × 252pt)
+        function createPortraitSVG(qrPaths, businessName, storeName) {
+            var width = 144;  // 2 inches * 72pt/inch
+            var height = 252; // 3.5 inches * 72pt/inch
+            var qrSize = 100; // QR code size in points
+            var qrPadding = 8; // White space inside QR border
+            var qrBorderWidth = 2; // Black border thickness
+            var qrTotalSize = qrSize + (qrPadding * 2) + (qrBorderWidth * 2); // Total QR area
+            var cardPadding = 12;
+            var borderRadius = 8;
             
-            var currentY = padding;
-            
-            // Draw business name if provided
+            var svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <style>
+                        .business-text { font-family: 'Inter', Arial, sans-serif; font-weight: bold; fill: white; }
+                        .store-text { font-family: 'Inter', Arial, sans-serif; font-weight: bold; fill: white; }
+                        .powered-text { font-family: 'Inter', Arial, sans-serif; font-weight: normal; fill: white; }
+                    </style>
+                </defs>
+                
+                <!-- Green background with black border -->
+                <rect width="${width}" height="${height}" fill="#22c55e" stroke="#000000" stroke-width="2" rx="${borderRadius}" ry="${borderRadius}"/>
+                
+                <!-- Black rounded border for QR -->
+                <rect x="${(width - qrTotalSize) / 2}" y="${cardPadding}" width="${qrTotalSize}" height="${qrTotalSize}" 
+                      fill="#000000" rx="8" ry="8"/>
+                
+                <!-- White background inside border -->
+                <rect x="${(width - qrTotalSize) / 2 + qrBorderWidth}" y="${cardPadding + qrBorderWidth}" 
+                      width="${qrSize + (qrPadding * 2)}" height="${qrSize + (qrPadding * 2)}" 
+                      fill="white" rx="6" ry="6"/>
+                
+                <!-- QR Code centered and middled in the white area -->
+                <g transform="translate(${(width - qrSize) / 2}, ${cardPadding + qrBorderWidth + qrPadding}) scale(${qrSize / 300})">
+                    ${qrPaths}
+                </g>`;
+
+            var textStartY = cardPadding + qrTotalSize + 30;
+            var currentY = textStartY;
+
             if (businessName) {
-                ctx.fillStyle = '#1f2937';
-                ctx.font = 'bold 48px Inter, Arial, sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                
-                var maxWidth = canvas.width - (padding * 2);
-                var businessLines = wrapText(ctx, businessName, maxWidth);
-                var lineHeight = 50;
-                var startY = currentY + (businessTextHeight / 2) - ((businessLines.length - 1) * lineHeight / 2);
-                
-                for (var i = 0; i < businessLines.length; i++) {
-                    ctx.fillText(businessLines[i], canvas.width / 2, startY + (i * lineHeight));
-                }
-                
-                currentY += businessTextHeight;
+                svg += `<text x="${width/2}" y="${currentY}" text-anchor="middle" font-size="22" class="business-text">${businessName}</text>`;
+                currentY += 30;
             }
             
-            // Draw store nickname if provided
             if (storeName) {
-                // Add spacing between business name and store nickname
-                if (businessName) {
-                    currentY += textSpacing;
-                }
-                
-                ctx.fillStyle = '#1f2937';
-                ctx.font = 'bold 48px Inter, Arial, sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                
-                var maxWidth = canvas.width - (padding * 2);
-                var storeLines = wrapText(ctx, storeName, maxWidth);
-                var lineHeight = 50;
-                var startY = currentY + (storeTextHeight / 2) - ((storeLines.length - 1) * lineHeight / 2);
-                
-                for (var i = 0; i < storeLines.length; i++) {
-                    ctx.fillText(storeLines[i], canvas.width / 2, startY + (i * lineHeight));
-                }
-                
-                currentY += storeTextHeight;
+                svg += `<text x="${width/2}" y="${currentY}" text-anchor="middle" font-size="18" class="store-text">${storeName}</text>`;
+                currentY += 25;
             }
+
+            svg += `<text x="${width/2}" y="${height - 20}" text-anchor="middle" font-size="10" class="powered-text">Powered by localbartees.com</text>`;
             
-            // Draw QR code
-            ctx.drawImage(qrImg, padding, currentY, qrSize, qrSize);
-            
-            // Load and draw logo in center of QR code
-            var logoImg = new Image();
-            logoImg.crossOrigin = 'anonymous';
-            logoImg.onload = function() {
-                // Calculate logo size and position
-                var logoSize = qrSize * 0.15;
-                var logoX = padding + (qrSize - logoSize) / 2;
-                var logoY = currentY + (qrSize - logoSize) / 2;
-                
-                // Draw white background circle for logo
-                ctx.fillStyle = '#ffffff';
-                ctx.beginPath();
-                ctx.arc(logoX + logoSize/2, logoY + logoSize/2, logoSize/2 + 10, 0, 2 * Math.PI);
-                ctx.fill();
-                
-                // Draw logo
-                ctx.drawImage(logoImg, logoX, logoY, logoSize, logoSize);
-                
-                // Draw "Powered by" text
-                ctx.fillStyle = '#000000';
-                ctx.font = '28px Inter, Arial, sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('Powered by localbartees.com', canvas.width / 2, currentY + qrSize + (poweredByHeight / 2));
-                
-                // Display final image
-                displayFinalImage(canvas);
-            };
-            logoImg.onerror = function() {
-                // Continue without logo if it fails to load
-                ctx.fillStyle = '#000000';
-                ctx.font = '28px Inter, Arial, sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('Powered by localbartees.com', canvas.width / 2, currentY + qrSize + (poweredByHeight / 2));
-                
-                displayFinalImage(canvas);
-            };
-            logoImg.src = 'https://localbartees.github.io/LocalBarTees/qr/lbt_neon_blk.png';
-        }
-        
-        // Display final composite image
-        function displayFinalImage(canvas) {
-            var compositeImg = document.createElement('img');
-            compositeImg.src = canvas.toDataURL();
-            compositeImg.alt = 'Generated QR Code';
-            compositeImg.className = 'w-full h-auto rounded-xl shadow-lg bg-white max-w-xs mx-auto';
-            
-            qrContainer.innerHTML = '<div class="text-center"></div>';
-            qrContainer.firstChild.appendChild(compositeImg);
-            
-            // Store canvas for download
-            qrContainer.canvas = canvas;
-        }
-        
-        // Helper function to draw rounded rectangle
-        function drawRoundedRect(ctx, x, y, width, height, radius) {
-            ctx.beginPath();
-            ctx.moveTo(x + radius, y);
-            ctx.lineTo(x + width - radius, y);
-            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-            ctx.lineTo(x + width, y + height - radius);
-            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-            ctx.lineTo(x + radius, y + height);
-            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-            ctx.lineTo(x, y + radius);
-            ctx.quadraticCurveTo(x, y, x + radius, y);
-            ctx.closePath();
+            svg += '</svg>';
+            return svg;
         }
 
-        // Helper function to wrap text
-        function wrapText(ctx, text, maxWidth) {
-            var words = text.split(' ');
-            var lines = [];
-            var currentLine = words[0];
-            
-            for (var i = 1; i < words.length; i++) {
-                var word = words[i];
-                var width = ctx.measureText(currentLine + ' ' + word).width;
-                if (width < maxWidth) {
-                    currentLine += ' ' + word;
-                } else {
-                    lines.push(currentLine);
-                    currentLine = word;
-                }
-            }
-            lines.push(currentLine);
-            return lines;
+        // Display SVG in container with proper aspect ratio
+        function displaySVG(container, svgContent, maxWidth) {
+            container.innerHTML = `<div class="flex justify-center">
+                <div style="max-width: ${maxWidth}; width: 100%;">
+                    ${svgContent}
+                </div>
+            </div>`;
         }
 
-        // Update QR code when inputs change
-        function updateQR() {
-            var url = buildURL();
-            currentUrl = url;
-            generateQR(url);
+        // Download SVG file
+        function downloadSVG(svgContent, filename) {
+            var blob = new Blob([svgContent], { type: 'image/svg+xml' });
+            var url = URL.createObjectURL(blob);
+            var link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // Download portrait version
+        function downloadPortrait() {
+            if (!portraitSvg) return;
+            var id = idInput.value.trim().toLowerCase();
+            var filename = id ? `qr_${id}_portrait_2x3.5.svg` : 'qr_portrait_2x3.5.svg';
+            downloadSVG(portraitSvg, filename);
+        }
+
+        // Download landscape version
+        function downloadLandscape() {
+            if (!landscapeSvg) return;
+            var id = idInput.value.trim().toLowerCase();
+            var filename = id ? `qr_${id}_landscape_3.5x2.svg` : 'qr_landscape_3.5x2.svg';
+            downloadSVG(landscapeSvg, filename);
         }
 
         // Go back in browser history
@@ -356,36 +406,11 @@
             window.history.back();
         }
 
-        // Download QR code with dynamic filename
-        function downloadQR() {
-            if (!currentUrl) return;
-            
-            var id = idInput.value.trim().toLowerCase();
-            var filename = id ? 'qr_' + id + '.png' : 'qr_code.png';
-            
-            if (qrContainer.canvas) {
-                var link = document.createElement('a');
-                link.download = filename;
-                link.href = qrContainer.canvas.toDataURL();
-                link.click();
-            }
-        }
-
-        // Initialize app
-        function init() {
-            updateQR();
-        }
-
         // Event listeners
-        businessNameInput.addEventListener('input', updateQR);
-        storeNameInput.addEventListener('input', updateQR);
-        idInput.addEventListener('input', updateQR);
         backBtn.addEventListener('click', goBack);
-        downloadBtn.addEventListener('click', downloadQR);
-
-        // Initialize when page loads
-        window.addEventListener('load', init);
-        window.addEventListener('DOMContentLoaded', init);
+        generateBtn.addEventListener('click', generateQRData);
+        downloadPortraitBtn.addEventListener('click', downloadPortrait);
+        downloadLandscapeBtn.addEventListener('click', downloadLandscape);
     </script>
 </body>
 </html>
