@@ -1,715 +1,438 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Local Bar Tees QR Code Printer</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            font-weight: 700;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .header p {
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-
-        .controls {
-            padding: 40px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .upload-area {
-            border: 3px dashed #667eea;
-            border-radius: 15px;
-            padding: 40px;
-            text-align: center;
-            background: white;
-            margin-bottom: 30px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .upload-area:hover {
-            border-color: #764ba2;
-            background: #f8f9ff;
-            transform: translateY(-2px);
-        }
-
-        .upload-area.drag-over {
-            border-color: #28a745;
-            background: #f0fff4;
-        }
-
-        .upload-icon {
-            font-size: 3em;
-            margin-bottom: 20px;
-            color: #667eea;
-        }
-
-        .upload-text {
-            font-size: 1.2em;
-            color: #495057;
-            margin-bottom: 15px;
-        }
-
-        .file-input {
-            display: none;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        }
-
-        .quantity-controls {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .rotate-control {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            color: #495057;
-        }
-
-        .rotate-control input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #667eea;
-        }
-
-        .quantity-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .quantity-group label {
-            font-weight: 600;
-            color: #495057;
-        }
-
-        .quantity-input {
-            width: 80px;
-            padding: 8px 12px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 1em;
-            text-align: center;
-        }
-
-        .quantity-input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .quick-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .quick-btn {
-            background: white;
-            border: 2px solid #667eea;
-            color: #667eea;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .quick-btn:hover {
-            background: #667eea;
-            color: white;
-        }
-
-        .preview-section {
-            padding: 40px;
-            display: none;
-        }
-
-        .preview-section.active {
-            display: block;
-        }
-
-        .preview-header {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .preview-actions {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .download-btn {
-            background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%);
-            box-shadow: 0 4px 15px rgba(111, 66, 193, 0.4);
-        }
-
-        .download-btn:hover {
-            box-shadow: 0 6px 20px rgba(111, 66, 193, 0.6);
-        }
-
-        .preview-info {
-            color: #495057;
-            font-size: 1.1em;
-        }
-
-        .print-btn {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
-        }
-
-        .print-btn:hover {
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
-        }
-
-        .preview-container {
-            background: white;
-            border: 1px solid #dee2e6;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .page-preview {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            aspect-ratio: 8.5/11;
-            border: 2px solid #dee2e6;
-            border-radius: 8px;
-            padding: 20px;
-            display: grid;
-            gap: 10px;
-            background: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .preview-image {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 4px;
-            border: 1px solid #e9ecef;
-            transition: transform 0.3s ease;
-        }
-
-        .preview-image.rotated {
-            transform: rotate(90deg);
-            /* When rotated, the image needs to be scaled down to fit in its cell */
-            /* since a rotated square effectively becomes diamond-shaped in terms of bounding box */
-            width: 70.7%; /* sqrt(2)/2 ≈ 0.707 to account for rotation */
-            height: 70.7%;
-            margin: auto;
-        }
-
-        @media print {
-            * {
-                -webkit-print-color-adjust: exact !important;
-                color-adjust: exact !important;
-            }
-            
-            body {
-                margin: 0 !important;
-                padding: 0 !important;
-                background: white !important;
-            }
-            
-            .header, .controls, .preview-header {
-                display: none !important;
-            }
-            
-            .container {
-                max-width: none !important;
-                margin: 0 !important;
-                background: white !important;
-                border-radius: 0 !important;
-                box-shadow: none !important;
-                overflow: visible !important;
-            }
-            
-            .preview-section {
-                display: block !important;
-                padding: 0 !important;
-            }
-            
-            .preview-container {
-                border: none !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                box-shadow: none !important;
-                background: white !important;
-            }
-            
-            .page-preview {
-                width: 8.5in !important;
-                height: 11in !important;
-                max-width: none !important;
-                margin: 0 !important;
-                border: none !important;
-                padding: 0.5in !important;
-                box-shadow: none !important;
-                page-break-after: always;
-                background: white !important;
-            }
-            
-            .preview-image {
-                border: none !important;
-                display: block !important;
-                width: 100% !important;
-                height: 100% !important;
-                object-fit: contain !important;
-            }
-            
-            .preview-image.rotated {
-                transform: rotate(90deg) !important;
-                width: 70.7% !important;
-                height: 70.7% !important;
-                margin: auto !important;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2em;
-            }
-            
-            .controls {
-                padding: 20px;
-            }
-            
-            .upload-area {
-                padding: 20px;
-            }
-            
-            .quantity-controls {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .quick-buttons {
-                width: 100%;
-            }
-            
-            .quick-btn {
-                flex: 1;
-                text-align: center;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Local Bar Tees QR Code Printer</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #6c757d;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 0;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .header {
+      background: #495057;
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 2.5em;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .header p {
+      font-size: 1.2em;
+      opacity: 0.9;
+    }
+    .header-status {
+      font-size: 1.0em;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+    .header-status.error { color: #ff6b6b; }
+    .header-status.success { color: #51cf66; }
+    .controls {
+      padding: 15px 40px;
+      background: #f8f9fa;
+      border-bottom: 1px solid #e9ecef;
+    }
+    .btn {
+      background: #495057;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 0;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(73, 80, 87, 0.4);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(73, 80, 87, 0.6);
+    }
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      padding: 20px;
+      background: white;
+      border: 1px solid #dee2e6;
+    }
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 10px 15px;
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+    }
+    .quantity-input {
+      width: 80px;
+      padding: 8px 12px;
+      border: 1px solid #ced4da;
+      border-radius: 0;
+      font-size: 1em;
+      text-align: center;
+      background: white;
+    }
+    .quantity-input:focus {
+      outline: none;
+      border-color: #495057;
+      box-shadow: none;
+    }
+    .quick-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .quick-btn {
+      background: white;
+      border: 2px solid #495057;
+      color: #495057;
+      padding: 8px 16px;
+      border-radius: 0;
+      font-size: 0.9em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .quick-btn:hover {
+      background: #495057;
+      color: white;
+    }
+    .preview-section {
+      padding: 20px 40px 40px 40px;
+      display: none;
+    }
+    .preview-section.active { display: block; }
+    .preview-header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .preview-info {
+      color: #495057;
+      font-size: 1.1em;
+    }
+    .download-btn {
+      background: #6f42c1;
+      box-shadow: 0 4px 15px rgba(111, 66, 193, 0.4);
+    }
+    .download-btn:hover {
+      box-shadow: 0 6px 20px rgba(111, 66, 193, 0.6);
+    }
+    .print-btn {
+      background: #28a745;
+      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+    }
+    .print-btn:hover {
+      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
+    }
+    .preview-container {
+      background: white;
+      border: none;
+      border-radius: 0;
+      padding: 20px;
+      box-shadow: none;
+    }
+    .page-preview {
+      width: 8.5in;
+      height: 11in;
+      margin: 0 auto;
+      border: 2px solid #dee2e6;
+      padding: 20px;
+      display: grid;
+      gap: 10px;
+      background: white;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .preview-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 0;
+      border: 1px solid #e9ecef;
+      transition: transform 0.3s ease;
+    }
+    .preview-image.rotated {
+      transform: rotate(90deg) scale(0.7);
+      margin-bottom: 10px;
+    }
+    .shop-info {
+      background: #e3f2fd;
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 4px solid #1976d2;
+      display: block !important;
+      visibility: visible !important;
+    }
+    .shop-info h3 {
+      color: #1976d2;
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+    .shop-info p {
+      margin: 0;
+      font-size: 1.1em;
+    }
+    .shop-info a {
+      color: #1976d2;
+      text-decoration: none;
+    }
+    .shop-info a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🖨️ Local Bar Tees QR Code Printer</h1>
-            <p>Choose your QR code style and print multiple copies perfectly on 8.5×11 paper</p>
+  <div class="container">
+    <div class="header">
+      <h1>🖨️ Local Bar Tees QR Code Printer</h1>
+      <p>Choose your QR code style and print multiple copies perfectly on 8.5×11 paper</p>
+      <div class="header-status" id="headerStatus">Loading QR code...</div>
+    </div>
+    <div class="shop-info">
+      <h3>🏪 Your Shop Link</h3>
+      <p>Your shop can be found at <strong><a href="https://localbartees.com/loading" id="shopLink" target="_blank">https://localbartees.com/<span id="shopQrCode">loading...</span></a></strong></p>
+    </div>
+    <div class="controls">
+      <div class="quantity-controls">
+        <div class="control-group">
+          <label for="quantity">Number of copies:</label>
+          <input type="number" id="quantity" class="quantity-input" min="1" max="40" value="4">
+          <div class="quick-buttons">
+            <button class="quick-btn" onclick="setQuantity(1)">1</button>
+            <button class="quick-btn" onclick="setQuantity(2)">2</button>
+            <button class="quick-btn" onclick="setQuantity(4)">4</button>
+            <button class="quick-btn" onclick="setQuantity(6)">6</button>
+            <button class="quick-btn" onclick="setQuantity(9)">9</button>
+            <button class="quick-btn" onclick="setQuantity(12)">12</button>
+            <button class="quick-btn" onclick="setQuantity(16)">16</button>
+          </div>
         </div>
-
-        <div class="controls">
-            <div class="upload-area" id="uploadArea">
-                <div class="upload-icon">🖨️</div>
-                <div class="upload-text">Click to upload QR code or drag and drop</div>
-                <p style="color: #6c757d; margin-top: 10px;">Supports JPG, PNG, GIF, and other image formats</p>
-                <input type="file" class="file-input" id="fileInput" accept="image/*">
-            </div>
-
-            <div class="quantity-controls">
-                <div class="quantity-group">
-                    <label for="quantity">Number of copies:</label>
-                    <input type="number" id="quantity" class="quantity-input" min="1" max="100" value="4">
-                </div>
-                <div class="rotate-control">
-                    <input type="checkbox" id="rotateImages">
-                    <label for="rotateImages">Rotate images 90°</label>
-                </div>
-            </div>
-            <div class="quick-buttons">
-                <button class="quick-btn" onclick="setQuantity(1)">1</button>
-                <button class="quick-btn" onclick="setQuantity(2)">2</button>
-                <button class="quick-btn" onclick="setQuantity(4)">4</button>
-                <button class="quick-btn" onclick="setQuantity(6)">6</button>
-                <button class="quick-btn" onclick="setQuantity(9)">9</button>
-                <button class="quick-btn" onclick="setQuantity(12)">12</button>
-                <button class="quick-btn" onclick="setQuantity(16)">16</button>
-            </div>
+        <div class="control-group">
+          <input type="checkbox" id="rotateImages">
+          <label for="rotateImages">Rotate images 90°</label>
         </div>
-
-        <div class="preview-section" id="previewSection">
-            <div class="preview-header">
-                <div class="preview-info">
-                    <span id="previewInfo">Ready to print</span>
-                </div>
-            </div>
-            <div class="preview-container">
-                <div class="page-preview" id="pagePreview"></div>
-            </div>
-            <div class="preview-actions">
-                <button class="btn print-btn" onclick="printImages()">🖨️ Print</button>
-                <button class="btn download-btn" onclick="downloadImage()">📥 Download as Image</button>
-            </div>
+        <div class="control-group">
+          <button class="btn print-btn" onclick="printImages()">🖨️ Print</button>
+          <button class="btn download-btn" onclick="downloadImage()">💾 Download</button>
         </div>
+      </div>
     </div>
 
+    <div class="preview-section" id="previewSection">
+      <div class="preview-header">
+        <div class="preview-info">
+          <span id="previewInfo">Ready to print</span>
+        </div>
+      </div>
+      <div class="preview-container">
+        <div class="page-preview" id="pagePreview"></div>
+      </div>
+    </div>
+
+    <div class="instructions-section" id="instructionsSection" style="display: none;"></div>
+
     <script>
-        let currentImage = null;
-        let currentQuantity = 4;
-        let shouldRotate = false;
+      // Full JavaScript logic
+let currentImage = null;
+let currentQuantity = 4;
+let shouldRotate = false;
+let currentQRCode = null;
 
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const quantityInput = document.getElementById('quantity');
-        const rotateCheckbox = document.getElementById('rotateImages');
-        const previewSection = document.getElementById('previewSection');
-        const pagePreview = document.getElementById('pagePreview');
-        const previewInfo = document.getElementById('previewInfo');
+const headerStatus = document.getElementById('headerStatus');
+const quantityInput = document.getElementById('quantity');
+const rotateCheckbox = document.getElementById('rotateImages');
+const previewSection = document.getElementById('previewSection');
+const pagePreview = document.getElementById('pagePreview');
+const previewInfo = document.getElementById('previewInfo');
 
-        // Upload area interactions
-        uploadArea.addEventListener('click', () => fileInput.click());
-        uploadArea.addEventListener('dragover', handleDragOver);
-        uploadArea.addEventListener('dragleave', handleDragLeave);
-        uploadArea.addEventListener('drop', handleDrop);
-        fileInput.addEventListener('change', handleFileSelect);
-        quantityInput.addEventListener('input', handleQuantityChange);
-        rotateCheckbox.addEventListener('change', handleRotationChange);
+const instructionData = [
+  {
+    title: "📄 Printing for Maximum Quality",
+    sections: [
+      {
+        heading: "Printer Settings:",
+        type: "ul",
+        items: [
+          "Use <strong>300 DPI minimum</strong> for crisp, scannable results",
+          "Set to <strong>\"High Quality\" or \"Best\"</strong> print mode",
+          "Select <strong>\"Photo Paper\"</strong> setting even for regular paper",
+          "Ensure <strong>black ink cartridge is full</strong> - low ink causes scanning issues"
+        ]
+      },
+      {
+        heading: "Paper Selection:",
+        type: "ul",
+        items: [
+          "<strong>Best:</strong> 32lb (120gsm) bright white paper or heavier cardstock",
+          "<strong>Good:</strong> Premium inkjet paper (24-28lb)",
+          "<strong>Avoid:</strong> Regular copy paper, textured paper, or glossy photo paper",
+          "<strong>Outdoor use:</strong> Waterproof synthetic paper or vinyl sticker sheets"
+        ]
+      }
+    ]
+  },
+  {
+    title: "🏷️ Optimal Laminating Process",
+    sections: [
+      {
+        heading: "CRITICAL ORDER: Print → Laminate → Cut (for multiple QR codes)",
+        type: "p"
+      },
+      {
+        heading: "Step-by-Step Process:",
+        type: "ol",
+        items: [
+          "<strong>Print</strong> your QR codes on quality paper",
+          "<strong>Allow 5-10 minutes drying time</strong> before laminating",
+          "<strong>Laminate the entire sheet</strong> - this creates sealed edges that prevent moisture infiltration",
+          "<strong>Cut individual QR codes</strong> after laminating, leaving 2-3mm sealed border",
+          "<strong>Round corners slightly</strong> to prevent peeling at edges"
+        ]
+      }
+    ]
+  }
+];
 
-        function handleDragOver(e) {
-            e.preventDefault();
-            uploadArea.classList.add('drag-over');
-        }
+function renderInstructions() {
+  const section = document.getElementById('instructionsSection');
+  section.innerHTML = `<h2>🖨️ Professional Printing & Laminating Instructions</h2>`;
+  instructionData.forEach(group => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'instruction-group';
+    const heading = document.createElement('h3');
+    heading.textContent = group.title;
+    wrapper.appendChild(heading);
+    const content = document.createElement('div');
+    content.className = 'instruction-content';
+    group.sections.forEach(s => {
+      if (s.type === 'p') {
+        const p = document.createElement('p');
+        p.innerHTML = `<strong>${s.heading}</strong>`;
+        content.appendChild(p);
+      } else {
+        const label = document.createElement('p');
+        label.innerHTML = `<strong>${s.heading}</strong>`;
+        content.appendChild(label);
+        const list = document.createElement(s.type);
+        s.items.forEach(item => {
+          const li = document.createElement('li');
+          li.innerHTML = item;
+          list.appendChild(li);
+        });
+        content.appendChild(list);
+      }
+    });
+    wrapper.appendChild(content);
+    section.appendChild(wrapper);
+  });
+  section.style.display = 'block';
+}
 
-        function handleDragLeave(e) {
-            e.preventDefault();
-            uploadArea.classList.remove('drag-over');
-        }
+function initializeFromURL() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const qrValue = urlParams.get('qr');
+  if (qrValue) {
+    currentQRCode = qrValue;
+    loadQRImage(qrValue);
+    document.getElementById('shopQrCode').textContent = qrValue;
+    document.getElementById('shopLink').href = `https://localbartees.com/${qrValue}`;
+  } else {
+    headerStatus.textContent = 'NO QR CODE FOUND CONTACT SUPPORT';
+    headerStatus.className = 'header-status error';
+    document.getElementById('shopQrCode').textContent = 'no-qr-code';
+    document.getElementById('shopLink').href = 'https://localbartees.com/no-qr-code';
+  }
+}
 
-        function handleDrop(e) {
-            e.preventDefault();
-            uploadArea.classList.remove('drag-over');
-            const files = e.dataTransfer.files;
-            if (files.length > 0 && files[0].type.startsWith('image/')) {
-                handleImageFile(files[0]);
-            }
-        }
+function loadQRImage(qrValue) {
+  headerStatus.textContent = 'Loading QR code...';
+  headerStatus.className = 'header-status';
+  const imageUrl = `https://localbartees.github.io/LocalBarTees/qr/qr_${qrValue}.png`;
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = function() {
+    headerStatus.textContent = 'QR CODE LOADED';
+    headerStatus.className = 'header-status success';
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+    currentImage = canvas.toDataURL();
+    updatePreview();
+    renderInstructions();
+  };
+  img.onerror = function() {
+    headerStatus.textContent = 'NO QR CODE FOUND CONTACT SUPPORT';
+    headerStatus.className = 'header-status error';
+  };
+  img.src = imageUrl;
+}
 
-        function handleFileSelect(e) {
-            const file = e.target.files[0];
-            if (file && file.type.startsWith('image/')) {
-                handleImageFile(file);
-            }
-        }
+function setQuantity(num) {
+  currentQuantity = num;
+  quantityInput.value = num;
+  updatePreview();
+}
 
-        function handleImageFile(file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                currentImage = e.target.result;
-                updatePreview();
-            };
-            reader.readAsDataURL(file);
-        }
+function updatePreview() {
+  if (!currentImage) return;
+  previewSection.classList.add('active');
+  const layout = calculateOptimalLayout(currentQuantity);
+  pagePreview.innerHTML = '';
+  if (currentQuantity === 2 && shouldRotate) {
+    pagePreview.style.display = 'flex';
+    pagePreview.style.flexDirection = 'column';
+    pagePreview.style.alignItems = 'center';
+  } else {
+    pagePreview.style.display = 'grid';
+    pagePreview.style.gridTemplateColumns = `repeat(${layout.cols}, 1fr)`;
+    pagePreview.style.gridTemplateRows = `repeat(${layout.rows}, 1fr)`;
+  }
+  for (let i = 0; i < currentQuantity; i++) {
+    const img = document.createElement('img');
+    img.src = currentImage;
+    img.className = shouldRotate ? 'preview-image rotated' : 'preview-image';
+    img.alt = `QR Code ${i + 1}`;
+    pagePreview.appendChild(img);
+  }
+}
 
-        function setQuantity(num) {
-            currentQuantity = num;
-            quantityInput.value = num;
-            updatePreview();
-        }
+quantityInput.addEventListener('input', e => {
+  currentQuantity = parseInt(e.target.value) || 1;
+  updatePreview();
+});
 
-        function handleQuantityChange(e) {
-            currentQuantity = parseInt(e.target.value) || 1;
-            updatePreview();
-        }
+rotateCheckbox.addEventListener('change', e => {
+  shouldRotate = e.target.checked;
+  updatePreview();
+});
 
-        function handleRotationChange(e) {
-            shouldRotate = e.target.checked;
-            updatePreview();
-        }
-
-        function updatePreview() {
-            if (!currentImage) return;
-
-            previewSection.classList.add('active');
-            
-            // Calculate optimal grid layout
-            const layout = calculateOptimalLayout(currentQuantity);
-            
-            // Calculate image dimensions
-            const dimensions = calculateImageDimensions(layout);
-            
-            // Update preview info
-            const rotationText = shouldRotate ? " (rotated)" : "";
-            const sizeText = `${dimensions.inches.width}"×${dimensions.inches.height}" (${dimensions.mm.width}×${dimensions.mm.height}mm)`;
-            previewInfo.textContent = `${currentQuantity} QR codes • ${layout.cols}×${layout.rows} layout${rotationText} • Each: ${sizeText}`;
-            
-            // Set up CSS Grid
-            pagePreview.style.gridTemplateColumns = `repeat(${layout.cols}, 1fr)`;
-            pagePreview.style.gridTemplateRows = `repeat(${layout.rows}, 1fr)`;
-            
-            // Clear and populate preview
-            pagePreview.innerHTML = '';
-            
-            for (let i = 0; i < currentQuantity; i++) {
-                const img = document.createElement('img');
-                img.src = currentImage;
-                img.className = shouldRotate ? 'preview-image rotated' : 'preview-image';
-                img.alt = `QR Code ${i + 1}`;
-                pagePreview.appendChild(img);
-            }
-        }
-
-        function calculateImageDimensions(layout) {
-            // Page dimensions: 8.5" × 11" with 0.5" margins on all sides
-            const pageWidth = 8.5 - 1.0; // 7.5" usable width
-            const pageHeight = 11 - 1.0;  // 10" usable height
-            
-            // Calculate cell dimensions
-            let cellWidth = pageWidth / layout.cols;
-            let cellHeight = pageHeight / layout.rows;
-            
-            // Account for grid gaps (10px gap = ~0.14 inches at 72 DPI)
-            const gapInInches = 0.14;
-            if (layout.cols > 1) {
-                cellWidth -= gapInInches * (layout.cols - 1) / layout.cols;
-            }
-            if (layout.rows > 1) {
-                cellHeight -= gapInInches * (layout.rows - 1) / layout.rows;
-            }
-            
-            // For rotated images, account for the scaling factor
-            if (shouldRotate) {
-                cellWidth *= 0.707; // Scale down for rotation
-                cellHeight *= 0.707;
-            }
-            
-            // Convert to millimeters (1 inch = 25.4mm)
-            const mmWidth = Math.round(cellWidth * 25.4);
-            const mmHeight = Math.round(cellHeight * 25.4);
-            
-            return {
-                inches: {
-                    width: cellWidth.toFixed(2),
-                    height: cellHeight.toFixed(2)
-                },
-                mm: {
-                    width: mmWidth,
-                    height: mmHeight
-                }
-            };
-        }
-
-        function calculateOptimalLayout(quantity) {
-            // Handle specific cases that work well on 8.5×11 paper
-            let specialCases = {
-                1: { cols: 1, rows: 1 },
-                2: { cols: 2, rows: 1 },  // Side by side
-                3: { cols: 3, rows: 1 },  // Three across
-                4: { cols: 2, rows: 2 },  // 2x2 grid
-                5: { cols: 3, rows: 2 },  // 3x2 grid (5 images)
-                6: { cols: 3, rows: 2 },  // 3x2 grid
-                8: { cols: 4, rows: 2 },  // 4x2 grid
-                9: { cols: 3, rows: 3 },  // 3x3 grid
-                12: { cols: 4, rows: 3 }, // 4x3 grid
-                16: { cols: 4, rows: 4 }  // 4x4 grid
-            };
-            
-            // If rotation is enabled, modify layouts to take advantage of rotated images
-            if (shouldRotate) {
-                specialCases = {
-                    1: { cols: 1, rows: 1 },
-                    2: { cols: 1, rows: 2 },  // Stack vertically when rotated
-                    3: { cols: 1, rows: 3 },  // Stack vertically when rotated
-                    4: { cols: 2, rows: 2 },  // 2x2 grid
-                    5: { cols: 2, rows: 3 },  // 2x3 grid when rotated
-                    6: { cols: 2, rows: 3 },  // 2x3 grid when rotated
-                    8: { cols: 2, rows: 4 },  // 2x4 grid when rotated
-                    9: { cols: 3, rows: 3 },  // 3x3 grid
-                    12: { cols: 3, rows: 4 }, // 3x4 grid when rotated
-                    16: { cols: 4, rows: 4 }  // 4x4 grid
-                };
-            }
-            
-            // If we have a predefined layout for this quantity, use it
-            if (specialCases[quantity]) {
-                return specialCases[quantity];
-            }
-            
-            // For other quantities, calculate the best fit
-            const layouts = [];
-            
-            for (let cols = 1; cols <= Math.min(quantity, 6); cols++) {
-                const rows = Math.ceil(quantity / cols);
-                const efficiency = quantity / (cols * rows);
-                
-                // When rotating, prefer taller layouts (fewer columns, more rows)
-                // When not rotating, prefer wider layouts
-                let aspectRatio = cols / rows;
-                const pageAspectRatio = 8.5 / 11; // Always 8.5×11 paper
-                
-                // Score based on efficiency and aspect ratio fit
-                const aspectScore = 1 - Math.abs(aspectRatio - pageAspectRatio) / pageAspectRatio;
-                const score = efficiency * 0.7 + aspectScore * 0.3;
-                
-                layouts.push({
-                    cols: cols,
-                    rows: rows,
-                    efficiency: efficiency,
-                    score: score
-                });
-            }
-            
-            // Sort by score and return the best layout
-            layouts.sort((a, b) => b.score - a.score);
-            return layouts[0];
-        }
-
-        function printImages() {
-            if (!currentImage) {
-                alert('Please upload a QR code first!');
-                return;
-            }
-            
-            // Trigger print dialog
-            window.print();
-        }
-
-        function downloadImage() {
-            if (!currentImage) {
-                alert('Please upload a QR code first!');
-                return;
-            }
-            
-            // Create a canvas with 8.5×11 dimensions at 300 DPI
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            const dpi = 300;
-            const width = 8.5 * dpi;  // 2550px
-            const height = 11 * dpi;  // 3300px
-            
-            canvas.width = width;
-            canvas.height = height;
-            
-            // Fill with white background
-            ctx.fillStyle = 'white';
-            ctx.fillRect(0, 0, width, height);
-            
-            // Calculate layout and dimensions
-            const layout = calculateOptimalLayout(currentQuantity);
-            const margin = 0.5 * dpi; // 0.5 inch margins
-            const usableWidth = width - (2 * margin);
-            const usableHeight = height - (2 * margin);
-            
-            const cellWidth = usableWidth / layout.cols;
-            const cellHeight = usableHeight / layout.rows;
-            const gap = 0.14 * dpi; // Grid gap in pixels
-            
-            // Load the image and draw it
-            const img = new Image();
-            img.onload = function() {
-                for (let i = 0; i < currentQuantity; i++) {
-                    const col = i % layout.cols;
-                    const row = Math.floor(i / layout.cols);
-                    
-                    const x = margin + (col * cellWidth) + (col * gap);
-                    const y = margin + (row * cellHeight) + (row * gap);
-                    
-                    let drawWidth = cellWidth - gap;
-                    let drawHeight = cellHeight - gap;
-                    
-                    if (shouldRotate) {
-                        // Save context, translate to center, rotate, then draw
-                        ctx.save();
-                        ctx.translate(x + drawWidth/2, y + drawHeight/2);
-                        ctx.rotate(Math.PI / 2); // 90 degrees
-                        
-                        // Scale down for rotation
-                        drawWidth *= 0.707;
-                        drawHeight *= 0.707;
-                        
-                        ctx.drawImage(img, -drawWidth/2, -drawHeight/2, drawWidth, drawHeight);
-                        ctx.restore();
-                    } else {
-                        ctx.drawImage(img, x, y, drawWidth, drawHeight);
-                    }
-                }
-                
-                // Download the canvas as image
-                canvas.toBlob(function(blob) {
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `qr-codes-${currentQuantity}-${layout.cols}x${layout.rows}.png`;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                });
-            };
-            img.src = currentImage;
-        }
-
-        // Set initial quantity
-        setQuantity(4);
+window.addEventListener('load', initializeFromURL);
+setQuantity(4);
     </script>
+  </div>
 </body>
 </html>
