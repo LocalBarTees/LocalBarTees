@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Print Layout Tool</title>
+    <title>Local Bar Tees QR Code Printer</title>
     <style>
         * {
             margin: 0;
@@ -116,6 +116,20 @@
             flex-wrap: wrap;
         }
 
+        .rotate-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .rotate-control input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+        }
+
         .quantity-group {
             display: flex;
             align-items: center;
@@ -223,6 +237,11 @@
             object-fit: contain;
             border-radius: 4px;
             border: 1px solid #e9ecef;
+            transition: transform 0.3s ease;
+        }
+
+        .preview-image.rotated {
+            transform: rotate(90deg);
         }
 
         @media print {
@@ -282,6 +301,10 @@
                 height: 100% !important;
                 object-fit: contain !important;
             }
+            
+            .preview-image.rotated {
+                transform: rotate(90deg) !important;
+            }
         }
 
         @media (max-width: 768px) {
@@ -316,14 +339,14 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🖼️ Image Print Layout</h1>
-            <p>Upload an image and choose how many copies to print on 8.5×11 paper</p>
+            <h1>🖨️ Local Bar Tees QR Code Printer</h1>
+            <p>Choose your QR code style and print multiple copies perfectly on 8.5×11 paper</p>
         </div>
 
         <div class="controls">
             <div class="upload-area" id="uploadArea">
-                <div class="upload-icon">📁</div>
-                <div class="upload-text">Click to upload an image or drag and drop</div>
+                <div class="upload-icon">🖨️</div>
+                <div class="upload-text">Click to upload QR code or drag and drop</div>
                 <p style="color: #6c757d; margin-top: 10px;">Supports JPG, PNG, GIF, and other image formats</p>
                 <input type="file" class="file-input" id="fileInput" accept="image/*">
             </div>
@@ -333,15 +356,19 @@
                     <label for="quantity">Number of copies:</label>
                     <input type="number" id="quantity" class="quantity-input" min="1" max="100" value="4">
                 </div>
-                <div class="quick-buttons">
-                    <button class="quick-btn" onclick="setQuantity(1)">1</button>
-                    <button class="quick-btn" onclick="setQuantity(2)">2</button>
-                    <button class="quick-btn" onclick="setQuantity(4)">4</button>
-                    <button class="quick-btn" onclick="setQuantity(6)">6</button>
-                    <button class="quick-btn" onclick="setQuantity(9)">9</button>
-                    <button class="quick-btn" onclick="setQuantity(12)">12</button>
-                    <button class="quick-btn" onclick="setQuantity(16)">16</button>
+                <div class="rotate-control">
+                    <input type="checkbox" id="rotateImages">
+                    <label for="rotateImages">Rotate images 90°</label>
                 </div>
+            </div>
+            <div class="quick-buttons">
+                <button class="quick-btn" onclick="setQuantity(1)">1</button>
+                <button class="quick-btn" onclick="setQuantity(2)">2</button>
+                <button class="quick-btn" onclick="setQuantity(4)">4</button>
+                <button class="quick-btn" onclick="setQuantity(6)">6</button>
+                <button class="quick-btn" onclick="setQuantity(9)">9</button>
+                <button class="quick-btn" onclick="setQuantity(12)">12</button>
+                <button class="quick-btn" onclick="setQuantity(16)">16</button>
             </div>
         </div>
 
@@ -361,10 +388,12 @@
     <script>
         let currentImage = null;
         let currentQuantity = 4;
+        let shouldRotate = false;
 
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
         const quantityInput = document.getElementById('quantity');
+        const rotateCheckbox = document.getElementById('rotateImages');
         const previewSection = document.getElementById('previewSection');
         const pagePreview = document.getElementById('pagePreview');
         const previewInfo = document.getElementById('previewInfo');
@@ -376,6 +405,7 @@
         uploadArea.addEventListener('drop', handleDrop);
         fileInput.addEventListener('change', handleFileSelect);
         quantityInput.addEventListener('input', handleQuantityChange);
+        rotateCheckbox.addEventListener('change', handleRotationChange);
 
         function handleDragOver(e) {
             e.preventDefault();
@@ -423,6 +453,11 @@
             updatePreview();
         }
 
+        function handleRotationChange(e) {
+            shouldRotate = e.target.checked;
+            updatePreview();
+        }
+
         function updatePreview() {
             if (!currentImage) return;
 
@@ -432,7 +467,8 @@
             const layout = calculateOptimalLayout(currentQuantity);
             
             // Update preview info
-            previewInfo.textContent = `${currentQuantity} images • ${layout.cols}×${layout.rows} layout`;
+            const rotationText = shouldRotate ? " (rotated)" : "";
+            previewInfo.textContent = `${currentQuantity} QR codes • ${layout.cols}×${layout.rows} layout${rotationText}`;
             
             // Set up CSS Grid
             pagePreview.style.gridTemplateColumns = `repeat(${layout.cols}, 1fr)`;
@@ -444,28 +480,52 @@
             for (let i = 0; i < currentQuantity; i++) {
                 const img = document.createElement('img');
                 img.src = currentImage;
-                img.className = 'preview-image';
-                img.alt = `Image ${i + 1}`;
+                img.className = shouldRotate ? 'preview-image rotated' : 'preview-image';
+                img.alt = `QR Code ${i + 1}`;
                 pagePreview.appendChild(img);
             }
         }
 
         function calculateOptimalLayout(quantity) {
-            // Calculate the best grid layout for the given quantity
-            // Prioritize layouts that use space efficiently
+            // Handle specific cases that work well on 8.5×11 paper
+            const specialCases = {
+                1: { cols: 1, rows: 1 },
+                2: { cols: 2, rows: 1 },  // Side by side
+                3: { cols: 3, rows: 1 },  // Three across
+                4: { cols: 2, rows: 2 },  // 2x2 grid
+                5: { cols: 3, rows: 2 },  // 3x2 grid (5 images)
+                6: { cols: 3, rows: 2 },  // 3x2 grid
+                8: { cols: 4, rows: 2 },  // 4x2 grid
+                9: { cols: 3, rows: 3 },  // 3x3 grid
+                12: { cols: 4, rows: 3 }, // 4x3 grid
+                16: { cols: 4, rows: 4 }  // 4x4 grid
+            };
+            
+            // If we have a predefined layout for this quantity, use it
+            if (specialCases[quantity]) {
+                return specialCases[quantity];
+            }
+            
+            // For other quantities, calculate the best fit
             const layouts = [];
             
-            for (let cols = 1; cols <= quantity; cols++) {
+            for (let cols = 1; cols <= Math.min(quantity, 6); cols++) {
                 const rows = Math.ceil(quantity / cols);
                 const efficiency = quantity / (cols * rows);
-                const aspectRatio = (cols * 8.5) / (rows * 11);
+                
+                // Prefer layouts that aren't too tall or too wide
+                const aspectRatio = cols / rows;
+                const pageAspectRatio = 8.5 / 11; // ≈ 0.77
+                
+                // Score based on efficiency and aspect ratio fit
+                const aspectScore = 1 - Math.abs(aspectRatio - pageAspectRatio) / pageAspectRatio;
+                const score = efficiency * 0.7 + aspectScore * 0.3;
                 
                 layouts.push({
                     cols: cols,
                     rows: rows,
                     efficiency: efficiency,
-                    aspectRatio: aspectRatio,
-                    score: efficiency * 0.7 + (1 - Math.abs(aspectRatio - 0.77) / 0.77) * 0.3
+                    score: score
                 });
             }
             
@@ -476,7 +536,7 @@
 
         function printImages() {
             if (!currentImage) {
-                alert('Please upload an image first!');
+                alert('Please upload a QR code first!');
                 return;
             }
             
