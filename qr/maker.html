@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Make a QR Code – Local Bar Tees</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     * {
       margin: 0;
@@ -231,8 +230,18 @@
       height: 500px;
     }
 
-    canvas#finalCanvasWhite {
+    canvas#finalCanvasWhite, canvas#landscapeCanvasWhite {
       background: #fff;
+    }
+
+    canvas#landscapeCanvasBlack, canvas#landscapeCanvasWhite {
+      width: 400px;
+      height: 240px;
+    }
+
+    h3 {
+      font-weight: normal;
+      margin: 20px 0;
     }
 
     @media (max-width: 768px) {
@@ -260,6 +269,11 @@
       canvas {
         width: 250px;
         height: 416px;
+      }
+
+      canvas#landscapeCanvasBlack, canvas#landscapeCanvasWhite {
+        width: 320px;
+        height: 192px;
       }
 
       button.download {
@@ -301,14 +315,27 @@
     </div>
 
     <div class="output-wrapper" style="display: none;" id="outputWrapper">
+      <h3 style="margin-bottom: 20px; color: #333;">Portrait Versions</h3>
       <div class="canvas-container">
         <div class="canvas-section">
           <canvas id="finalCanvas" width="600" height="1000"></canvas>
-          <button id="downloadButton" class="download black" onclick="downloadImage('black')" style="display: none;">Download Black Version</button>
+          <button id="downloadButton" class="download black" onclick="downloadImage('black')" style="display: none;">Download Portrait Black</button>
         </div>
         <div class="canvas-section">
           <canvas id="finalCanvasWhite" width="600" height="1000"></canvas>
-          <button id="downloadButtonWhite" class="download white" onclick="downloadImage('white')" style="display: none;">Download White Version</button>
+          <button id="downloadButtonWhite" class="download white" onclick="downloadImage('white')" style="display: none;">Download Portrait White</button>
+        </div>
+      </div>
+      
+      <h3 style="margin: 40px 0 20px 0; color: #333;">Landscape Versions</h3>
+      <div class="canvas-container">
+        <div class="canvas-section">
+          <canvas id="landscapeCanvasBlack" width="1000" height="600"></canvas>
+          <button id="downloadLandscapeBlack" class="download black" onclick="downloadImage('landscapeBlack')" style="display: none;">Download Landscape Black</button>
+        </div>
+        <div class="canvas-section">
+          <canvas id="landscapeCanvasWhite" width="1000" height="600"></canvas>
+          <button id="downloadLandscapeWhite" class="download white" onclick="downloadImage('landscapeWhite')" style="display: none;">Download Landscape White</button>
         </div>
       </div>
     </div>
@@ -318,66 +345,71 @@
     let downloadUrls = {};
     let downloadFilename = '';
 
-    function generateImage() {
+    // Check for URL parameters and set defaults
+    function setDefaultValues() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const qrParam = urlParams.get('qr');
+      
+      if (qrParam) {
+        document.getElementById('url').value = `https://localbartees.com/${qrParam}`;
+        document.getElementById('store').value = '';
+        document.getElementById('store').placeholder = 'Enter full shop name';
+      }
+    }
+
+    // Call setDefaultValues when page loads
+    window.addEventListener('load', setDefaultValues);
+
+    // Simple QR Code generator using SVG
+    function generateQRCode(text) {
+      // Create a simple QR code using an API service
+      const size = 400;
+      const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(text)}&format=png&margin=0`;
+      
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = apiUrl;
+      });
+    }
+
+    async function generateImage() {
       const urlInput = document.getElementById("url").value.trim();
       const storeInput = document.getElementById("store").value.trim();
+      
       if (!urlInput || !storeInput) {
         alert("Please fill in both fields.");
         return;
       }
 
-      // Show output wrapper
-      document.getElementById("outputWrapper").style.display = "block";
+      try {
+        // Show output wrapper
+        document.getElementById("outputWrapper").style.display = "block";
 
-      const slug = urlInput.split('/').filter(Boolean).pop();
-      const finalUrl = `https://localbartees.com/${slug}`;
-      const storeName = storeInput;
-      const logoBlackUrl = "https://localbartees.github.io/LocalBarTees/qr/lbt_neon_blk.png";
-      const logoWhiteUrl = "https://localbartees.github.io/LocalBarTees/qr/lbt_neon_wht.png";
+        const slug = urlInput.split('/').filter(Boolean).pop();
+        const finalUrl = `https://localbartees.com/${slug}`;
+        const storeName = storeInput;
+        
+        // Reset download URLs
+        downloadUrls = {};
 
-      // Reset download URLs
-      downloadUrls = {};
+        // Generate QR code
+        const qrImage = await generateQRCode(finalUrl);
 
-      // Generate QR to canvas in memory
-      const qrCanvas = document.createElement("canvas");
-      qrCanvas.width = 400;
-      qrCanvas.height = 400;
-      const qrCtx = qrCanvas.getContext("2d");
-      const tempDiv = document.createElement("div");
-      tempDiv.style.display = "none";
-      document.body.appendChild(tempDiv);
+        // Generate all four versions
+        generateVersion('black', qrImage, storeName, slug);
+        generateVersion('white', qrImage, storeName, slug);
+        generateLandscapeVersion('landscapeBlack', qrImage, storeName, slug);
+        generateLandscapeVersion('landscapeWhite', qrImage, storeName, slug);
 
-      const qr = new QRCode(tempDiv, {
-        text: finalUrl,
-        width: 400,
-        height: 400,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H
-      });
-
-      setTimeout(() => {
-        const qrImg = tempDiv.querySelector("img");
-        if (!qrImg || !qrImg.src) {
-          alert("QR generation failed.");
-          return;
-        }
-
-        const qrImage = new Image();
-        qrImage.onload = () => {
-          // Generate black version
-          generateVersion('black', qrImage, logoBlackUrl, storeName, slug);
-          // Generate white version
-          generateVersion('white', qrImage, logoWhiteUrl, storeName, slug);
-          
-          document.body.removeChild(tempDiv);
-        };
-        qrImage.crossOrigin = "anonymous";
-        qrImage.src = qrImg.src;
-      }, 200);
+      } catch (error) {
+        alert("Failed to generate QR code. Please check your internet connection and try again.");
+      }
     }
 
-    function generateVersion(version, qrImage, logoUrl, storeName, slug) {
+    function generateVersion(version, qrImage, storeName, slug) {
       const canvas = document.getElementById(version === 'black' ? 'finalCanvas' : 'finalCanvasWhite');
       const ctx = canvas.getContext("2d");
       
@@ -385,9 +417,21 @@
       ctx.fillStyle = version === 'black' ? "#000" : "#fff";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+      // Add black border for white versions
+      if (version === 'white') {
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 8;
+        const borderRadius = 20;
+        ctx.beginPath();
+        roundRect(ctx, 4, 4, canvas.width - 8, canvas.height - 8, borderRadius);
+        ctx.stroke();
+      }
+
+      // Load logo from qr\codes folder
       const logoImg = new Image();
-      logoImg.crossOrigin = "anonymous";
-      logoImg.onload = () => {
+      const logoUrl = version === 'black' ? "codes/lbt_neon_blk.png" : "codes/lbt_neon_wht.png";
+      
+      logoImg.onload = function() {
         const contentWidth = 400;
         const logoRatio = logoImg.width / logoImg.height;
         const logoHeight = contentWidth / logoRatio;
@@ -413,7 +457,7 @@
         const textY = qrY + contentWidth + 50;
         ctx.fillStyle = version === 'black' ? "#ffffff" : "#000000";
         ctx.textAlign = "center";
-        ctx.font = "28px Arial";
+        ctx.font = "36px Arial";
         ctx.fillText(storeName, canvas.width / 2, textY);
         ctx.font = "20px Arial";
         ctx.fillText("powered by localbartees.com", canvas.width / 2, textY + 35);
@@ -424,19 +468,228 @@
         downloadUrls[version] = canvas.toDataURL("image/png");
         downloadFilename = `qr_${slug}`;
         
-        // Show download buttons when both versions are ready
-        if (downloadUrls.black && downloadUrls.white) {
+        // Show download buttons when all versions are ready
+        if (downloadUrls.black && downloadUrls.white && downloadUrls.landscapeBlack && downloadUrls.landscapeWhite) {
           document.getElementById("downloadButton").style.display = "block";
           document.getElementById("downloadButtonWhite").style.display = "block";
+          document.getElementById("downloadLandscapeBlack").style.display = "block";
+          document.getElementById("downloadLandscapeWhite").style.display = "block";
         }
       };
+
+      logoImg.onerror = function() {
+        // Fallback if logo doesn't load - use text version
+        const contentWidth = 400;
+        const qrX = (canvas.width - contentWidth) / 2;
+        const qrY = 80;
+
+        // Draw QR with border
+        const borderPadding = 16;
+        const borderRadius = 20;
+        ctx.fillStyle = version === 'black' ? "#ffffff" : "#000000";
+        roundRect(ctx, qrX - borderPadding, qrY - borderPadding, contentWidth + 2 * borderPadding, contentWidth + 2 * borderPadding, borderRadius);
+        ctx.fill();
+        ctx.drawImage(qrImage, qrX, qrY, contentWidth, contentWidth);
+
+        // Text
+        const textY = qrY + contentWidth + 50;
+        ctx.fillStyle = version === 'black' ? "#ffffff" : "#000000";
+        ctx.textAlign = "center";
+        ctx.font = "bold 32px Arial";
+        ctx.fillText("LOCAL BAR TEES", canvas.width / 2, qrY - 30);
+        ctx.font = "36px Arial";
+        ctx.fillText(storeName, canvas.width / 2, textY);
+        ctx.font = "20px Arial";
+        ctx.fillText("powered by localbartees.com", canvas.width / 2, textY + 35);
+
+        canvas.style.display = "block";
+        
+        // Store download data
+        downloadUrls[version] = canvas.toDataURL("image/png");
+        downloadFilename = `qr_${slug}`;
+        
+        // Show download buttons when all versions are ready
+        if (downloadUrls.black && downloadUrls.white && downloadUrls.landscapeBlack && downloadUrls.landscapeWhite) {
+          document.getElementById("downloadButton").style.display = "block";
+          document.getElementById("downloadButtonWhite").style.display = "block";
+          document.getElementById("downloadLandscapeBlack").style.display = "block";
+          document.getElementById("downloadLandscapeWhite").style.display = "block";
+        }
+      };
+
       logoImg.src = logoUrl;
+    }
+
+    function generateLandscapeVersion(version, qrImage, storeName, slug) {
+      const isBlack = version === 'landscapeBlack';
+      const canvas = document.getElementById(isBlack ? 'landscapeCanvasBlack' : 'landscapeCanvasWhite');
+      const ctx = canvas.getContext("2d");
+      
+      // Set background color
+      ctx.fillStyle = isBlack ? "#000" : "#fff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Add black border for white versions
+      if (!isBlack) {
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 8;
+        const borderRadius = 20;
+        ctx.beginPath();
+        roundRect(ctx, 4, 4, canvas.width - 8, canvas.height - 8, borderRadius);
+        ctx.stroke();
+      }
+
+      // Load logo
+      const logoImg = new Image();
+      const logoUrl = isBlack ? "codes/lbt_neon_blk.png" : "codes/lbt_neon_wht.png";
+      
+      logoImg.onload = function() {
+        // Landscape layout - logo on left, QR in center, text on right
+        const qrSize = 280;
+        const logoWidth = 200;
+        const logoRatio = logoImg.width / logoImg.height;
+        const logoHeight = logoWidth / logoRatio;
+        
+        // Logo position (left side)
+        const logoX = 60;
+        const logoY = (canvas.height - logoHeight) / 2;
+        ctx.drawImage(logoImg, logoX, logoY, logoWidth, logoHeight);
+        
+        // QR position (absolute center)
+        const qrX = (canvas.width - qrSize) / 2;
+        const qrY = (canvas.height - qrSize) / 2;
+        const borderPadding = 12;
+        const borderRadius = 15;
+        
+        // Draw QR border
+        ctx.fillStyle = isBlack ? "#ffffff" : "#000000";
+        roundRect(ctx, qrX - borderPadding, qrY - borderPadding, qrSize + 2 * borderPadding, qrSize + 2 * borderPadding, borderRadius);
+        ctx.fill();
+        ctx.drawImage(qrImage, qrX, qrY, qrSize, qrSize);
+        
+        // Text area (right side)
+        const textX = (canvas.width / 2) + (qrSize / 2) + 60;
+        const textCenterY = canvas.height / 2;
+        
+        ctx.fillStyle = isBlack ? "#ffffff" : "#000000";
+        ctx.textAlign = "left";
+        
+        // Store name (large, centered vertically)
+        ctx.font = "bold 32px Arial";
+        const storeNameLines = wrapText(ctx, storeName, 180);
+        const lineHeight = 40;
+        const totalTextHeight = storeNameLines.length * lineHeight;
+        let currentY = textCenterY - (totalTextHeight / 2) + 20;
+        
+        storeNameLines.forEach(line => {
+          ctx.fillText(line, textX, currentY);
+          currentY += lineHeight;
+        });
+        
+        // Powered by text (smaller, below store name)
+        ctx.font = "18px Arial";
+        ctx.fillText("powered by", textX, currentY + 30);
+        ctx.font = "bold 20px Arial";
+        ctx.fillText("localbartees.com", textX, currentY + 55);
+
+        canvas.style.display = "block";
+        
+        // Store download data
+        downloadUrls[version] = canvas.toDataURL("image/png");
+        
+        // Show download buttons when all versions are ready
+        if (downloadUrls.black && downloadUrls.white && downloadUrls.landscapeBlack && downloadUrls.landscapeWhite) {
+          document.getElementById("downloadButton").style.display = "block";
+          document.getElementById("downloadButtonWhite").style.display = "block";
+          document.getElementById("downloadLandscapeBlack").style.display = "block";
+          document.getElementById("downloadLandscapeWhite").style.display = "block";
+        }
+      };
+
+      logoImg.onerror = function() {
+        // Fallback without logo
+        const qrSize = 280;
+        const qrX = (canvas.width - qrSize) / 2;
+        const qrY = (canvas.height - qrSize) / 2;
+        const borderPadding = 12;
+        const borderRadius = 15;
+        
+        // Draw QR border
+        ctx.fillStyle = isBlack ? "#ffffff" : "#000000";
+        roundRect(ctx, qrX - borderPadding, qrY - borderPadding, qrSize + 2 * borderPadding, qrSize + 2 * borderPadding, borderRadius);
+        ctx.fill();
+        ctx.drawImage(qrImage, qrX, qrY, qrSize, qrSize);
+        
+        // Text area
+        const textX = (canvas.width / 2) + (qrSize / 2) + 60;
+        const textCenterY = canvas.height / 2;
+        
+        ctx.fillStyle = isBlack ? "#ffffff" : "#000000";
+        ctx.textAlign = "left";
+        
+        // Brand name
+        ctx.font = "bold 28px Arial";
+        ctx.fillText("LOCAL BAR TEES", textX, textCenterY - 60);
+        
+        // Store name
+        ctx.font = "bold 32px Arial";
+        const storeNameLines = wrapText(ctx, storeName, 180);
+        let currentY = textCenterY - 20;
+        storeNameLines.forEach(line => {
+          ctx.fillText(line, textX, currentY);
+          currentY += 40;
+        });
+        
+        // Powered by text
+        ctx.font = "18px Arial";
+        ctx.fillText("powered by localbartees.com", textX, textCenterY + 80);
+
+        canvas.style.display = "block";
+        
+        // Store download data
+        downloadUrls[version] = canvas.toDataURL("image/png");
+        
+        // Show download buttons when all versions are ready
+        if (downloadUrls.black && downloadUrls.white && downloadUrls.landscapeBlack && downloadUrls.landscapeWhite) {
+          document.getElementById("downloadButton").style.display = "block";
+          document.getElementById("downloadButtonWhite").style.display = "block";
+          document.getElementById("downloadLandscapeBlack").style.display = "block";
+          document.getElementById("downloadLandscapeWhite").style.display = "block";
+        }
+      };
+
+      logoImg.src = logoUrl;
+    }
+
+    // Helper function to wrap text
+    function wrapText(ctx, text, maxWidth) {
+      const words = text.split(' ');
+      const lines = [];
+      let currentLine = words[0];
+
+      for (let i = 1; i < words.length; i++) {
+        const word = words[i];
+        const width = ctx.measureText(currentLine + " " + word).width;
+        if (width < maxWidth) {
+          currentLine += " " + word;
+        } else {
+          lines.push(currentLine);
+          currentLine = word;
+        }
+      }
+      lines.push(currentLine);
+      return lines;
     }
 
     function downloadImage(version) {
       if (!downloadUrls[version]) return;
       
-      const suffix = version === 'black' ? 'b' : 'w';
+      let suffix;
+      if (version === 'black') suffix = 'b';
+      else if (version === 'white') suffix = 'w';
+      else if (version === 'landscapeBlack') suffix = 'lb';
+      else if (version === 'landscapeWhite') suffix = 'lw';
+      
       const link = document.createElement('a');
       link.href = downloadUrls[version];
       link.download = `${downloadFilename}${suffix}.png`;
