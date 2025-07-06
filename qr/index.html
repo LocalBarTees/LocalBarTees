@@ -164,7 +164,6 @@
             object-fit: contain;
             border: 1px solid #ddd;
             border-radius: 4px;
-            margin: 0 auto 15px auto;
             display: block;
             background: white;
         }
@@ -174,7 +173,6 @@
             height: 80px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            margin: 0 auto 15px auto;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -348,7 +346,6 @@
 </head>
 <body>
 <div class="container">
-        <!--<button class="back-button" onclick="goBack()">← Back</button>      -->
         <div class="header">
             <h1>Local Bar Tees QR Codes</h1>
             <p>Local Bar Tees Team Only</p>
@@ -435,27 +432,58 @@
         }
 
         function updateStats() {
-    const count = businessData.length;
-    document.getElementById('businessCount').textContent = `${count} Client${count === 1 ? '' : 's'}`;
-}
+            const count = businessData.length;
+            document.getElementById('businessCount').textContent = `${count} Client${count === 1 ? '' : 's'}`;
+        }
 
-        function createThumbnail(uniqueId) {
-            const thumbnailUrl = `https://localbartees.github.io/LocalBarTees/qr/codes/qr_${uniqueId}b.png`;
+        function createThumbnailGrid(uniqueId) {
+            const container = document.createElement('div');
+            container.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:5px;justify-content:center;margin:0 auto 15px auto;max-width:210px;';
             
-            const img = document.createElement('img');
-            img.className = 'qr-thumbnail';
-            img.src = thumbnailUrl;
-            img.alt = 'QR Code Preview';
+            const variants = [
+                {suffix: 'b', alt: 'Black'},
+                {suffix: 'w', alt: 'White'},
+                {suffix: 'bl', alt: 'Black Large'},
+                {suffix: 'wl', alt: 'White Large'}
+            ];
+
+            let loadedImages = 0;
+            let totalImages = variants.length;
+
+            variants.forEach((variant, index) => {
+                const img = document.createElement('img');
+                img.className = 'qr-thumbnail';
+                img.src = `https://localbartees.github.io/LocalBarTees/qr/codes/qr_${uniqueId}${variant.suffix}.png`;
+                img.alt = `QR Code Preview (${variant.alt})`;
+                
+                img.onload = function() {
+                    loadedImages++;
+                };
+                
+                img.onerror = function() {
+                    loadedImages++;
+                    this.style.display = 'none';
+                    
+                    // Check if all images have finished loading (either success or error)
+                    if (loadedImages === totalImages) {
+                        // Check if any images are still visible
+                        const visibleImages = container.querySelectorAll('img:not([style*="display: none"])');
+                        if (visibleImages.length === 0) {
+                            // No images loaded, replace entire grid with centered error
+                            container.innerHTML = '';
+                            container.style.cssText = 'display:flex;justify-content:center;margin:0 auto 15px auto;';
+                            const errorDiv = document.createElement('div');
+                            errorDiv.className = 'qr-thumbnail-error';
+                            errorDiv.innerHTML = 'QR Preview<br>Unavailable';
+                            container.appendChild(errorDiv);
+                        }
+                    }
+                };
+                
+                container.appendChild(img);
+            });
             
-            img.onerror = function() {
-                // Replace with error div if image fails to load
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'qr-thumbnail-error';
-                errorDiv.innerHTML = 'QR Preview<br>Unavailable';
-                this.parentNode.replaceChild(errorDiv, this);
-            };
-            
-            return img;
+            return container;
         }
 
         function renderBusinessCards() {
@@ -466,7 +494,7 @@
                 const card = document.createElement('div');
                 card.className = 'business-card';
                 
-                const thumbnail = createThumbnail(business.uniqueId);
+                const thumbnailGrid = createThumbnailGrid(business.uniqueId);
                 
                 card.innerHTML = `
                     <div class="business-header">
@@ -480,20 +508,18 @@
                             <button class="action-btn" onclick="window.open('https://localbartees.github.io/LocalBarTees/vip/qr?qr=${escapeHtml(business.uniqueId)}', '_blank')">
                                 🖨️ PRINT ${escapeHtml(business.name.toUpperCase())} QR CODE PACKAGE FOR CLIENT
                             </button>
+                            <button class="action-btn" onclick="window.open('maker.html?qr=${escapeHtml(business.uniqueId)}', '_blank')">
+                                ⚙️ MAKE QR CODES FOR THIS CLIENT
+                            </button>
                         </div>
                     </div>
                 `;
                 
-                // Insert thumbnail before the first button
                 const firstButton = card.querySelector('.action-btn');
-                firstButton.parentNode.insertBefore(thumbnail, firstButton);
+                firstButton.parentNode.insertBefore(thumbnailGrid, firstButton);
                 
                 grid.appendChild(card);
             });
-        }
-
-        function goBack() {
-            window.history.back();
         }
 
         function shareClientLink(index) {
