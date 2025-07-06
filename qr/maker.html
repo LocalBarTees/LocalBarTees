@@ -85,21 +85,51 @@
     button.generate:hover {
       background: #222;
     }
+    button.download {
+      display: none;
+      margin: 10px auto 0 auto;
+      padding: 12px 16px;
+      font-size: 0.9rem;
+      background: #0070f3;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      width: 280px;
+      text-transform: uppercase;
+      border-radius: 4px;
+    }
+    button.download:hover {
+      background: #0056b3;
+    }
+    button.download.black {
+      background: #000;
+      color: #fff;
+    }
+    button.download.black:hover {
+      background: #333;
+    }
+    button.download.white {
+      background: #fff;
+      color: #000;
+      border: 1px solid #ccc;
+    }
+    button.download.white:hover {
+      background: #f5f5f5;
+    }
     .output-wrapper {
       margin-top: 40px;
       text-align: center;
     }
     canvas {
-      margin: 0 auto;
+      margin: 0 auto 20px auto;
       background: #000;
       border: 1px solid #ccc;
       display: none;
+      width: 300px;
+      height: 500px;
     }
-    a.download-link {
-      display: none;
-      margin-top: 20px;
-      color: #0070f3;
-      text-decoration: underline;
+    canvas#finalCanvasWhite {
+      background: #fff;
     }
   </style>
 </head>
@@ -121,20 +151,31 @@
     </div>
 
     <label for="url">What page do you want the QR code to go to?<br><small>(find on localbartees.com then cut and paste here)</small></label>
-    <input id="url" type="text" placeholder="https://localbartees.com/snoopy" />
+    <input id="url" type="text" placeholder="https://localbartees.com/nail" value="https://localbartees.com/nail" />
 
-    <label for="store">What do you call this shop?<br><small>e.g. The Snoopy Shop</small></label>
-    <input id="store" type="text" placeholder="The Snoopy Shop" />
+    <label for="store">What do you call this shop?<br><small>e.g. The Rusty Nail Store or The Rusty Nail Shop or Rusty Nail Merch</small></label>
+    <input id="store" type="text" placeholder="The Rusty Nail Store" value="The Rusty Nail Store" />
 
     <button class="generate" onclick="generateImage()">Generate this QR Code</button>
 
     <div class="output-wrapper">
-      <canvas id="finalCanvas" width="600" height="1000"></canvas>
-      <a id="downloadLink" class="download-link" href="#" download="qr_final.png">Download Final Image</a>
+      <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+        <div style="text-align: center;">
+          <canvas id="finalCanvas" width="600" height="1000"></canvas>
+          <button id="downloadButton" class="download black" onclick="downloadImage('black')" style="display: none;">Download Black Version</button>
+        </div>
+        <div style="text-align: center;">
+          <canvas id="finalCanvasWhite" width="600" height="1000"></canvas>
+          <button id="downloadButtonWhite" class="download white" onclick="downloadImage('white')" style="display: none;">Download White Version</button>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
+    let downloadUrls = {};
+    let downloadFilename = '';
+
     function generateImage() {
       const urlInput = document.getElementById("url").value.trim();
       const storeInput = document.getElementById("store").value.trim();
@@ -146,7 +187,8 @@
       const slug = urlInput.split('/').filter(Boolean).pop();
       const finalUrl = `https://localbartees.com/${slug}`;
       const storeName = storeInput;
-      const logoUrl = "https://localbartees.github.io/LocalBarTees/qr/lbt_neon_blk.png";
+      const logoBlackUrl = "https://localbartees.github.io/LocalBarTees/qr/lbt_neon_blk.png";
+      const logoWhiteUrl = "https://localbartees.github.io/LocalBarTees/qr/lbt_neon_wht.png";
 
       // Generate QR to canvas in memory
       const qrCanvas = document.createElement("canvas");
@@ -175,56 +217,84 @@
 
         const qrImage = new Image();
         qrImage.onload = () => {
-          const canvas = document.getElementById("finalCanvas");
-          const ctx = canvas.getContext("2d");
-          ctx.fillStyle = "#000";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-          const logoImg = new Image();
-          logoImg.crossOrigin = "anonymous";
-          logoImg.onload = () => {
-            const contentWidth = 400;
-            const logoRatio = logoImg.width / logoImg.height;
-            const logoHeight = contentWidth / logoRatio;
-            const logoX = (canvas.width - contentWidth) / 2;
-            const logoY = 40;
-
-            // Draw logo
-            ctx.drawImage(logoImg, logoX, logoY, contentWidth, logoHeight);
-
-            // Draw QR with white border
-            const qrX = (canvas.width - contentWidth) / 2;
-            const qrY = logoY + logoHeight + 40;
-            const borderPadding = 16;
-            const borderRadius = 20;
-
-            ctx.fillStyle = "#ffffff";
-            roundRect(ctx, qrX - borderPadding, qrY - borderPadding, contentWidth + 2 * borderPadding, contentWidth + 2 * borderPadding, borderRadius);
-            ctx.fill();
-            ctx.drawImage(qrImage, qrX, qrY, contentWidth, contentWidth);
-
-            // Text
-            const textY = qrY + contentWidth + 50;
-            ctx.fillStyle = "#ffffff";
-            ctx.textAlign = "center";
-            ctx.font = "28px Arial";
-            ctx.fillText(storeName, canvas.width / 2, textY);
-            ctx.font = "20px Arial";
-            ctx.fillText("powered by localbartees.com", canvas.width / 2, textY + 35);
-
-            canvas.style.display = "block";
-            const link = document.getElementById("downloadLink");
-            link.href = canvas.toDataURL("image/png");
-            link.download = `qr_${slug}.png`;
-            link.style.display = "block";
-
-            document.body.removeChild(tempDiv);
-          };
-          logoImg.src = logoUrl;
+          // Generate black version
+          generateVersion('black', qrImage, logoBlackUrl, storeName, slug);
+          // Generate white version
+          generateVersion('white', qrImage, logoWhiteUrl, storeName, slug);
+          
+          document.body.removeChild(tempDiv);
         };
         qrImage.crossOrigin = "anonymous";
         qrImage.src = qrImg.src;
       }, 200);
+    }
+
+    function generateVersion(version, qrImage, logoUrl, storeName, slug) {
+      const canvas = document.getElementById(version === 'black' ? 'finalCanvas' : 'finalCanvasWhite');
+      const ctx = canvas.getContext("2d");
+      
+      // Set background color
+      ctx.fillStyle = version === 'black' ? "#000" : "#fff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const logoImg = new Image();
+      logoImg.crossOrigin = "anonymous";
+      logoImg.onload = () => {
+        const contentWidth = 400;
+        const logoRatio = logoImg.width / logoImg.height;
+        const logoHeight = contentWidth / logoRatio;
+        const logoX = (canvas.width - contentWidth) / 2;
+        const logoY = 40;
+
+        // Draw logo
+        ctx.drawImage(logoImg, logoX, logoY, contentWidth, logoHeight);
+
+        // Draw QR with border
+        const qrX = (canvas.width - contentWidth) / 2;
+        const qrY = logoY + logoHeight + 40;
+        const borderPadding = 16;
+        const borderRadius = 20;
+
+        // Border color opposite of background
+        ctx.fillStyle = version === 'black' ? "#ffffff" : "#000000";
+        roundRect(ctx, qrX - borderPadding, qrY - borderPadding, contentWidth + 2 * borderPadding, contentWidth + 2 * borderPadding, borderRadius);
+        ctx.fill();
+        ctx.drawImage(qrImage, qrX, qrY, contentWidth, contentWidth);
+
+        // Text
+        const textY = qrY + contentWidth + 50;
+        ctx.fillStyle = version === 'black' ? "#ffffff" : "#000000";
+        ctx.textAlign = "center";
+        ctx.font = "28px Arial";
+        ctx.fillText(storeName, canvas.width / 2, textY);
+        ctx.font = "20px Arial";
+        ctx.fillText("powered by localbartees.com", canvas.width / 2, textY + 35);
+
+        canvas.style.display = "block";
+        
+        // Store download data
+        downloadUrls[version] = canvas.toDataURL("image/png");
+        downloadFilename = `qr_${slug}`;
+        
+        // Show download buttons when both versions are ready
+        if (downloadUrls.black && downloadUrls.white) {
+          document.getElementById("downloadButton").style.display = "block";
+          document.getElementById("downloadButtonWhite").style.display = "block";
+        }
+      };
+      logoImg.src = logoUrl;
+    }
+
+    function downloadImage(version) {
+      if (!downloadUrls[version]) return;
+      
+      const suffix = version === 'black' ? 'b' : 'w';
+      const link = document.createElement('a');
+      link.href = downloadUrls[version];
+      link.download = `${downloadFilename}${suffix}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
 
     function roundRect(ctx, x, y, width, height, radius) {
