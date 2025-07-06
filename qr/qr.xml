@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<qrCodes version="1.0" generator="Local Bar Tees QR Generator" generated="2025-07-06T04:10:40.197Z" count="7">
+<qrCodes version="1.0" generator="Local Bar Tees QR Generator" generated="2025-07-06T06:54:39.574Z" count="8">
   <codes>
     <code uniqueId="nail">
       <name>The Rusty Nail</name>
@@ -56,6 +56,14 @@
       <size>300x300</size>
       <errorCorrection>M</errorCorrection>
       <generated>2025-07-06T04:10:40.197Z</generated>
+    </code>
+    <code uniqueId="Schwegmanns">
+      <name>Schwegmann’s Giant Super Markets</name>
+      <url>https://localbartees.com/Schwegmanns?qr</url>
+      <filename>qr_Schwegmanns.png</filename>
+      <size>300x300</size>
+      <errorCorrection>M</errorCorrection>
+      <generated>2025-07-06T06:54:39.574Z</generated>
     </code>
   </codes>
 </qrCodes>
