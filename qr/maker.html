@@ -287,21 +287,11 @@
   <div class="container">
     <div class="header">
       <h1>Local Bar Tees QR Codes</h1>
-      <p>Local Bar Tees Team Only</p>
-      <p>Make a New QR Code</p>
+      <p>QR Code Maker</p>
     </div>
 
     <div class="home-button-container">
-      <a href="index.html" class="home-button">← Back to Client List</a>
-    </div>
-
-    <div class="button-row">
-      <a href="https://github.com/LocalBarTees/LocalBarTees/actions/workflows/generate-qr.yml" class="header-button" target="_blank">
-        Add a Client to Database
-      </a>
-      <a href="https://admin.shopify.com/store/xj0eqa-yk/collections?selectedView=all" class="header-button" target="_blank" onclick="window.open('https://admin.shopify.com/store/xj0eqa-yk/content/redirects', '_blank')">
-        Add a Client to Shopify
-      </a>
+      <a href="index.html" class="home-button">← Back</a>
     </div>
 
     <div class="form-section">
@@ -438,29 +428,31 @@
         const logoX = (canvas.width - contentWidth) / 2;
         const logoY = 40;
 
-        // Draw logo
+        // Draw logo with better positioning
         ctx.drawImage(logoImg, logoX, logoY, contentWidth, logoHeight);
 
-        // Draw QR with border
+        // Draw QR with cleaner border and positioning
         const qrX = (canvas.width - contentWidth) / 2;
-        const qrY = logoY + logoHeight + 40;
-        const borderPadding = 16;
-        const borderRadius = 20;
+        const qrY = logoY + logoHeight + 50; // Better spacing
+        const borderPadding = 20;
+        const borderRadius = 25;
 
-        // Border color opposite of background
+        // QR border - cleaner and more prominent
         ctx.fillStyle = version === 'black' ? "#ffffff" : "#000000";
         roundRect(ctx, qrX - borderPadding, qrY - borderPadding, contentWidth + 2 * borderPadding, contentWidth + 2 * borderPadding, borderRadius);
         ctx.fill();
         ctx.drawImage(qrImage, qrX, qrY, contentWidth, contentWidth);
 
-        // Text
-        const textY = qrY + contentWidth + 50;
+        // Store name - cleaner typography
+        const textY = qrY + contentWidth + 60; // Less space here
         ctx.fillStyle = version === 'black' ? "#ffffff" : "#000000";
         ctx.textAlign = "center";
-        ctx.font = "36px Arial";
+        ctx.font = "bold 42px Arial"; // Slightly refined size
         ctx.fillText(storeName, canvas.width / 2, textY);
+        
+        // Footer text - refined and positioned higher
         ctx.font = "20px Arial";
-        ctx.fillText("powered by localbartees.com", canvas.width / 2, textY + 35);
+        ctx.fillText("powered by localbartees.com", canvas.width / 2, textY + 40);
 
         canvas.style.display = "block";
         
@@ -478,29 +470,31 @@
       };
 
       logoImg.onerror = function() {
-        // Fallback if logo doesn't load - use text version
+        // Fallback - clean text version
         const contentWidth = 400;
         const qrX = (canvas.width - contentWidth) / 2;
-        const qrY = 80;
+        const qrY = 100; // Clean top positioning
 
-        // Draw QR with border
-        const borderPadding = 16;
-        const borderRadius = 20;
+        // QR with refined border
+        const borderPadding = 20;
+        const borderRadius = 25;
         ctx.fillStyle = version === 'black' ? "#ffffff" : "#000000";
         roundRect(ctx, qrX - borderPadding, qrY - borderPadding, contentWidth + 2 * borderPadding, contentWidth + 2 * borderPadding, borderRadius);
         ctx.fill();
         ctx.drawImage(qrImage, qrX, qrY, contentWidth, contentWidth);
 
-        // Text
-        const textY = qrY + contentWidth + 50;
+        // Brand and store name - refined hierarchy
         ctx.fillStyle = version === 'black' ? "#ffffff" : "#000000";
         ctx.textAlign = "center";
-        ctx.font = "bold 32px Arial";
-        ctx.fillText("LOCAL BAR TEES", canvas.width / 2, qrY - 30);
-        ctx.font = "36px Arial";
-        ctx.fillText(storeName, canvas.width / 2, textY);
+        
+        ctx.font = "bold 28px Arial";
+        ctx.fillText("LOCAL BAR TEES", canvas.width / 2, qrY - 40);
+        
+        ctx.font = "bold 42px Arial";
+        ctx.fillText(storeName, canvas.width / 2, qrY + contentWidth + 60);
+        
         ctx.font = "20px Arial";
-        ctx.fillText("powered by localbartees.com", canvas.width / 2, textY + 35);
+        ctx.fillText("powered by localbartees.com", canvas.width / 2, qrY + contentWidth + 100);
 
         canvas.style.display = "block";
         
@@ -544,20 +538,20 @@
       const logoUrl = isBlack ? "codes/lbt_neon_blk.png" : "codes/lbt_neon_wht.png";
       
       logoImg.onload = function() {
-        // Landscape layout - logo on left, QR in center, text on right
-        const qrSize = 280;
-        const logoWidth = 200;
+        // Sticker design - logo top left, big QR center, store name under QR
+        const qrSize = 320;
+        const logoWidth = 140;
         const logoRatio = logoImg.width / logoImg.height;
         const logoHeight = logoWidth / logoRatio;
         
-        // Logo position (left side)
-        const logoX = 60;
-        const logoY = (canvas.height - logoHeight) / 2;
+        // Logo position (top left)
+        const logoX = 30;
+        const logoY = 20;
         ctx.drawImage(logoImg, logoX, logoY, logoWidth, logoHeight);
         
-        // QR position (absolute center)
+        // QR position (center, higher up)
         const qrX = (canvas.width - qrSize) / 2;
-        const qrY = (canvas.height - qrSize) / 2;
+        const qrY = (canvas.height - qrSize) / 2 - 40;
         const borderPadding = 12;
         const borderRadius = 15;
         
@@ -567,30 +561,21 @@
         ctx.fill();
         ctx.drawImage(qrImage, qrX, qrY, qrSize, qrSize);
         
-        // Text area (right side)
-        const textX = (canvas.width / 2) + (qrSize / 2) + 60;
-        const textCenterY = canvas.height / 2;
-        
+        // Store name centered under QR code - much bigger with space
         ctx.fillStyle = isBlack ? "#ffffff" : "#000000";
-        ctx.textAlign = "left";
-        
-        // Store name (large, centered vertically)
-        ctx.font = "bold 32px Arial";
-        const storeNameLines = wrapText(ctx, storeName, 180);
-        const lineHeight = 40;
-        const totalTextHeight = storeNameLines.length * lineHeight;
-        let currentY = textCenterY - (totalTextHeight / 2) + 20;
+        ctx.textAlign = "center";
+        ctx.font = "bold 48px Arial";
+        const storeNameLines = wrapText(ctx, storeName, canvas.width - 60);
+        let currentY = qrY + qrSize + 70; // Added 20px more space
         
         storeNameLines.forEach(line => {
-          ctx.fillText(line, textX, currentY);
-          currentY += lineHeight;
+          ctx.fillText(line, canvas.width / 2, currentY);
+          currentY += 52;
         });
         
-        // Powered by text (smaller, below store name)
-        ctx.font = "18px Arial";
-        ctx.fillText("powered by", textX, currentY + 30);
-        ctx.font = "bold 20px Arial";
-        ctx.fillText("localbartees.com", textX, currentY + 55);
+        // Powered by text along bottom - bigger
+        ctx.font = "24px Arial";
+        ctx.fillText("powered by localbartees.com", canvas.width / 2, canvas.height - 20);
 
         canvas.style.display = "block";
         
@@ -607,10 +592,10 @@
       };
 
       logoImg.onerror = function() {
-        // Fallback without logo
-        const qrSize = 280;
+        // Fallback without logo - sticker style
+        const qrSize = 320;
         const qrX = (canvas.width - qrSize) / 2;
-        const qrY = (canvas.height - qrSize) / 2;
+        const qrY = (canvas.height - qrSize) / 2 - 40;
         const borderPadding = 12;
         const borderRadius = 15;
         
@@ -620,29 +605,25 @@
         ctx.fill();
         ctx.drawImage(qrImage, qrX, qrY, qrSize, qrSize);
         
-        // Text area
-        const textX = (canvas.width / 2) + (qrSize / 2) + 60;
-        const textCenterY = canvas.height / 2;
-        
         ctx.fillStyle = isBlack ? "#ffffff" : "#000000";
-        ctx.textAlign = "left";
+        ctx.textAlign = "center";
         
-        // Brand name
-        ctx.font = "bold 28px Arial";
-        ctx.fillText("LOCAL BAR TEES", textX, textCenterY - 60);
+        // Brand name at top
+        ctx.font = "bold 24px Arial";
+        ctx.fillText("LOCAL BAR TEES", canvas.width / 2, 40);
         
-        // Store name
-        ctx.font = "bold 32px Arial";
-        const storeNameLines = wrapText(ctx, storeName, 180);
-        let currentY = textCenterY - 20;
+        // Store name centered under QR - much bigger with space
+        ctx.font = "bold 48px Arial";
+        const storeNameLines = wrapText(ctx, storeName, canvas.width - 60);
+        let currentY = qrY + qrSize + 70; // Added space
         storeNameLines.forEach(line => {
-          ctx.fillText(line, textX, currentY);
-          currentY += 40;
+          ctx.fillText(line, canvas.width / 2, currentY);
+          currentY += 52;
         });
         
-        // Powered by text
-        ctx.font = "18px Arial";
-        ctx.fillText("powered by localbartees.com", textX, textCenterY + 80);
+        // Powered by text along bottom - bigger
+        ctx.font = "24px Arial";
+        ctx.fillText("powered by localbartees.com", canvas.width / 2, canvas.height - 20);
 
         canvas.style.display = "block";
         
@@ -687,8 +668,8 @@
       let suffix;
       if (version === 'black') suffix = 'b';
       else if (version === 'white') suffix = 'w';
-      else if (version === 'landscapeBlack') suffix = 'lb';
-      else if (version === 'landscapeWhite') suffix = 'lw';
+      else if (version === 'landscapeBlack') suffix = 'bl';
+      else if (version === 'landscapeWhite') suffix = 'wl';
       
       const link = document.createElement('a');
       link.href = downloadUrls[version];
