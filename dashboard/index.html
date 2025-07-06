@@ -347,11 +347,14 @@
                         <div class="tool-description">Access client setup and intake forms</div>
                     </a>
 
-                    <a href="#" class="tool-card" id="welcomeBtn">
+                    <div class="tool-card" id="welcomeCard">
                         <span class="tool-icon">🎁</span>
                         <div class="tool-title">Welcome Package</div>
                         <div class="tool-description">Send welcome materials to new clients</div>
-                    </a>
+                        <div class="button-container" style="margin-top:16px;">
+                            <a href="https://localbartees.github.io/LocalBarTees/vip/?qr=mayfair" class="dashboard-button" target="_blank">Client Dashboard Sample</a>
+                        </div>
+                    </div>
 
                     <div class="tool-card" id="productCard">
                         <span class="tool-icon">👕</span>
@@ -440,18 +443,12 @@
             profileBtn.textContent = absUrl;
             console.log('Set My Profile href to:', profileBtn.href);
             document.getElementById('onboardingBtn').href = `#onboarding-${memberId}`;
-            document.getElementById('welcomeBtn').href = `#welcome-${memberId}`;
             document.getElementById('memberInfo').style.display = 'block';
         }
 
         document.getElementById('onboardingBtn').addEventListener('click', function(e) {
             e.preventDefault();
             alert('🚀 Coming Soon!\n\nClient Onboarding feature is currently in development.');
-        });
-
-        document.getElementById('welcomeBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('🚀 Coming Soon!\n\nWelcome Package feature is currently in development.');
         });
 
         document.getElementById('printCardBtn').addEventListener('click', function(e) {
