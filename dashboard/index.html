@@ -29,9 +29,10 @@
         }
 
         .top-bar {
-            background: #00d4ff;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
             padding: 32px 0;
             position: relative;
+            box-shadow: 0 4px 20px rgba(30, 58, 138, 0.3);
         }
 
         .top-bar::after {
@@ -51,10 +52,11 @@
         }
 
         .dashboard-title {
-            color: #000;
+            color: #ffffff;
             font-size: 32px;
-            font-weight: 600;
+            font-weight: 700;
             letter-spacing: -0.02em;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .content-area {
@@ -71,32 +73,59 @@
         }
 
         .tool-card {
-            background: #1a1a1a;
+            background: #111111;
             border: 1px solid #2a2a2a;
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 40px 32px;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             cursor: pointer;
             text-decoration: none;
             color: inherit;
             display: block;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .tool-card:hover {
-            background: #1f1f1f;
-            border-color: #3a3a3a;
-            transform: translateY(-2px);
+            background: #161616;
+            border-color: #1e3a8a;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(30, 58, 138, 0.2);
+        }
+
+        .tool-card:hover::before {
+            opacity: 1;
         }
 
         .tool-card.featured {
-            background: #ff6b35;
-            border-color: #ff6b35;
-            color: #000;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            border-color: #1e3a8a;
+            color: #ffffff;
+            box-shadow: 0 8px 24px rgba(30, 58, 138, 0.4);
+        }
+
+        .tool-card.featured::before {
+            display: none;
         }
 
         .tool-card.featured:hover {
-            background: #ff7a47;
-            border-color: #ff7a47;
+            background: linear-gradient(135deg, #1e40af 0%, #4f46e5 100%);
+            border-color: #1e40af;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(30, 58, 138, 0.5);
         }
 
         .tool-icon {
@@ -104,24 +133,30 @@
             margin-bottom: 20px;
             display: block;
             line-height: 1;
+            position: relative;
+            z-index: 1;
         }
 
         .tool-title {
             font-size: 20px;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 12px;
             letter-spacing: -0.01em;
             line-height: 1.3;
+            position: relative;
+            z-index: 1;
         }
 
         .tool-description {
             font-size: 15px;
             opacity: 0.7;
             line-height: 1.5;
+            position: relative;
+            z-index: 1;
         }
 
         .tool-card.featured .tool-description {
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
         .status-message {
@@ -134,7 +169,7 @@
             background: #2a1a1a;
             color: #ff6b6b;
             border: 1px solid #3a2020;
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 24px;
             text-align: center;
         }
@@ -144,33 +179,65 @@
             flex-direction: column;
             gap: 12px;
             margin-top: 16px;
+            position: relative;
+            z-index: 1;
         }
 
         .dashboard-button {
-            background: #000;
+            background: rgba(0, 0, 0, 0.8);
             color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 12px 20px;
             font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             text-decoration: none;
             text-align: center;
             display: flex;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(10px);
         }
 
         .featured .dashboard-button {
-            background: #000;
+            background: rgba(0, 0, 0, 0.9);
             color: #fff;
+            border-color: rgba(255, 255, 255, 0.4);
         }
 
         .dashboard-button:hover {
-            background: #00d4ff;
-            color: #000;
-            border-color: #00d4ff;
+            background: #1e3a8a;
+            color: #fff;
+            border-color: #1e3a8a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+        }
+
+        .all-products-button {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: #ffffff;
+            border: 1px solid #1e3a8a;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 16px;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+        }
+
+        .all-products-button:hover {
+            background: linear-gradient(135deg, #1e40af 0%, #4f46e5 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(30, 58, 138, 0.4);
         }
 
         @media (max-width: 768px) {
@@ -194,7 +261,7 @@
 
             .tool-card {
                 padding: 32px 24px;
-                border-radius: 12px;
+                border-radius: 16px;
             }
 
             .tool-icon {
@@ -236,7 +303,7 @@
 
         .featured-helper-text {
             font-size: 13px;
-            color: #000;
+            color: rgba(255, 255, 255, 0.8);
             margin: 4px 0 8px 0;
             text-align: center;
         }
@@ -286,11 +353,13 @@
                         <div class="tool-description">Send welcome materials to new clients</div>
                     </a>
 
-                    <a href="#" class="tool-card" id="productBtn">
+                    <div class="tool-card" id="productCard">
                         <span class="tool-icon">👕</span>
-                        <div class="tool-title">Add Product</div>
-                        <div class="tool-description">Add products to the website</div>
-                    </a>
+                        <div class="tool-title">Products</div>
+                        <div class="button-container" style="margin-top:16px;">
+                            <a href="https://localbartees.com/all" class="all-products-button">ALL PRODUCTS</a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -372,7 +441,6 @@
             console.log('Set My Profile href to:', profileBtn.href);
             document.getElementById('onboardingBtn').href = `#onboarding-${memberId}`;
             document.getElementById('welcomeBtn').href = `#welcome-${memberId}`;
-            document.getElementById('productBtn').href = `#product-${memberId}`;
             document.getElementById('memberInfo').style.display = 'block';
         }
 
@@ -384,11 +452,6 @@
         document.getElementById('welcomeBtn').addEventListener('click', function(e) {
             e.preventDefault();
             alert('🚀 Coming Soon!\n\nWelcome Package feature is currently in development.');
-        });
-
-        document.getElementById('productBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('🚀 Coming Soon!\n\nAdd Product feature is currently in development.');
         });
 
         document.getElementById('printCardBtn').addEventListener('click', function(e) {
