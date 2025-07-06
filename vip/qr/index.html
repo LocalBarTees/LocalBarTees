@@ -1,1 +1,377 @@
-qr code printer goes Here
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Local Bar Tees QR Codes</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+  <!-- Open Graph & Twitter Card tags -->
+  <meta property="og:title" content="Local Bar Tees QR Codes">
+  <meta property="og:description" content="Your custom QR code package from Local Bar Tees.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://localbartees.github.io/LocalBarTees/vip/qr">
+  <meta property="og:site_name" content="Local Bar Tees">
+  <meta property="og:image" content="https://localbartees.com/cdn/shop/files/lbt_black.png?v=1751584652">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Local Bar Tees QR Codes">
+  <meta name="twitter:description" content="Your custom QR code package from Local Bar Tees.">
+  <meta name="twitter:image" content="https://localbartees.com/cdn/shop/files/lbt_black.png?v=1751584652">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Local Bar Tees QR Codes",
+    "description": "Your custom QR code package from Local Bar Tees.",
+    "url": "https://localbartees.github.io/LocalBarTees/vip/qr",
+    "image": "https://localbartees.com/cdn/shop/files/lbt_black.png?v=1751584652"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      line-height: 1.4;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: white;
+      border: 1px solid #ddd;
+    }
+
+    .header h1 {
+      font-size: 1.8rem;
+      color: #000;
+      font-weight: normal;
+    }
+
+    .header p {
+      font-size: 1rem;
+      color: #666;
+    }
+
+    .store-buttons-container {
+      display: flex;
+      gap: 4%;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .store-link-button,
+    .share-button {
+      display: block;
+      width: 48%;
+      background: white;
+      color: #000;
+      border: 1px solid #ddd;
+      padding: 15px;
+      cursor: pointer;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    .store-link-button:hover,
+    .share-button:hover {
+      background: #f5f5f5;
+    }
+
+    .client-card {
+      background: white;
+      border: 1px solid #ddd;
+      overflow: hidden;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .client-header {
+      background: #000;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .client-name {
+      font-size: 1.2rem;
+      color: white;
+    }
+
+    .client-content {
+      padding: 15px;
+    }
+
+    .qr-image {
+      width: 85%;
+      height: auto;
+      display: block;
+      margin: 0 auto 15px auto;
+      border: 1px solid #ddd;
+    }
+
+    .client-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .action-btn {
+      background: white;
+      color: #000;
+      border: 1px solid #ddd;
+      padding: 12px 15px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      width: 100%;
+    }
+
+    .action-btn:hover {
+      background: #f5f5f5;
+    }
+
+    .loading {
+      text-align: center;
+      color: #666;
+      font-size: 1.2rem;
+      margin: 50px 0;
+      padding: 40px;
+      background: white;
+      border: 1px solid #ddd;
+    }
+
+    .error-message {
+      background: white;
+      color: #000;
+      padding: 20px;
+      margin: 20px 0;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+
+    @media print {
+      * {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+
+      body {
+        background: white !important;
+      }
+
+      .container,
+      .header,
+      .store-buttons-container,
+      .client-content,
+      .client-actions,
+      .error-message,
+      .loading {
+        display: none !important;
+      }
+
+      .client-card {
+        background: white !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        height: 100vh !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        page-break-after: avoid !important;
+      }
+
+      .qr-image {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        margin: 0 auto !important;
+        border: none !important;
+        page-break-inside: avoid !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .store-buttons-container {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .store-link-button,
+      .share-button {
+        width: 100%;
+        font-size: 0.9rem;
+        padding: 12px;
+      }
+
+      .action-btn {
+        padding: 10px 12px;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Local Bar Tees QR Codes</h1>
+      <p>Printer</p>
+    </div>
+
+    <div class="store-buttons-container">
+      <a href="#" class="store-link-button" id="storeLink" target="_blank">
+        Your store can be found at https://localbartees.com/
+      </a>
+      <button class="share-button" id="shareButton" onclick="shareStore()">
+        Share https://localbartees.com/ with others
+      </button>
+    </div>
+
+    <div class="loading" id="loading">Loading your QR code package...</div>
+
+    <div class="client-card" id="clientCard" style="display: none;">
+      <div class="client-header">
+        <div class="client-name" id="clientName">Client Name</div>
+      </div>
+      <div class="client-content">
+        <img id="qrImage" class="qr-image" src="" alt="QR Code" style="display: none;" />
+        <div class="client-actions">
+          <button class="action-btn" id="actionButton">QR CODE ACTION</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="error-message" id="errorMessage" style="display: none;">
+      QR code not found. Please check your link and try again.
+    </div>
+  </div>
+
+  <script>
+    let currentStoreUrl = '';
+
+    function getUrlParameter(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    function shareStore() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Check out this Local Bar Tees store!',
+          text: 'Check out this Local Bar Tees store:',
+          url: currentStoreUrl
+        }).catch(fallbackShare);
+      } else {
+        fallbackShare();
+      }
+    }
+
+    function fallbackShare() {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(currentStoreUrl).then(() => {
+          alert('Store link copied to clipboard!');
+        }).catch(manualCopy);
+      } else {
+        manualCopy();
+      }
+    }
+
+    function manualCopy() {
+      const textArea = document.createElement('textarea');
+      textArea.value = currentStoreUrl;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert('Store link copied to clipboard!');
+    }
+
+    function printQRCode() {
+      const qrImage = document.getElementById('qrImage');
+      if (qrImage.src && qrImage.complete && qrImage.naturalWidth > 0) {
+        window.print();
+      } else {
+        alert('Please wait for the QR code to load before printing.');
+      }
+    }
+
+    function loadQRImage(uniqueId) {
+      const qrImageUrl = `https://localbartees.github.io/LocalBarTees/qr/qr_${uniqueId}.png`;
+      const qrImage = document.getElementById('qrImage');
+      qrImage.onload = () => {
+        qrImage.style.display = 'block';
+      };
+      qrImage.onerror = () => {
+        qrImage.style.display = 'none';
+        console.error('Failed to load QR image:', qrImageUrl);
+      };
+      qrImage.src = qrImageUrl;
+      qrImage.alt = `QR Code for ${uniqueId}`;
+    }
+
+    async function loadClientData() {
+      try {
+        const qrId = getUrlParameter('qr');
+        if (!qrId) throw new Error('No QR code ID provided');
+
+        const response = await fetch('../../qr/qr.xml');
+        const xmlText = await response.text();
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+
+        const clientData = Array.from(xmlDoc.querySelectorAll('code')).find(code =>
+          code.getAttribute('uniqueId') === qrId
+        );
+
+        if (!clientData) throw new Error('Client not found');
+
+        const clientInfo = {
+          uniqueId: clientData.getAttribute('uniqueId'),
+          name: clientData.querySelector('name')?.textContent || 'Unknown Client'
+        };
+
+        document.getElementById('loading').style.display = 'none';
+        displayClientData(clientInfo);
+      } catch (err) {
+        console.error(err);
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'block';
+      }
+    }
+
+    function displayClientData({ uniqueId, name }) {
+      const storeUrl = `https://localbartees.com/${uniqueId}`;
+      currentStoreUrl = storeUrl;
+
+      document.getElementById('storeLink').href = storeUrl;
+      document.getElementById('storeLink').textContent = `Your store can be found at ${storeUrl}`;
+      document.getElementById('shareButton').textContent = `Share ${storeUrl} with others`;
+
+      loadQRImage(uniqueId);
+
+      document.getElementById('clientName').textContent = name;
+      document.getElementById('clientCard').style.display = 'block';
+
+      const actionButton = document.getElementById('actionButton');
+      actionButton.textContent = 'PRINT LARGE QR CODE';
+      actionButton.onclick = printQRCode;
+    }
+
+    document.addEventListener('DOMContentLoaded', loadClientData);
+  </script>
+</body>
+</html>
