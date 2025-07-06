@@ -1,4 +1,316 @@
-vip dashboard
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Bar Tees Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-print qr codes
-view site_nameshare site
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .dashboard {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .establishment-name {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-title {
+            font-size: 1.3em;
+            color: #666;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .dashboard-content {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-card:nth-child(2) {
+            background: linear-gradient(135deg, #4834d4, #686de0);
+        }
+
+        .stat-card:nth-child(3) {
+            background: linear-gradient(135deg, #00d2d3, #54a0ff);
+        }
+
+        .stat-card:nth-child(4) {
+            background: linear-gradient(135deg, #ff9ff3, #f368e0);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+
+        .qr-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .establishment-name {
+                font-size: 2em;
+            }
+            
+            .dashboard {
+                padding: 20px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div id="dashboard-content">
+            <div class="establishment-name" id="establishment-name">Loading...</div>
+            <div class="dashboard-title">Your Local Bar Tees Dashboard</div>
+            
+            <div class="dashboard-content">
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="viewStore()">View Your Store</button>
+                    <button class="action-btn" onclick="qrCodePrint()">QR Code Print</button>
+                    <button class="action-btn" onclick="privateCollection()">Private Collection</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // QR XML data embedded in the script
+        const qrData = {
+            "nail": {
+                "name": "The Rusty Nail",
+                "url": "https://localbartees.com/nail?qr",
+                "filename": "qr_nail.png",
+                "generated": "2025-07-03T18:42:30.058Z"
+            },
+            "sidecar": {
+                "name": "Sidecar Patio & Oyster Bar",
+                "url": "https://localbartees.com/sidecar?qr",
+                "filename": "qr_sidecar.png",
+                "generated": "2025-07-03T18:45:49.647Z"
+            },
+            "mayfair": {
+                "name": "Mayfair Lounge",
+                "url": "https://localbartees.com/mayfair?qr",
+                "filename": "qr_mayfair.png",
+                "generated": "2025-07-03T20:01:21.607Z"
+            },
+            "jenn": {
+                "name": "Jenn Howard",
+                "url": "https://localbartees.com/jenn?qr",
+                "filename": "qr_jenn.png",
+                "generated": "2025-07-03T21:59:31.414Z"
+            },
+            "roundin": {
+                "name": "Roundin' 3rd",
+                "url": "https://localbartees.com/roundin?qr",
+                "filename": "qr_roundin.png",
+                "generated": "2025-07-03T22:12:14.565Z"
+            },
+            "kolb": {
+                "name": "Kolb's Restaurant",
+                "url": "https://localbartees.com/kolb?qr",
+                "filename": "qr_kolb.png",
+                "generated": "2025-07-06T03:56:15.287Z"
+            },
+            "nicks": {
+                "name": "Nick's Old Train Bar",
+                "url": "https://localbartees.com/nicks?qr",
+                "filename": "qr_nicks.png",
+                "generated": "2025-07-06T04:10:40.197Z"
+            },
+            "Schwegmanns": {
+                "name": "Schwegmann's Giant Super Markets",
+                "url": "https://localbartees.com/Schwegmanns?qr",
+                "filename": "qr_Schwegmanns.png",
+                "generated": "2025-07-06T06:54:39.574Z"
+            }
+        };
+
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function initializeDashboard() {
+            const qrParam = getUrlParameter('qr');
+            const establishmentNameElement = document.getElementById('establishment-name');
+            const qrInfoElement = document.getElementById('qr-info');
+            
+            if (!qrParam) {
+                establishmentNameElement.innerHTML = `
+                    <div class="error-message">
+                        No QR parameter found in URL. Please access this dashboard through a QR code.
+                    </div>
+                `;
+                qrInfoElement.innerHTML = '';
+                return;
+            }
+
+            const establishment = qrData[qrParam];
+            
+            if (!establishment) {
+                establishmentNameElement.innerHTML = `
+                    <div class="error-message">
+                        QR code "${qrParam}" not found in database.
+                    </div>
+                `;
+                qrInfoElement.innerHTML = '';
+                return;
+            }
+
+            // Set establishment name
+            establishmentNameElement.textContent = establishment.name;
+            
+            // Clear QR info since we removed that section
+            qrInfoElement.innerHTML = '';
+        }
+
+        function viewStore() {
+            const qrParam = getUrlParameter('qr');
+            if (qrParam) {
+                window.open(`https://localbartees.com/${qrParam}`, '_blank');
+            } else {
+                alert('No QR parameter found');
+            }
+        }
+
+        function qrCodePrint() {
+            const qrParam = getUrlParameter('qr');
+            if (qrParam) {
+                window.open(`https://localbartees.github.io/LocalBarTees/vip/qr/?qr=${qrParam}`, '_blank');
+            } else {
+                alert('No QR parameter found');
+            }
+        }
+
+        function privateCollection() {
+            const qrParam = getUrlParameter('qr');
+            if (qrParam) {
+                window.open(`https://localbartees.com/collections/${qrParam}staff`, '_blank');
+            } else {
+                alert('No QR parameter found');
+            }
+        }
+
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', initializeDashboard);
+    </script>
+</body>
+</html>
