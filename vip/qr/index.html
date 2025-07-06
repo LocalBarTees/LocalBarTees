@@ -193,8 +193,21 @@
             margin-top: 5px;
         }
 
-        .print-btn:hover {
-            background: #333;
+        .download-btn {
+            background: white;
+            color: #000;
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: normal;
+            text-transform: uppercase;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .download-btn:hover {
+            background: #f5f5f5;
         }
 
         .qr-thumbnail-error {
@@ -625,7 +638,7 @@
 
             variants.forEach((variant, index) => {
                 const imageContainer = document.createElement('div');
-                imageContainer.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:10px;';
+                imageContainer.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:5px;';
                 
                 const img = document.createElement('img');
                 img.className = 'qr-thumbnail';
@@ -637,10 +650,20 @@
                 printBtn.textContent = 'PRINT FULL PAGE';
                 printBtn.onclick = () => printImage(img.src, variant.alt);
                 
+                const downloadBtn = document.createElement('a');
+                downloadBtn.className = 'download-btn';
+                downloadBtn.textContent = 'DOWNLOAD';
+                downloadBtn.href = img.src;
+                downloadBtn.download = `qr_${uniqueId}${variant.suffix}.png`;
+                downloadBtn.target = '_blank';
+                downloadBtn.style.textDecoration = 'none';
+                downloadBtn.style.display = 'inline-block';
+                
                 img.onload = function() {
                     loadedImages++;
                     imageContainer.appendChild(img);
                     imageContainer.appendChild(printBtn);
+                    imageContainer.appendChild(downloadBtn);
                 };
                 
                 img.onerror = function() {
