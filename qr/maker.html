@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Make a QR Code – Local Bar Tees</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      line-height: 1.4;
+    }
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: white;
+      border: 1px solid #ddd;
+    }
+    .header h1 {
+      font-size: 1.8rem;
+      color: #000;
+      margin-bottom: 5px;
+      font-weight: normal;
+    }
+    .header p {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 5px;
+    }
+    .button-row {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .header-button {
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 12px 16px;
+      font-size: 0.95rem;
+      text-align: center;
+      text-decoration: none;
+      color: #000;
+      font-weight: bold;
+      border-radius: 4px;
+      flex: 1;
+      min-width: 220px;
+    }
+    .header-button:hover {
+      background: #eee;
+    }
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-top: 5px;
+    }
+    button.generate {
+      margin-top: 30px;
+      padding: 15px 20px;
+      font-size: 1rem;
+      background: #000;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      text-transform: uppercase;
+    }
+    button.generate:hover {
+      background: #222;
+    }
+    .output-wrapper {
+      margin-top: 40px;
+      text-align: center;
+    }
+    canvas {
+      margin: 0 auto;
+      background: #000;
+      border: 1px solid #ccc;
+      display: none;
+    }
+    a.download-link {
+      display: none;
+      margin-top: 20px;
+      color: #0070f3;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Local Bar Tees QR Codes</h1>
+      <p>Local Bar Tees Team Only</p>
+      <p>Make a New QR Code</p>
+    </div>
+
+    <div class="button-row">
+      <a href="https://github.com/LocalBarTees/LocalBarTees/actions/workflows/generate-qr.yml" class="header-button" target="_blank">
+        Add a Client to Database
+      </a>
+      <a href="https://admin.shopify.com/store/xj0eqa-yk/collections?selectedView=all" class="header-button" target="_blank" onclick="window.open('https://admin.shopify.com/store/xj0eqa-yk/content/redirects', '_blank')">
+        Add a Client to Shopify
+      </a>
+    </div>
+
+    <label for="url">What page do you want the QR code to go to?<br><small>(find on localbartees.com then cut and paste here)</small></label>
+    <input id="url" type="text" placeholder="https://localbartees.com/snoopy" />
+
+    <label for="store">What do you call this shop?<br><small>e.g. The Snoopy Shop</small></label>
+    <input id="store" type="text" placeholder="The Snoopy Shop" />
+
+    <button class="generate" onclick="generateImage()">Generate this QR Code</button>
+
+    <div class="output-wrapper">
+      <canvas id="finalCanvas" width="600" height="1000"></canvas>
+      <a id="downloadLink" class="download-link" href="#" download="qr_final.png">Download Final Image</a>
+    </div>
+  </div>
+
+  <script>
+    function generateImage() {
+      const urlInput = document.getElementById("url").value.trim();
+      const storeInput = document.getElementById("store").value.trim();
+      if (!urlInput || !storeInput) {
+        alert("Please fill in both fields.");
+        return;
+      }
+
+      const slug = urlInput.split('/').filter(Boolean).pop();
+      const finalUrl = `https://localbartees.com/${slug}`;
+      const storeName = storeInput;
+      const logoUrl = "https://localbartees.github.io/LocalBarTees/qr/lbt_neon_blk.png";
+
+      // Generate QR to canvas in memory
+      const qrCanvas = document.createElement("canvas");
+      qrCanvas.width = 400;
+      qrCanvas.height = 400;
+      const qrCtx = qrCanvas.getContext("2d");
+      const tempDiv = document.createElement("div");
+      tempDiv.style.display = "none";
+      document.body.appendChild(tempDiv);
+
+      const qr = new QRCode(tempDiv, {
+        text: finalUrl,
+        width: 400,
+        height: 400,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+
+      setTimeout(() => {
+        const qrImg = tempDiv.querySelector("img");
+        if (!qrImg || !qrImg.src) {
+          alert("QR generation failed.");
+          return;
+        }
+
+        const qrImage = new Image();
+        qrImage.onload = () => {
+          const canvas = document.getElementById("finalCanvas");
+          const ctx = canvas.getContext("2d");
+          ctx.fillStyle = "#000";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          const logoImg = new Image();
+          logoImg.crossOrigin = "anonymous";
+          logoImg.onload = () => {
+            const contentWidth = 400;
+            const logoRatio = logoImg.width / logoImg.height;
+            const logoHeight = contentWidth / logoRatio;
+            const logoX = (canvas.width - contentWidth) / 2;
+            const logoY = 40;
+
+            // Draw logo
+            ctx.drawImage(logoImg, logoX, logoY, contentWidth, logoHeight);
+
+            // Draw QR with white border
+            const qrX = (canvas.width - contentWidth) / 2;
+            const qrY = logoY + logoHeight + 40;
+            const borderPadding = 16;
+            const borderRadius = 20;
+
+            ctx.fillStyle = "#ffffff";
+            roundRect(ctx, qrX - borderPadding, qrY - borderPadding, contentWidth + 2 * borderPadding, contentWidth + 2 * borderPadding, borderRadius);
+            ctx.fill();
+            ctx.drawImage(qrImage, qrX, qrY, contentWidth, contentWidth);
+
+            // Text
+            const textY = qrY + contentWidth + 50;
+            ctx.fillStyle = "#ffffff";
+            ctx.textAlign = "center";
+            ctx.font = "28px Arial";
+            ctx.fillText(storeName, canvas.width / 2, textY);
+            ctx.font = "20px Arial";
+            ctx.fillText("powered by localbartees.com", canvas.width / 2, textY + 35);
+
+            canvas.style.display = "block";
+            const link = document.getElementById("downloadLink");
+            link.href = canvas.toDataURL("image/png");
+            link.download = `qr_${slug}.png`;
+            link.style.display = "block";
+
+            document.body.removeChild(tempDiv);
+          };
+          logoImg.src = logoUrl;
+        };
+        qrImage.crossOrigin = "anonymous";
+        qrImage.src = qrImg.src;
+      }, 200);
+    }
+
+    function roundRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+  </script>
+</body>
+</html>

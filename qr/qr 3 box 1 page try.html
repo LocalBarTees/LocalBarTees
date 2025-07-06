@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Bar Tees QR Codes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border: 1px solid #ddd;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            color: #000;
+            margin: 0;
+            font-weight: normal;
+        }
+
+        .page-content {
+            width: 100%;
+        }
+
+        .section {
+            background: white;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .section-header {
+            color: white;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            font-weight: normal;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .distributor-header {
+            background: #3498db;
+        }
+
+        .generator-header {
+            background: #e74c3c;
+        }
+
+        .printer-header {
+            background: #27ae60;
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+        }
+
+        .section-content {
+            padding: 20px;
+        }
+
+        .section-description {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .form-select {
+            width: auto;
+            min-width: 200px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            background: white;
+            color: #000;
+            font-size: 1rem;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="%23666" d="M6 8L2 4h8z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #000;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            background: white;
+            color: #000;
+            border: 1px solid #ddd;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: normal;
+            text-transform: uppercase;
+            flex: 1;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            background: #f5f5f5;
+            transform: translateY(-1px);
+        }
+
+        .action-btn:disabled {
+            background: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .client-info {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .client-info h3 {
+            margin-bottom: 10px;
+            color: #000;
+            font-size: 1.1rem;
+        }
+
+        .client-info p {
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .placeholder-content {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .hide {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .form-and-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .button-group {
+                flex-direction: column;
+                margin-top: 10px;
+            }
+
+            .action-btn {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Local Bar Tees QR Codes</h1>
+        </div>
+
+        <div class="page-content">
+            <!-- Distributor Section -->
+            <div class="section" id="distributorSection">
+                <div class="section-header distributor-header">
+                    <span>QR Code Distributor</span>
+                    <span class="section-icon">📲</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-description">
+                        Distribute QR code packages to Local Bar Tees clients. Select a client below to send or print their QR code package.
+                    </div>
+                    
+                    <div class="form-and-buttons">
+                        <div class="form-group">
+                            <select class="form-select" id="clientSelect">
+                                <option value="">Loading clients...</option>
+                            </select>
+                        </div>
+
+                        <div class="button-group">
+                            <button class="action-btn" id="newQRBtn">
+                                ⚙️ I Don't See the Client I Want, Make a New QR Code From Scratch
+                            </button>
+                            <button class="action-btn" id="shareBtn" disabled>
+                                📲 Share QR Code Package with Client
+                            </button>
+                            <button class="action-btn" id="printBtn" disabled>
+                                🖨️ Print QR Code Package for Client
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generator Section -->
+            <div class="section hide" id="generatorSection">
+                <div class="section-header generator-header">
+                    <span>QR Code Generator</span>
+                    <span class="section-icon">⚙️</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-description">
+                        Create and manage QR codes for Local Bar Tees clients. This section allows you to generate new QR codes and manage existing ones.
+                    </div>
+                    <div class="placeholder-content">
+                        <h3>Generator Interface</h3>
+                        <p>Generator functionality will be implemented here</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Printer Section -->
+            <div class="section hide" id="printerSection">
+                <div class="section-header printer-header">
+                    <span>QR Code Printer</span>
+                    <span class="section-icon">📄</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-description">
+                        Print QR codes and instructions for your Local Bar Tees implementation. This section provides print-ready materials.
+                    </div>
+                    <div class="client-info" id="printerClientInfo">
+                        <h3 id="printerClientName">No client selected</h3>
+                        <p><strong>QR Code ID:</strong> <span id="printerClientId">-</span></p>
+                        <p><strong>URL:</strong> <span id="printerClientUrl">-</span></p>
+                        <p><strong>Generated:</strong> <span id="printerClientGenerated">-</span></p>
+                        <p><strong>Size:</strong> <span id="printerClientSize">-</span></p>
+                        <p><strong>Error Correction:</strong> <span id="printerClientErrorCorrection">-</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let clientData = {};
+        let clientsList = [];
+
+        async function loadClientData() {
+            try {
+                const response = await fetch('./qr.xml');
+                const xmlText = await response.text();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+                
+                if (xmlDoc.querySelector('parsererror')) {
+                    throw new Error('Failed to parse XML');
+                }
+
+                const codes = xmlDoc.querySelectorAll('code');
+                clientsList = Array.from(codes).map(code => ({
+                    uniqueId: code.getAttribute('uniqueId'),
+                    name: code.querySelector('name')?.textContent || 'Unknown',
+                    url: code.querySelector('url')?.textContent || '',
+                    filename: code.querySelector('filename')?.textContent || '',
+                    size: code.querySelector('size')?.textContent || '300x300',
+                    errorCorrection: code.querySelector('errorCorrection')?.textContent || 'M',
+                    generated: code.querySelector('generated')?.textContent || ''
+                }));
+
+                clientsList.sort((a, b) => {
+                    const nameA = a.name.toLowerCase().startsWith('the ') ? a.name.substring(4) : a.name;
+                    const nameB = b.name.toLowerCase().startsWith('the ') ? b.name.substring(4) : b.name;
+                    return nameA.toLowerCase().localeCompare(nameB.toLowerCase());
+                });
+
+                clientData = {};
+                clientsList.forEach(client => {
+                    clientData[client.uniqueId] = client;
+                });
+
+                populateClientSelect();
+            } catch (error) {
+                console.error('Error loading client data:', error);
+                const clientSelect = document.getElementById('clientSelect');
+                clientSelect.innerHTML = '<option value="">Error loading clients</option>';
+            }
+        }
+
+        function populateClientSelect() {
+            const clientSelect = document.getElementById('clientSelect');
+            clientSelect.innerHTML = '<option value="">Choose a client...</option>';
+            
+            clientsList.forEach(client => {
+                const option = document.createElement('option');
+                option.value = client.uniqueId;
+                option.textContent = client.name;
+                clientSelect.appendChild(option);
+            });
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'Unknown';
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString();
+            } catch (error) {
+                return dateString;
+            }
+        }
+
+        function shareQRPackage() {
+            const clientSelect = document.getElementById('clientSelect');
+            const selectedId = clientSelect.value;
+            
+            if (selectedId && clientData[selectedId]) {
+                const client = clientData[selectedId];
+                const clientLink = `https://localbartees.github.io/LocalBarTees/qr?qr=${client.uniqueId}`;
+                const shareText = `Here are your Local Bar Tees QR codes and instructions:\n\n${clientLink}`;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: `QR Code Package for ${client.name}`,
+                        text: shareText
+                    }).catch(err => {
+                        fallbackShare(shareText);
+                    });
+                } else {
+                    fallbackShare(shareText);
+                }
+            }
+        }
+
+        function printQRPackage() {
+            const clientSelect = document.getElementById('clientSelect');
+            const selectedId = clientSelect.value;
+            
+            if (selectedId && clientData[selectedId]) {
+                const client = clientData[selectedId];
+                
+                // Hide all sections
+                document.getElementById('distributorSection').classList.add('hide');
+                document.getElementById('generatorSection').classList.add('hide');
+                
+                // Populate and show printer section
+                document.getElementById('printerClientName').textContent = client.name;
+                document.getElementById('printerClientId').textContent = client.uniqueId;
+                document.getElementById('printerClientUrl').textContent = client.url;
+                document.getElementById('printerClientGenerated').textContent = formatDate(client.generated);
+                document.getElementById('printerClientSize').textContent = client.size;
+                document.getElementById('printerClientErrorCorrection').textContent = client.errorCorrection;
+                
+                document.getElementById('printerSection').classList.remove('hide');
+            }
+        }
+
+        function showGenerator() {
+            // Hide all sections
+            document.getElementById('distributorSection').classList.add('hide');
+            document.getElementById('printerSection').classList.add('hide');
+            
+            // Show generator section
+            document.getElementById('generatorSection').classList.remove('hide');
+        }
+
+        function fallbackShare(shareText) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert('Message and link copied to clipboard!');
+                }).catch(() => {
+                    prompt('Copy this message:', shareText);
+                });
+            } else {
+                prompt('Copy this message:', shareText);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadClientData().then(() => {
+                const clientSelect = document.getElementById('clientSelect');
+                const shareBtn = document.getElementById('shareBtn');
+                const printBtn = document.getElementById('printBtn');
+                const newQRBtn = document.getElementById('newQRBtn');
+                
+                // Set up click handlers
+                shareBtn.onclick = shareQRPackage;
+                printBtn.onclick = printQRPackage;
+                newQRBtn.onclick = showGenerator;
+                
+                // Set up client selection
+                clientSelect.addEventListener('change', function() {
+                    const selectedId = this.value;
+                    
+                    if (selectedId && clientData[selectedId]) {
+                        const client = clientData[selectedId];
+                        
+                        shareBtn.disabled = false;
+                        printBtn.disabled = false;
+                        
+                        shareBtn.textContent = `📲 Share ${client.name.toUpperCase()} QR Code Package with Client`;
+                        printBtn.textContent = `🖨️ Print ${client.name.toUpperCase()} QR Code Package for Client`;
+                    } else {
+                        shareBtn.disabled = true;
+                        printBtn.disabled = true;
+                        shareBtn.textContent = '📲 Share QR Code Package with Client';
+                        printBtn.textContent = '🖨️ Print QR Code Package for Client';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
