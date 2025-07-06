@@ -1,12 +1,12 @@
 # Local Bar Tees QR Codes
 
-Generated: 2025-07-06T04:10:40.197Z
+Generated: 2025-07-06T06:54:39.574Z
 Total QR Codes: 1
 
 ## Files Generated
 
 ### PNG Files
-- qr_nicks.png → https://localbartees.com/nicks?qr
+- qr_Schwegmanns.png → https://localbartees.com/Schwegmanns?qr
 
 ### XML Data
 - qr.xml (contains all QR codes metadata)
