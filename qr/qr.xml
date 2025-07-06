@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<qrCodes version="1.0" generator="Local Bar Tees QR Generator" generated="2025-07-06T03:56:15.287Z" count="6">
+<qrCodes version="1.0" generator="Local Bar Tees QR Generator" generated="2025-07-06T04:10:40.197Z" count="7">
   <codes>
     <code uniqueId="nail">
       <name>The Rusty Nail</name>
@@ -48,6 +48,14 @@
       <size>300x300</size>
       <errorCorrection>M</errorCorrection>
       <generated>2025-07-06T03:56:15.287Z</generated>
+    </code>
+    <code uniqueId="nicks">
+      <name>Nick's Old Train Bar</name>
+      <url>https://localbartees.com/nicks?qr</url>
+      <filename>qr_nicks.png</filename>
+      <size>300x300</size>
+      <errorCorrection>M</errorCorrection>
+      <generated>2025-07-06T04:10:40.197Z</generated>
     </code>
   </codes>
 </qrCodes>
