@@ -6,17 +6,25 @@
   <title>Make a QR Code – Local Bar Tees</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: Arial, sans-serif;
       background: #f5f5f5;
       color: #333;
       line-height: 1.4;
     }
+
     .container {
-      max-width: 700px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
     }
+
     .header {
       text-align: center;
       margin-bottom: 30px;
@@ -24,17 +32,58 @@
       background: white;
       border: 1px solid #ddd;
     }
+
     .header h1 {
       font-size: 1.8rem;
       color: #000;
       margin-bottom: 5px;
       font-weight: normal;
     }
+
     .header p {
       font-size: 1rem;
       color: #666;
       margin-bottom: 5px;
     }
+
+    .back-button {
+      display: inline-block;
+      background: white;
+      color: #000;
+      border: 1px solid #ddd;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 1rem;
+      text-decoration: none;
+      margin-bottom: 20px;
+    }
+
+    .back-button:hover {
+      background: #f5f5f5;
+    }
+
+    .home-button-container {
+      margin: 0 auto 20px auto;
+      max-width: 100%;
+    }
+
+    .home-button {
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: normal;
+      padding: 15px;
+      background: white;
+      color: #000;
+      border: 1px solid #ddd;
+      text-decoration: none;
+    }
+
+    .home-button:hover {
+      background: #f5f5f5;
+    }
+
     .button-row {
       display: flex;
       gap: 10px;
@@ -42,35 +91,63 @@
       justify-content: center;
       flex-wrap: wrap;
     }
+
     .header-button {
       background: #fff;
-      border: 1px solid #ccc;
+      border: 1px solid #ddd;
       padding: 12px 16px;
       font-size: 0.95rem;
       text-align: center;
       text-decoration: none;
       color: #000;
-      font-weight: bold;
-      border-radius: 4px;
+      font-weight: normal;
+      border-radius: 0;
       flex: 1;
       min-width: 220px;
     }
+
     .header-button:hover {
-      background: #eee;
+      background: #f5f5f5;
     }
+
+    .form-section {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
     label {
       display: block;
       margin-top: 20px;
-      font-weight: bold;
+      font-weight: normal;
+      color: #000;
     }
+
+    label:first-child {
+      margin-top: 0;
+    }
+
+    label small {
+      color: #666;
+      font-weight: normal;
+    }
+
     input {
       width: 100%;
       padding: 10px;
       font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      border: 1px solid #ddd;
+      border-radius: 0;
       margin-top: 5px;
+      font-family: Arial, sans-serif;
     }
+
+    input:focus {
+      outline: none;
+      border-color: #000;
+    }
+
     button.generate {
       margin-top: 30px;
       padding: 15px 20px;
@@ -81,10 +158,13 @@
       cursor: pointer;
       width: 100%;
       text-transform: uppercase;
+      font-weight: normal;
     }
+
     button.generate:hover {
       background: #222;
     }
+
     button.download {
       display: none;
       margin: 10px auto 0 auto;
@@ -96,40 +176,96 @@
       cursor: pointer;
       width: 280px;
       text-transform: uppercase;
-      border-radius: 4px;
+      border-radius: 0;
+      font-weight: normal;
     }
+
     button.download:hover {
       background: #0056b3;
     }
+
     button.download.black {
       background: #000;
       color: #fff;
     }
+
     button.download.black:hover {
       background: #333;
     }
+
     button.download.white {
       background: #fff;
       color: #000;
-      border: 1px solid #ccc;
+      border: 1px solid #ddd;
     }
+
     button.download.white:hover {
       background: #f5f5f5;
     }
+
     .output-wrapper {
       margin-top: 40px;
       text-align: center;
+      background: white;
+      border: 1px solid #ddd;
+      padding: 20px;
     }
+
+    .canvas-container {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .canvas-section {
+      text-align: center;
+    }
+
     canvas {
       margin: 0 auto 20px auto;
       background: #000;
-      border: 1px solid #ccc;
+      border: 1px solid #ddd;
       display: none;
       width: 300px;
       height: 500px;
     }
+
     canvas#finalCanvasWhite {
       background: #fff;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+
+      .header h1 {
+        font-size: 1.5rem;
+      }
+
+      .button-row {
+        flex-direction: column;
+      }
+
+      .header-button {
+        min-width: auto;
+      }
+
+      .canvas-container {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      canvas {
+        width: 250px;
+        height: 416px;
+      }
+
+      button.download {
+        width: 100%;
+        max-width: 280px;
+      }
     }
   </style>
 </head>
@@ -141,6 +277,10 @@
       <p>Make a New QR Code</p>
     </div>
 
+    <div class="home-button-container">
+      <a href="index.html" class="home-button">← Back to Client List</a>
+    </div>
+
     <div class="button-row">
       <a href="https://github.com/LocalBarTees/LocalBarTees/actions/workflows/generate-qr.yml" class="header-button" target="_blank">
         Add a Client to Database
@@ -150,21 +290,23 @@
       </a>
     </div>
 
-    <label for="url">What page do you want the QR code to go to?<br><small>(find on localbartees.com then cut and paste here)</small></label>
-    <input id="url" type="text" placeholder="https://localbartees.com/nail" value="https://localbartees.com/nail" />
+    <div class="form-section">
+      <label for="url">What page do you want the QR code to go to?<br><small>(find on localbartees.com then cut and paste here)</small></label>
+      <input id="url" type="text" placeholder="https://localbartees.com/nail" value="https://localbartees.com/nail" />
 
-    <label for="store">What do you call this shop?<br><small>e.g. The Rusty Nail Store or The Rusty Nail Shop or Rusty Nail Merch</small></label>
-    <input id="store" type="text" placeholder="The Rusty Nail Store" value="The Rusty Nail Store" />
+      <label for="store">What do you call this shop?<br><small>e.g. The Rusty Nail Store or The Rusty Nail Shop or Rusty Nail Merch</small></label>
+      <input id="store" type="text" placeholder="The Rusty Nail Store" value="The Rusty Nail Store" />
 
-    <button class="generate" onclick="generateImage()">Generate this QR Code</button>
+      <button class="generate" onclick="generateImage()">Generate this QR Code</button>
+    </div>
 
-    <div class="output-wrapper">
-      <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
-        <div style="text-align: center;">
+    <div class="output-wrapper" style="display: none;" id="outputWrapper">
+      <div class="canvas-container">
+        <div class="canvas-section">
           <canvas id="finalCanvas" width="600" height="1000"></canvas>
           <button id="downloadButton" class="download black" onclick="downloadImage('black')" style="display: none;">Download Black Version</button>
         </div>
-        <div style="text-align: center;">
+        <div class="canvas-section">
           <canvas id="finalCanvasWhite" width="600" height="1000"></canvas>
           <button id="downloadButtonWhite" class="download white" onclick="downloadImage('white')" style="display: none;">Download White Version</button>
         </div>
@@ -184,11 +326,17 @@
         return;
       }
 
+      // Show output wrapper
+      document.getElementById("outputWrapper").style.display = "block";
+
       const slug = urlInput.split('/').filter(Boolean).pop();
       const finalUrl = `https://localbartees.com/${slug}`;
       const storeName = storeInput;
       const logoBlackUrl = "https://localbartees.github.io/LocalBarTees/qr/lbt_neon_blk.png";
       const logoWhiteUrl = "https://localbartees.github.io/LocalBarTees/qr/lbt_neon_wht.png";
+
+      // Reset download URLs
+      downloadUrls = {};
 
       // Generate QR to canvas in memory
       const qrCanvas = document.createElement("canvas");

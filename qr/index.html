@@ -158,6 +158,34 @@
             gap: 10px;
         }
 
+        .qr-thumbnail {
+            width: 100px;
+            max-height: 180px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 0 auto 15px auto;
+            display: block;
+            background: white;
+        }
+
+        .qr-thumbnail-error {
+            width: 100px;
+            height: 80px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 0 auto 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            color: #666;
+            font-size: 0.7rem;
+            text-align: center;
+            line-height: 1.2;
+            padding: 5px;
+        }
+
         .action-btn {
             background: white;
             color: #000;
@@ -305,6 +333,16 @@
                 padding: 10px 12px;
                 font-size: 0.8rem;
             }
+
+            .qr-thumbnail {
+                width: 80px;
+                max-height: 144px;
+            }
+
+            .qr-thumbnail-error {
+                width: 80px;
+                height: 64px;
+            }
         }
     </style>
 </head>
@@ -317,19 +355,18 @@
             <div class="business-count" id="businessCount">0 Clients</div>
         </div>
 
-<div style="margin: 0 auto 20px auto; max-width: 100%;">
-    <a href="maker.html" 
-       class="back-button" 
-       style="display: block; width: 100%; text-align: center; font-size: 1rem; font-weight: normal; padding: 15px;">
-        ⚙️ I Don't See the Client I Want, Make a New QR Code From Scratch
-    </a>
-</div>
-
-
         <div class="loading" id="loading">Loading clients...</div>
 
         <div class="business-grid" id="businessGrid">
             <!-- Business cards will be populated here -->
+        </div>
+
+        <div style="margin: 20px auto 0 auto; max-width: 100%;">
+            <a href="https://github.com/LocalBarTees/LocalBarTees/actions/workflows/generate-qr.yml" 
+               class="back-button" 
+               style="display: block; width: 100%; text-align: center; font-size: 1rem; font-weight: normal; padding: 15px;">
+                ADD A CLIENT
+            </a>
         </div>
 
         <div class="client-link-overlay" id="clientLinkPopup">
@@ -402,6 +439,24 @@
     document.getElementById('businessCount').textContent = `${count} Client${count === 1 ? '' : 's'}`;
 }
 
+        function createThumbnail(uniqueId) {
+            const thumbnailUrl = `https://localbartees.github.io/LocalBarTees/qr/codes/qr_${uniqueId}b.png`;
+            
+            const img = document.createElement('img');
+            img.className = 'qr-thumbnail';
+            img.src = thumbnailUrl;
+            img.alt = 'QR Code Preview';
+            
+            img.onerror = function() {
+                // Replace with error div if image fails to load
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'qr-thumbnail-error';
+                errorDiv.innerHTML = 'QR Preview<br>Unavailable';
+                this.parentNode.replaceChild(errorDiv, this);
+            };
+            
+            return img;
+        }
 
         function renderBusinessCards() {
             const grid = document.getElementById('businessGrid');
@@ -410,6 +465,8 @@
             businessData.forEach((business, index) => {
                 const card = document.createElement('div');
                 card.className = 'business-card';
+                
+                const thumbnail = createThumbnail(business.uniqueId);
                 
                 card.innerHTML = `
                     <div class="business-header">
@@ -426,6 +483,10 @@
                         </div>
                     </div>
                 `;
+                
+                // Insert thumbnail before the first button
+                const firstButton = card.querySelector('.action-btn');
+                firstButton.parentNode.insertBefore(thumbnail, firstButton);
                 
                 grid.appendChild(card);
             });
