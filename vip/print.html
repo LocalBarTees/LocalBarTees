@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Bar Tees Info Page</title>
+    <style>
+        @media print {
+            body { margin: 0; }
+            .page-break { page-break-after: always; }
+            .page-break:last-child { page-break-after: avoid; }
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+        }
+        
+        .page {
+            width: 8.5in;
+            height: 11in;
+            margin: 20px auto;
+            padding: 1in;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            position: relative;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 20px;
+            margin: 0 0 15px 0;
+            color: #333;
+        }
+        
+        .client-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 0 15px 0;
+            color: #333;
+        }
+        
+        .date {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+            margin: 0;
+        }
+        
+        .client-info {
+            line-height: 1.8;
+            font-size: 20px;
+        }
+        
+        .info-line {
+            margin-bottom: 12px;
+        }
+        
+        .label {
+            font-weight: normal;
+            color: #333;
+        }
+        
+        .value {
+            font-weight: bold;
+        }
+        
+        .underline {
+            text-decoration: underline;
+        }
+        
+        a {
+            color: #333;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            color: #666;
+        }
+        
+        .footer {
+            position: absolute;
+            bottom: 1in;
+            left: 1in;
+            right: 1in;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            border-top: 1px solid #ccc;
+            padding-top: 15px;
+        }
+        
+        .page-break {
+            page-break-after: always;
+        }
+        
+        .page-break:last-child {
+            page-break-after: avoid;
+        }
+    </style>
+</head>
+<body>
+    <div id="pages-container">
+        <!-- Pages will be generated here -->
+    </div>
+
+    <script>
+        // Function to get current date in long format
+        function getLongDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            return now.toLocaleDateString('en-US', options);
+        }
+
+        // Function to generate a single page
+        function generatePage(container, client, index, totalClients, longDate) {
+            const pageHtml = `
+                <div class="page ${index < totalClients - 1 ? 'page-break' : ''}">
+                    <div class="header">
+                        <h1>Local Bar Tees Info Page</h1>
+                        <div class="client-name">${client.name}</div>
+                        <div class="date">as of ${longDate}</div>
+                    </div>
+                    
+                    <div class="client-info">
+                        <div class="info-line">
+                            <span class="label">Shop Name:</span> 
+                            <span class="value underline">${client.shop}</span>
+                        </div>
+                        
+                        <div class="info-line">
+                            <span class="label">Shop Site:</span> 
+                            <span class="value"><a href="https://localbartees.com/${client.url}" target="_blank">https://localbartees.com/${client.url}</a></span>
+                        </div>
+                        
+                        <div class="info-line">
+                            <span class="label">Private Store:</span> 
+                            <span class="value"><a href="https://localbartees.com/${client.private}" target="_blank">https://localbartees.com/<span class="underline">${client.private}</span></a></span>
+                        </div>
+                        
+                        <div class="info-line">
+                            <span class="label">Private Discount Code:</span> 
+                            <span class="value underline">${client.private}</span>
+                        </div>
+                        
+                        <div class="info-line">
+                            <span class="label">Support Hotline:</span> 
+                            <span class="value"><a href="mailto:VIP@localbartees.com">VIP@localbartees.com</a></span>
+                        </div>
+                        
+                        <div class="info-line">
+                            <span class="label">VIP Portal/Dashboard:</span> 
+                            <span class="value"><a href="https://localbartees.com/${client.id}vip" target="_blank">https://localbartees.com/${client.id}vip</a></span>
+                        </div>
+                    </div>
+                    
+                    <div class="footer">
+                        To change underlined items above, or for anything else, email <a href="mailto:VIP@localbartees.com">VIP@localbartees.com</a>.
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML += pageHtml;
+        }
+
+        // Function to get referring URL client ID
+        function getReferringClientId() {
+            const referrer = document.referrer;
+            if (!referrer) return null;
+            
+            // Check if referrer matches pattern https://localbartees.com/{id}vip
+            const match = referrer.match(/https:\/\/localbartees\.com\/([^\/]+)vip/);
+            return match ? match[1] : null;
+        }
+
+        // Function to load XML file and generate pages
+        async function loadXMLAndGeneratePages() {
+            // Test data to show layout when XML file can't be loaded
+            const testData = [
+                { id: 'nail', name: 'The Rusty Nail', shop: 'The Rusty Nail Store', url: 'nail', private: 'disco' },
+                { id: 'sidecar', name: 'Sidecar Patio & Oyster Bar', shop: 'Sidecar Shop', url: 'sidecar', private: 'erster' },
+                { id: 'roundin', name: "Roundin' 3rd", shop: "Roundin' 3rd Store", url: 'roundin', private: 'geoff' }
+            ];
+            
+            const referringClientId = getReferringClientId();
+            
+            try {
+                const response = await fetch('../src/clients.xml');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const xmlText = await response.text();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+                
+                // Check for XML parsing errors
+                const parserError = xmlDoc.querySelector('parsererror');
+                if (parserError) {
+                    throw new Error('XML parsing error: ' + parserError.textContent);
+                }
+                
+                const clients = xmlDoc.querySelectorAll('client');
+                const container = document.getElementById('pages-container');
+                const longDate = getLongDate();
+                
+                if (clients.length === 0) {
+                    throw new Error('No clients found in XML');
+                }
+                
+                container.innerHTML = ''; // Clear container
+                
+                let clientsToShow = [];
+                clients.forEach((client) => {
+                    const clientData = {
+                        id: client.getAttribute('id'),
+                        name: client.querySelector('name').textContent,
+                        shop: client.querySelector('shop').textContent,
+                        url: client.querySelector('url').textContent,
+                        private: client.querySelector('private').textContent
+                    };
+                    clientsToShow.push(clientData);
+                });
+                
+                // Filter by referring client ID if specified
+                if (referringClientId) {
+                    clientsToShow = clientsToShow.filter(client => client.id === referringClientId);
+                }
+                
+                clientsToShow.forEach((client, index) => {
+                    generatePage(container, client, index, clientsToShow.length, longDate);
+                });
+                
+            } catch (error) {
+                console.error('Error loading XML, using test data:', error);
+                // Use test data when XML fails to load
+                const container = document.getElementById('pages-container');
+                const longDate = getLongDate();
+                
+                container.innerHTML = ''; // Clear container
+                
+                let clientsToShow = testData;
+                
+                // Filter by referring client ID if specified
+                if (referringClientId) {
+                    clientsToShow = testData.filter(client => client.id === referringClientId);
+                }
+                
+                clientsToShow.forEach((client, index) => {
+                    generatePage(container, client, index, clientsToShow.length, longDate);
+                });
+            }
+        }
+
+        // Load XML and generate pages when DOM is loaded
+        document.addEventListener('DOMContentLoaded', loadXMLAndGeneratePages);
+    </script>
+</body>
+</html>

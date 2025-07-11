@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<clients version="1.0" generator="Local Bar Tees Clients">
-    <client>
-      <id>"nail"</id>
-      <private>disco</private>
-      <name>The Rusty Nail</name>
-      <shop>The Rusty Nail Store</shop>
-    </client>
-    <client>
-      <id>"sidecar"</id>
-      <private>erster</private>
-      <name>Sidecar Patio &amp; Oyster Bar</name>
-      <shop>Sidecar Shop</shop>
-    </client>
-    <client>
-      <id>"roundin"</id>
-      <private>geoff</private>
-      <name>Roundin' 3rd</name>
-      <shop>Roundin' 3rd Store</shop>
-    </client>
+<clients>
+  <client id="nail">
+    <name>The Rusty Nail</name>
+    <shop>The Rusty Nail Store</shop>
+    <url>nail</url>
+    <private>disco</private>
+  </client>
+  <client id="sidecar">
+    <name>Sidecar Patio &amp; Oyster Bar</name>
+    <shop>Sidecar Shop</shop>
+    <url>sidecar</url>
+    <private>erster</private>
+  </client>
+  <client id="roundin">
+    <name>Roundin' 3rd</name>
+    <shop>Roundin' 3rd Store</shop>
+    <url>roundin</url>
+    <private>geoff</private>
+  </client>
 </clients>
