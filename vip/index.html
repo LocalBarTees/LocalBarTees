@@ -30,6 +30,83 @@
             }
         }
         
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .page {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+                margin: 10px 0 !important;
+                padding: 20px !important;
+                box-sizing: border-box;
+            }
+            
+            .header h1 {
+                font-size: 18px !important;
+            }
+            
+            .client-name {
+                font-size: 20px !important;
+            }
+            
+            .client-info {
+                font-size: 16px !important;
+                line-height: 1.6 !important;
+            }
+            
+            .info-line {
+                margin-bottom: 8px !important;
+                word-wrap: break-word;
+            }
+            
+            .footer {
+                position: relative !important;
+                bottom: auto !important;
+                left: auto !important;
+                right: auto !important;
+                margin-top: 30px !important;
+                padding-top: 15px !important;
+            }
+            
+            /* Mobile QR page adjustments */
+            canvas {
+                max-width: 100% !important;
+                height: auto !important;
+            }
+            
+            /* Single large QR sticker on mobile */
+            #qr-canvas-xlarge-nail,
+            #qr-canvas-xlarge-sidecar,
+            #qr-canvas-xlarge-roundin {
+                width: 90vw !important;
+                max-width: 350px !important;
+                height: auto !important;
+            }
+            
+            /* Original size sticker on mobile */
+            canvas[id^="qr-canvas-"]:not([id*="medium"]):not([id*="xlarge"]) {
+                width: 80vw !important;
+                max-width: 300px !important;
+                height: auto !important;
+            }
+            
+            /* Medium stickers on mobile - stack vertically */
+            div[style*="display: flex"] {
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 15px !important;
+            }
+            
+            canvas[id*="medium"] {
+                width: 70vw !important;
+                max-width: 250px !important;
+                height: auto !important;
+            }
+        }
+        
         body {
             font-family: Arial, sans-serif;
             margin: 0;
