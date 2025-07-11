@@ -6,9 +6,28 @@
     <title>Local Bar Tees Info Page</title>
     <style>
         @media print {
-            body { margin: 0; }
-            .page-break { page-break-after: always; }
-            .page-break:last-child { page-break-after: avoid; }
+            body { 
+                margin: 0; 
+                background: white !important;
+            }
+            .page { 
+                width: 8.5in !important;
+                height: 11in !important;
+                margin: 0 !important;
+                padding: 0.75in !important;
+                background: white !important;
+                box-shadow: none !important;
+                page-break-after: always;
+            }
+            .page:last-child {
+                page-break-after: avoid;
+            }
+            .page-break { 
+                page-break-after: always !important; 
+            }
+            .page-break:last-child { 
+                page-break-after: avoid !important; 
+            }
         }
         
         body {
@@ -177,14 +196,10 @@
             container.innerHTML += pageHtml;
         }
 
-        // Function to get referring URL client ID
-        function getReferringClientId() {
-            const referrer = document.referrer;
-            if (!referrer) return null;
-            
-            // Check if referrer matches pattern https://localbartees.com/{id}vip
-            const match = referrer.match(/https:\/\/localbartees\.com\/([^\/]+)vip/);
-            return match ? match[1] : null;
+        // Function to get client ID from URL parameter
+        function getClientIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
         }
 
         // Function to load XML file and generate pages
@@ -196,7 +211,7 @@
                 { id: 'roundin', name: "Roundin' 3rd", shop: "Roundin' 3rd Store", url: 'roundin', private: 'geoff' }
             ];
             
-            const referringClientId = getReferringClientId();
+            const clientIdParam = getClientIdFromUrl();
             
             try {
                 const response = await fetch('../src/clients.xml');
@@ -237,9 +252,9 @@
                     clientsToShow.push(clientData);
                 });
                 
-                // Filter by referring client ID if specified
-                if (referringClientId) {
-                    clientsToShow = clientsToShow.filter(client => client.id === referringClientId);
+                // Filter by URL parameter ID if specified
+                if (clientIdParam) {
+                    clientsToShow = clientsToShow.filter(client => client.id === clientIdParam);
                 }
                 
                 clientsToShow.forEach((client, index) => {
@@ -256,9 +271,9 @@
                 
                 let clientsToShow = testData;
                 
-                // Filter by referring client ID if specified
-                if (referringClientId) {
-                    clientsToShow = testData.filter(client => client.id === referringClientId);
+                // Filter by URL parameter ID if specified
+                if (clientIdParam) {
+                    clientsToShow = testData.filter(client => client.id === clientIdParam);
                 }
                 
                 clientsToShow.forEach((client, index) => {
