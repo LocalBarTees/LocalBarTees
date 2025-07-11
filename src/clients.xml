@@ -8,13 +8,13 @@
   </client>
   <client id="sidecar">
     <name>Sidecar Patio &amp; Oyster Bar</name>
-    <shop>Sidecar Shop</shop>
+    <shop>Sidecar Merch</shop>
     <url>sidecar</url>
     <private>erster</private>
   </client>
   <client id="roundin">
     <name>Roundin' 3rd</name>
-    <shop>Roundin' 3rd Store</shop>
+    <shop>Roundin' 3rd Merch</shop>
     <url>roundin</url>
     <private>geoff</private>
   </client>

@@ -145,6 +145,131 @@
             return now.toLocaleDateString('en-US', options);
         }
 
+        // Function to generate a QR code page
+        function generateQRPage(container, client, index, totalClients) {
+            const pageHtml = `
+                <div class="page page-break">
+                    <div style="text-align: center; padding-top: 20px;">
+                        <div style="font-size: 14px; color: #666; margin-bottom: 30px;">More QR Codes for ${client.name}</div>
+                        
+                        <!-- Original size sticker -->
+                        <div style="margin-bottom: 20px;">
+                            <canvas id="qr-canvas-${client.id}" width="800" height="1000" style="display: block; margin: 0 auto; width: 300px; height: 375px;"></canvas>
+                        </div>
+                        
+                        <!-- 4 medium stickers in 2x2 grid -->
+                        <div style="display: flex; justify-content: center; align-items: flex-start; gap: 15px; margin-bottom: 15px;">
+                            <canvas id="qr-canvas-medium1-${client.id}" width="800" height="1000" style="width: 180px; height: 225px;"></canvas>
+                            <canvas id="qr-canvas-medium2-${client.id}" width="800" height="1000" style="width: 180px; height: 225px;"></canvas>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: center; align-items: flex-start; gap: 15px;">
+                            <canvas id="qr-canvas-medium3-${client.id}" width="800" height="1000" style="width: 180px; height: 225px;"></canvas>
+                            <canvas id="qr-canvas-medium4-${client.id}" width="800" height="1000" style="width: 180px; height: 225px;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML += pageHtml;
+            
+            // Generate all sticker sizes after DOM is updated
+            setTimeout(() => {
+                generateQRSticker(client, '');
+                generateQRSticker(client, 'medium1');
+                generateQRSticker(client, 'medium2');
+                generateQRSticker(client, 'medium3');
+                generateQRSticker(client, 'medium4');
+            }, 100);
+        }
+        
+        // Function to generate large QR code page
+        function generateLargeQRPage(container, client, index, totalClients) {
+            const pageHtml = `
+                <div class="page page-break">
+                    <div style="text-align: center; padding-top: 20px;">
+                        <div style="font-size: 14px; color: #666; margin-bottom: 20px;">QR Code for ${client.name}</div>
+                        
+                        <!-- Extra large 6.5 inch wide sticker to fit on page -->
+                        <div style="margin: 0 auto;">
+                            <canvas id="qr-canvas-xlarge-${client.id}" width="800" height="1000" style="display: block; margin: 0 auto; width: 6.5in; height: 8.125in;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML += pageHtml;
+            
+            // Generate the extra large sticker after DOM is updated
+            setTimeout(() => {
+                generateQRSticker(client, 'xlarge');
+            }, 100);
+        }
+
+        // Function to generate QR sticker as an image
+        function generateQRSticker(client, suffix) {
+            const canvasId = suffix ? `qr-canvas-${suffix}-${client.id}` : `qr-canvas-${client.id}`;
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const qrUrl = `https://localbartees.com/${client.id}?qr=yes`;
+            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${encodeURIComponent(qrUrl)}`;
+            
+            // Enable high-quality rendering
+            ctx.imageSmoothingEnabled = false;
+            ctx.textRenderingOptimization = 'optimizeQuality';
+            
+            // Clear canvas with high resolution
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, 800, 1000);
+            
+            // Draw outer border with rounded corners
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 8;
+            ctx.beginPath();
+            ctx.roundRect(20, 20, 760, 960, 30);
+            ctx.stroke();
+            
+            // Load and draw QR code
+            const qrImg = new Image();
+            qrImg.crossOrigin = 'anonymous';
+            qrImg.onload = function() {
+                // Draw QR code border
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 8;
+                ctx.beginPath();
+                ctx.roundRect(70, 70, 660, 660, 30);
+                ctx.stroke();
+                
+                // Fill QR code background
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.roundRect(78, 78, 644, 644, 22);
+                ctx.fill();
+                
+                // Draw QR code
+                ctx.drawImage(qrImg, 100, 100, 600, 600);
+                
+                // Draw shop name
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 48px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(client.shop, 400, 800);
+                
+                // Draw URL
+                ctx.fillStyle = '#666';
+                ctx.font = '42px Arial';
+                ctx.fillText(`https://localbartees.com/${client.id}`, 400, 860);
+                
+                // Draw powered by text
+                ctx.fillStyle = '#000';
+                ctx.font = 'italic 42px Arial';
+                ctx.fillText('powered by localbartees.com', 400, 920);
+            };
+            qrImg.src = qrApiUrl;
+        }
+
         // Function to generate a single page
         function generatePage(container, client, index, totalClients, longDate) {
             const pageHtml = `
@@ -259,6 +384,8 @@
                 
                 clientsToShow.forEach((client, index) => {
                     generatePage(container, client, index, clientsToShow.length, longDate);
+                    generateLargeQRPage(container, client, index, clientsToShow.length);
+                    generateQRPage(container, client, index, clientsToShow.length);
                 });
                 
             } catch (error) {
@@ -278,6 +405,8 @@
                 
                 clientsToShow.forEach((client, index) => {
                     generatePage(container, client, index, clientsToShow.length, longDate);
+                    generateLargeQRPage(container, client, index, clientsToShow.length);
+                    generateQRPage(container, client, index, clientsToShow.length);
                 });
             }
         }
