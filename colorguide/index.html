@@ -1,219 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Local Bar Tees Color Guide</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background: #f9f9f9;
+      font-family: sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
     }
-
     h1 {
       text-align: center;
-      margin-bottom: 30px;
     }
-
-    .section-title {
-      margin-top: 40px;
-      font-size: 24px;
-      border-bottom: 2px solid #ccc;
-      padding-bottom: 5px;
-    }
-
     .color-grid {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 20px;
-      justify-content: center;
       margin-top: 20px;
     }
-
-    .swatch {
-      width: 140px;
-      text-align: center;
+    .color-item {
       background: #fff;
       border: 1px solid #ccc;
       padding: 10px;
+      text-align: center;
       border-radius: 8px;
-      box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.05);
-      position: relative;
     }
-
-    .swatch img {
+    .color-item img {
       max-width: 100%;
       height: auto;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .swatch .label {
       margin-top: 10px;
-      font-size: 14px;
-      font-weight: bold;
     }
-
-    .swatch input[type="checkbox"] {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      transform: scale(1.4);
+    .compare-controls {
+      text-align: center;
+      margin: 30px 0;
     }
-
-    .compare-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #eee;
-      border-top: 2px solid #ccc;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      overflow-x: auto;
-      z-index: 9000;
-    }
-
-    .compare-bar .bar-controls {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 10px;
-    }
-
-    .compare-bar .bar-images {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-    }
-
-    .compare-bar .bar-images img {
-      max-height: 150px;
-      border: 2px solid #666;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .zoom-modal {
+    .zoom-view {
       display: none;
-      position: fixed;
-      z-index: 9999;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.9);
-    }
-
-    .zoom-content {
-      margin: 40px auto;
-      display: flex;
       flex-wrap: wrap;
       gap: 20px;
       justify-content: center;
-      max-width: 90%;
     }
-
-    .zoom-content img {
-      max-height: 400px;
-      border: 2px solid #fff;
+    .zoom-view img {
+      max-width: 300px;
+      border: 2px solid #000;
       border-radius: 8px;
-    }
-
-    .zoom-close {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      color: #fff;
-      font-size: 40px;
-      font-weight: bold;
-      cursor: pointer;
     }
   </style>
 </head>
 <body>
+  <h1>Local Bar Tees Color Guide</h1>
 
-<h1>Local Bar Tees Color Guide</h1>
-
-<div class="section-title">All Colors</div>
-<div class="color-grid" id="colorGrid">
-  <!-- Populated by JavaScript -->
-</div>
-
-<div class="compare-bar">
-  <div class="bar-controls">
-    <button onclick="zoomAll()">Zoom All</button>
+  <div class="compare-controls">
+    <button onclick="zoomAll()">Zoom All Selected</button>
   </div>
-  <div class="bar-images" id="compareBar"></div>
-</div>
 
-<div id="zoomModal" class="zoom-modal">
-  <span class="zoom-close" onclick="document.getElementById('zoomModal').style.display='none'">&times;</span>
-  <div class="zoom-content" id="zoomContent"></div>
-</div>
+  <div class="color-grid">
+    <!-- COLOR BLOCKS -->
+    <!-- Inserted dynamically below -->
+    <!-- Template:
+    <div class="color-item">
+      <label><input type="checkbox" value="FILENAME"> NAME</label>
+      <img src="FILENAME" alt="NAME">
+    </div>
+    -->
+    <div class="color-item"><label><input type="checkbox" value="azalea-1000x1000.webp"> Azalea</label><img src="azalea-1000x1000.webp" alt="Azalea"></div>
+    <div class="color-item"><label><input type="checkbox" value="black-1000x1000.webp"> Black</label><img src="black-1000x1000.webp" alt="Black"></div>
+    <div class="color-item"><label><input type="checkbox" value="cardinal-red-1000x1000.webp"> Cardinal Red</label><img src="cardinal-red-1000x1000.webp" alt="Cardinal Red"></div>
+    <div class="color-item"><label><input type="checkbox" value="carolina-blue-1000x1000.webp"> Carolina Blue</label><img src="carolina-blue-1000x1000.webp" alt="Carolina Blue"></div>
+    <div class="color-item"><label><input type="checkbox" value="charcoal-1000x1000.webp"> Charcoal</label><img src="charcoal-1000x1000.webp" alt="Charcoal"></div>
+    <div class="color-item"><label><input type="checkbox" value="dark-chocolate-1000x1000.webp"> Dark Chocolate</label><img src="dark-chocolate-1000x1000.webp" alt="Dark Chocolate"></div>
+    <div class="color-item"><label><input type="checkbox" value="dark-heather-1000x1000.webp"> Dark Heather</label><img src="dark-heather-1000x1000.webp" alt="Dark Heather"></div>
+    <div class="color-item"><label><input type="checkbox" value="daisy-1000x1000.webp"> Daisy</label><img src="daisy-1000x1000.webp" alt="Daisy"></div>
+    <div class="color-item"><label><input type="checkbox" value="gold-1000x1000.webp"> Gold</label><img src="gold-1000x1000.webp" alt="Gold"></div>
+    <div class="color-item"><label><input type="checkbox" value="graphite-heather-1000x1000.webp"> Graphite Heather</label><img src="graphite-heather-1000x1000.webp" alt="Graphite Heather"></div>
+    <div class="color-item"><label><input type="checkbox" value="heather-maroon-1000x1000.webp"> Heather Maroon</label><img src="heather-maroon-1000x1000.webp" alt="Heather Maroon"></div>
+    <div class="color-item"><label><input type="checkbox" value="heather-navy-1000x1000.webp"> Heather Navy</label><img src="heather-navy-1000x1000.webp" alt="Heather Navy"></div>
+    <div class="color-item"><label><input type="checkbox" value="heather-purple-1000x1000.webp"> Heather Purple</label><img src="heather-purple-1000x1000.webp" alt="Heather Purple"></div>
+    <div class="color-item"><label><input type="checkbox" value="heather-red-1000x1000.webp"> Heather Red</label><img src="heather-red-1000x1000.webp" alt="Heather Red"></div>
+    <div class="color-item"><label><input type="checkbox" value="ice-grey-1000x1000.webp"> Ice Grey</label><img src="ice-grey-1000x1000.webp" alt="Ice Grey"></div>
+    <div class="color-item"><label><input type="checkbox" value="irish-green-1000x1000.webp"> Irish Green</label><img src="irish-green-1000x1000.webp" alt="Irish Green"></div>
+    <div class="color-item"><label><input type="checkbox" value="light-blue-1000x1000.webp"> Light Blue</label><img src="light-blue-1000x1000.webp" alt="Light Blue"></div>
+    <div class="color-item"><label><input type="checkbox" value="maroon-1000x1000.webp"> Maroon</label><img src="maroon-1000x1000.webp" alt="Maroon"></div>
+    <div class="color-item"><label><input type="checkbox" value="military-green-1000x1000.webp"> Military Green</label><img src="military-green-1000x1000.webp" alt="Military Green"></div>
+    <div class="color-item"><label><input type="checkbox" value="natural-1000x1000.webp"> Natural</label><img src="natural-1000x1000.webp" alt="Natural"></div>
+    <div class="color-item"><label><input type="checkbox" value="navy-1000x1000.webp"> Navy</label><img src="navy-1000x1000.webp" alt="Navy"></div>
+    <div class="color-item"><label><input type="checkbox" value="purple-1000x1000.webp"> Purple</label><img src="purple-1000x1000.webp" alt="Purple"></div>
+    <div class="color-item"><label><input type="checkbox" value="royal-1000x1000.webp"> Royal</label><img src="royal-1000x1000.webp" alt="Royal"></div>
+    <div class="color-item"><label><input type="checkbox" value="rs-sport-grey-1000x1000.webp"> RS Sport Grey</label><img src="rs-sport-grey-1000x1000.webp" alt="RS Sport Grey"></div>
+    <div class="color-item"><label><input type="checkbox" value="sand-1000x1000.webp"> Sand</label><img src="sand-1000x1000.webp" alt="Sand"></div>
+    <div class="color-item"><label><input type="checkbox" value="white-1000x1000.webp"> White</label><img src="white-1000x1000.webp" alt="White"></div>
+    <div class="color-item"><label><input type="checkbox" value="sport-grey-1000x1000.webp"> Sport Grey</label><img src="sport-grey-1000x1000.webp" alt="Sport Grey"></div>
+    <div class="color-item"><label><input type="checkbox" value="heather-royal-1000x1000.webp"> Heather Royal</label><img src="heather-royal-1000x1000.webp" alt="Heather Royal"></div>
+  </div>
 
-<script>
-  const colors = [
-    { name: "Black", file: "black-1000x1000.webp" },
-    { name: "Gold", file: "gold-1000x1000.webp" },
-    { name: "Azalea", file: "azalea-1000x1000.webp" },
-    { name: "Graphite Heather", file: "graphite-heather-1000x1000.webp" },
-    { name: "Cardinal Red", file: "cardinal-red-1000x1000.webp" },
-    { name: "Carolina Blue", file: "carolina-blue-1000x1000.webp" },
-    // Add all remaining 22 colors here as { name: "Color Name", file: "filename.webp" }
-  ];
+  <div id="zoomContainer" class="zoom-view"></div>
 
-  const grid = document.getElementById('colorGrid');
-  const compareBar = document.getElementById('compareBar');
-  const zoomContent = document.getElementById('zoomContent');
-
-  colors.forEach(color => {
-    const div = document.createElement('div');
-    div.className = 'swatch';
-    div.innerHTML = `
-      <input type="checkbox" data-name="${color.name}" data-src="${color.file}">
-      <img src="${color.file}" alt="${color.name}">
-      <div class="label">${color.name}</div>
-    `;
-    grid.appendChild(div);
-  });
-
-  grid.addEventListener('change', e => {
-    if (e.target.matches('input[type="checkbox"]')) {
-      const { name, src } = e.target.dataset;
-      if (e.target.checked) {
-        const img = document.createElement('img');
-        img.src = src;
-        img.alt = name;
-        img.dataset.name = name;
-        img.title = 'Click to remove';
-        img.onclick = () => {
-          img.remove();
-          e.target.checked = false;
-        };
-        compareBar.appendChild(img);
-      } else {
-        const match = compareBar.querySelector(`img[data-name="${name}"]`);
-        if (match) match.remove();
-      }
+  <script>
+    function zoomAll() {
+      const zoomContainer = document.getElementById("zoomContainer");
+      zoomContainer.innerHTML = "";
+      document.querySelectorAll("input[type=checkbox]:checked").forEach(cb => {
+        const img = document.createElement("img");
+        img.src = cb.value;
+        img.alt = cb.parentElement.textContent.trim();
+        zoomContainer.appendChild(img);
+      });
+      zoomContainer.style.display = "flex";
     }
-  });
-
-  function zoomAll() {
-    zoomContent.innerHTML = '';
-    const imgs = compareBar.querySelectorAll('img');
-    imgs.forEach(img => {
-      const big = document.createElement('img');
-      big.src = img.src;
-      big.alt = img.alt;
-      zoomContent.appendChild(big);
-    });
-    document.getElementById('zoomModal').style.display = 'block';
-  }
-</script>
-
+  </script>
 </body>
 </html>
